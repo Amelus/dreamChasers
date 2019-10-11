@@ -12,7 +12,7 @@ export class BaseModelVm {
     @Expose()
     updatedAt?: Date;
 
-    @ApiModelPropertyOptional() 
+    @ApiModelPropertyOptional()
     @Expose()
     id?: string;
 }

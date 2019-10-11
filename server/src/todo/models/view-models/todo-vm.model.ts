@@ -4,13 +4,13 @@ import { TodoLevel } from '../todo-level.enum';
 import { Expose } from 'class-transformer';
 
 export class TodoVm extends BaseModelVm {
-    @ApiModelProperty() 
+    @ApiModelProperty()
     @Expose()
     content: string;
     @ApiModelProperty({ enum: TodoLevel })
     @Expose()
     level: TodoLevel;
-    @ApiModelProperty() 
+    @ApiModelProperty()
     @Expose()
     isCompleted: boolean;
 }

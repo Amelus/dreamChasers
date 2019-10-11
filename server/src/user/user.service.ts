@@ -26,7 +26,11 @@ export class UserService extends BaseService<User> {
     }
 
     async register(vm: RegisterVm) {
-        const { username, password, firstName, lastName } = vm;
+        const { registrationCode, username, password, firstName, lastName } = vm;
+
+        if (!registrationCode) {
+            throw new HttpException('Invalid registration code', HttpStatus.BAD_REQUEST);
+        }
 
         const newUser = User.createModel();
         newUser.username = username.trim().toLowerCase();
