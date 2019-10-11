@@ -1,0 +1,6 @@
+{
+  "JWT_KEY": "MySecret!123",
+  "MONGO_URI": "mongodb://localhost:27017/local",
+  "PORT": "3000",
+  "HOST": "localhost"
+}

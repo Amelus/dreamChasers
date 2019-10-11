@@ -65,7 +65,7 @@ export class UserService extends BaseService<User> {
         };
 
         const token = await this._authService.signPayload(payload);
-        
+
         console.log(user);
 
         const userVm: UserVm = await this.map(user.toJSON(), User, UserVm);
