@@ -21,19 +21,17 @@ import {
     ApiOperation,
     ApiUseTags,
 } from '@nestjs/swagger';
-import { isArray, map } from 'lodash';
-import { ApiException } from '../shared/api-exception.model';
-import { ToBooleanPipe } from '../shared/pipes/to-boolean.pipe';
-import { GetOperationId } from '../shared/utilities/get-operation-id.helper';
-import { TodoLevel } from './models/todo-level.enum';
-import { Todo } from './models/todo.model';
-import { TodoParams } from './models/view-models/todo-params.model';
-import { TodoVm } from './models/view-models/todo-vm.model';
-import { TodoService } from './todo.service';
-import { Roles } from '../shared/decorators/roles.decorator';
-import { UserRole } from '../user/models/user-role.enum';
-import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from '../shared/guards/roles.guard';
+import {map} from 'lodash';
+import {ApiException} from '../shared/api-exception.model';
+import {GetOperationId} from '../shared/utilities/get-operation-id.helper';
+import {Todo} from './models/todo.model';
+import {TodoParams} from './models/view-models/todo-params.model';
+import {TodoVm} from './models/view-models/todo-vm.model';
+import {TodoService} from './todo.service';
+import {Roles} from '../shared/decorators/roles.decorator';
+import {UserRole} from '../user/models/user-role.enum';
+import {AuthGuard} from '@nestjs/passport';
+import {RolesGuard} from '../shared/guards/roles.guard';
 
 @Controller('todos')
 @ApiUseTags(Todo.modelName)
@@ -43,10 +41,10 @@ export class TodoController {
     }
 
     @Post()
-    // @Roles(UserRole.Admin)
-    // @UseGuards(AuthGuard('jwt'), RolesGuard)
-    @ApiCreatedResponse({ type: TodoVm })
-    @ApiBadRequestResponse({ type: ApiException })
+    @Roles(UserRole.Admin)
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
+    @ApiCreatedResponse({type: TodoVm})
+    @ApiBadRequestResponse({type: ApiException})
     @ApiOperation(GetOperationId(Todo.modelName, 'Create'))
     async create(@Body() params: TodoParams): Promise<TodoVm> {
         try {
@@ -57,32 +55,45 @@ export class TodoController {
         }
     }
 
-    @Get()
+    @Get('assigned')
     @Roles(UserRole.Admin, UserRole.User)
     @UseGuards(AuthGuard('jwt'), RolesGuard)
-    @ApiOkResponse({ type: TodoVm, isArray: true })
-    @ApiBadRequestResponse({ type: ApiException })
-    @ApiOperation(GetOperationId(Todo.modelName, 'GetAll'))
-    @ApiImplicitQuery({ name: 'level', enum: EnumToArray(TodoLevel), required: false, isArray: true })
-    @ApiImplicitQuery({ name: 'isCompleted', required: false })
-    async get(
-        @Query('level') level?: TodoLevel,
-        @Query('isCompleted', new ToBooleanPipe())
-            isCompleted?: boolean,
-    ): Promise<TodoVm[]> {
-        let filter = {};
+    @ApiOkResponse({type: TodoVm, isArray: true})
+    @ApiBadRequestResponse({type: ApiException})
+    @ApiOperation(GetOperationId(Todo.modelName, 'GetAssigned'))
+    @ApiImplicitQuery({name: 'assignee', required: true})
+    async getAllAssigned(@Query('assignee') assignee?: string): Promise<TodoVm[]> {
 
-        if (level) {
-            filter['level'] = { $in: isArray(level) ? [...level] : [level] };
+        if (!assignee) {
+            throw new HttpException('Missing parameter assignee', HttpStatus.BAD_REQUEST);
         }
 
-        if (isCompleted !== null) {
-            if (filter['level']) {
-                filter = { $and: [{ level: filter['level'] }, { isCompleted }] };
-            } else {
-                filter['isCompleted'] = isCompleted;
-            }
+        const filter = {};
+        filter['assignee'] = assignee;
+
+        try {
+            const todos = await this._todoService.findAll(filter);
+            return this._todoService.mapArray(map(todos, todo => todo.toJSON()), Todo, TodoVm);
+        } catch (e) {
+            throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @Get('created')
+    @Roles(UserRole.Admin)
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
+    @ApiOkResponse({type: TodoVm, isArray: true})
+    @ApiBadRequestResponse({type: ApiException})
+    @ApiOperation(GetOperationId(Todo.modelName, 'GetCreated'))
+    @ApiImplicitQuery({name: 'creator', required: true})
+    async getAllCreated(@Query('creator') creator?: string): Promise<TodoVm[]> {
+
+        if (!creator) {
+            throw new HttpException('Missing parameter creator', HttpStatus.BAD_REQUEST);
+        }
+
+        const filter = {};
+        filter['creator'] = creator;
 
         try {
             const todos = await this._todoService.findAll(filter);
@@ -95,11 +106,11 @@ export class TodoController {
     @Put()
     // @Roles(UserRole.Admin, UserRole.User)
     // @UseGuards(AuthGuard('jwt'), RolesGuard)
-    @ApiOkResponse({ type: TodoVm })
-    @ApiBadRequestResponse({ type: ApiException })
+    @ApiOkResponse({type: TodoVm})
+    @ApiBadRequestResponse({type: ApiException})
     @ApiOperation(GetOperationId(Todo.modelName, 'Update'))
     async update(@Body() vm: TodoVm): Promise<TodoVm> {
-        const { id, content, level, isCompleted } = vm;
+        const {id, content, status, isCompleted} = vm;
 
         if (!vm || !id) {
             throw new HttpException('Missing parameters', HttpStatus.BAD_REQUEST);
@@ -117,7 +128,7 @@ export class TodoController {
 
         exist.content = content;
         exist.isCompleted = isCompleted;
-        exist.level = level;
+        exist.status = status;
 
         try {
             const updated = await this._todoService.update(id, exist);
@@ -128,10 +139,10 @@ export class TodoController {
     }
 
     @Delete(':id')
-    // @Roles(UserRole.Admin)
-    // @UseGuards(AuthGuard('jwt'), RolesGuard)
-    @ApiOkResponse({ type: TodoVm })
-    @ApiBadRequestResponse({ type: ApiException })
+    @Roles(UserRole.Admin)
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
+    @ApiOkResponse({type: TodoVm})
+    @ApiBadRequestResponse({type: ApiException})
     @ApiOperation(GetOperationId(Todo.modelName, 'Delete'))
     async delete(@Param('id') id: string): Promise<TodoVm> {
         try {

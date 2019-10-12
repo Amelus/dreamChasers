@@ -5,7 +5,7 @@ import { AppService } from './app.service';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  // router.get('/hello');
+  // router.getAllAssigned('/hello');
   // localhost:3000/root/hello
   @Get('hello')
   root(): any {

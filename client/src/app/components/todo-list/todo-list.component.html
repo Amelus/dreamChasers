@@ -14,7 +14,7 @@
         </nz-form-item>
 
         <nz-form-item class="d-flex align-items-center mb-2">
-          <nz-form-label [nzFor]="'level'">Priority</nz-form-label>
+          <nz-form-label [nzFor]="'status'">Priority</nz-form-label>
           <nz-form-control [nzHasFeedback]="true">
             <nz-select formControlName="level" id="level" class="w-100">
               <nz-option *ngFor="let option of availableLevels" [nzValue]="option" [nzLabel]="option"></nz-option>
@@ -60,14 +60,14 @@
             <div class="editable-cell-text-wrapper">
               <ng-container *ngIf="!editableCache[todo.id].level.edit">
                 {{todo.level}}
-                <i class="anticon anticon-edit editable-cell-icon" (click)="startEdit(todo, 'level')"></i>
+                <i class="anticon anticon-edit editable-cell-icon" (click)="startEdit(todo, 'status')"></i>
               </ng-container>
               <ng-container *ngIf="editableCache[todo.id].level.edit">
                 <nz-select class="w-100" [(ngModel)]="editableCache[todo.id].level.data" nzAllowClear
                            nzPlaceHolder="Choose">
                   <nz-option *ngFor="let option of availableLevels" [nzLabel]="option" [nzValue]="option"></nz-option>
                 </nz-select>
-                <i class="anticon anticon-check editable-cell-icon-check" (click)="finishEdit(todo, 'level')"></i>
+                <i class="anticon anticon-check editable-cell-icon-check" (click)="finishEdit(todo, 'status')"></i>
               </ng-container>
             </div>
           </div>
