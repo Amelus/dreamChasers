@@ -1,9 +1,10 @@
-import {HttpException, Injectable} from '@nestjs/common';
+import {forwardRef, HttpException, Inject, Injectable} from '@nestjs/common';
 import {BaseService} from '../shared/base.service';
 import {Registration} from './models/registration.model';
 import {InjectModel} from '@nestjs/mongoose';
 import {ModelType} from 'typegoose';
 import {MapperService} from '../shared/mapper/mapper.service';
+import {UserService} from '../user/user.service';
 
 @Injectable()
 export class RegistrationService extends BaseService<Registration> {
@@ -16,12 +17,11 @@ export class RegistrationService extends BaseService<Registration> {
         this._mapper = _mapperService.mapper;
     }
 
-    async findRegistrationCode(code: string): Promise<Registration> {
+    async isValidRegistrationCode(code: string): Promise<boolean> {
         const registrationModel = await this._model.findOne({ code });
         if (!registrationModel) {
-            const errors = { RegistrationCode: ' not found' };
-            throw new HttpException({ errors }, 401);
+            return false;
         }
-        return registrationModel;
+        return true;
     }
 }

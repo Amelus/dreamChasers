@@ -13,7 +13,7 @@ export class TodoListComponent implements OnInit {
     todos: TodoVm[] = [];
     editableCache = {};
 
-    availableLevels = [];
+    availableStatuses = [];
 
     constructor(private _formBuilder: FormBuilder,
                 private _todoClient: TodoClient) { }
@@ -21,12 +21,12 @@ export class TodoListComponent implements OnInit {
     ngOnInit() {
         this.initForm();
         this.getTodos();
-        this.getAvailableLevels();
+        this.getAvailableStatuses();
     }
 
-    onStatusChanged(status: boolean, todo: TodoVm) {
-        todo.isCompleted = status;
-        this._todoClient.update(todo)
+    onStatusChanged(isCompleted: boolean, todoVm: TodoVm) {
+        todoVm.isCompleted = isCompleted;
+        this._todoClient.update(todoVm)
             .subscribe((updatedTodo: TodoVm) => {
                 const index = this.todos.findIndex(todo => todo.id === updatedTodo.id);
                 this.todos.splice(index, 1, updatedTodo);
@@ -46,8 +46,8 @@ export class TodoListComponent implements OnInit {
                 this.todos = [newTodo, ...this.todos];
                 this.updateEditableCache();
                 this.form.get('content').reset();
-                this.form.get('level').reset();
-                this.form.get('level').setValue('Normal');
+                this.form.get('status').reset();
+                this.form.get('status').setValue('Pending');
             });
     }
 
@@ -66,8 +66,8 @@ export class TodoListComponent implements OnInit {
         });
     }
 
-    private getAvailableLevels() {
-        this.availableLevels = ['Low', 'Normal', 'High'];
+    private getAvailableStatuses() {
+        this.availableStatuses = ['Done', 'Pending', 'Aborted'];
     }
 
     private getTodos() {
@@ -81,7 +81,7 @@ export class TodoListComponent implements OnInit {
     private initForm() {
         this.form = this._formBuilder.group({
             content: ['', Validators.required],
-            level: 'Normal',
+            status: 'Pending',
         });
     }
 

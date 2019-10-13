@@ -1,5 +1,5 @@
 import { InstanceType, ModelType, prop } from 'typegoose';
-import {BaseModel, schemaOptions} from '../../shared/base.model';
+import { BaseModel, schemaOptions } from '../../shared/base.model';
 import { Expose } from 'class-transformer';
 
 export class Registration extends BaseModel<Registration> {

@@ -11,6 +11,7 @@ import { LoginResponseVm } from './models/view-models/login-response-vm.model';
 import { LoginVm } from './models/view-models/login-vm.model';
 import { RegisterVm } from './models/view-models/register-vm.model';
 import { UserVm } from './models/view-models/user-vm.model';
+import { RegistrationService } from '../registration/registration.service';
 
 @Injectable()
 export class UserService extends BaseService<User> {
@@ -19,6 +20,8 @@ export class UserService extends BaseService<User> {
         private readonly _mapperService: MapperService,
         @Inject(forwardRef(() => AuthService))
         readonly _authService: AuthService,
+        @Inject(forwardRef(() => RegistrationService))
+        readonly _registrationService: RegistrationService,
     ) {
         super();
         this._model = _userModel;
@@ -28,7 +31,8 @@ export class UserService extends BaseService<User> {
     async register(vm: RegisterVm) {
         const { registrationCode, username, password, firstName, lastName } = vm;
 
-        if (!registrationCode) {
+        const cCode = await this._registrationService.isValidRegistrationCode(registrationCode);
+        if (!cCode) {
             throw new HttpException('Invalid registration code', HttpStatus.BAD_REQUEST);
         }
 
