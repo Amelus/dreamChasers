@@ -1,9 +1,9 @@
 import {InstanceType, ModelType, prop} from 'typegoose';
 import {BaseModel, schemaOptions} from '../../shared/base.model';
-import {TodoStatus} from './todo-status.enum';
+import {AppointmentStatus} from './appointment-status.enum';
 import {Expose} from 'class-transformer';
 
-export class Todo extends BaseModel<Todo> {
+export class Appointment extends BaseModel<Appointment> {
 
     @prop({required: [true, 'Creator is required']})
     @Expose()
@@ -21,27 +21,31 @@ export class Todo extends BaseModel<Todo> {
     @Expose()
     content: string;
 
-    @prop({required: [true, 'Due startDate is required']})
+    @prop({required: [true, 'Start Date is required']})
     @Expose()
-    dueDate: Date;
+    startDate: Date;
 
-    @prop({enum: TodoStatus, default: TodoStatus.Pending})
+    @prop({required: [true, 'End DAte is required']})
     @Expose()
-    status: TodoStatus;
+    endDate: Date;
+
+    @prop({enum: AppointmentStatus, default: AppointmentStatus.Ongoing})
+    @Expose()
+    status: AppointmentStatus;
 
     @prop({default: false})
     @Expose()
     isCompleted: boolean;
 
-    static get model(): ModelType<Todo> {
-        return new Todo().getModelForClass(Todo, {schemaOptions});
+    static get model(): ModelType<Appointment> {
+        return new Appointment().getModelForClass(Appointment, {schemaOptions});
     }
 
     static get modelName(): string {
         return this.model.modelName;
     }
 
-    static createModel(): InstanceType<Todo> {
+    static createModel(): InstanceType<Appointment> {
         return new this.model();
     }
 }

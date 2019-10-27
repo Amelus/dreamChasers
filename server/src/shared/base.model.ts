@@ -4,11 +4,11 @@ import { Typegoose, prop } from 'typegoose';
 import { Expose } from 'class-transformer';
 
 export class BaseModelVm {
-    @ApiModelPropertyOptional({ type: String, format: 'date-time' })
+    @ApiModelPropertyOptional({ type: String, format: 'startDate-time' })
     @Expose()
     createdAt?: Date;
 
-    @ApiModelPropertyOptional({ type: String, format: 'date-time' })
+    @ApiModelPropertyOptional({ type: String, format: 'startDate-time' })
     @Expose()
     updatedAt?: Date;
 
@@ -19,12 +19,12 @@ export class BaseModelVm {
 
 export abstract class BaseModel<T> extends Typegoose {
     @prop()
-    @ApiModelPropertyOptional({ type: String, format: 'date-time' })
+    @ApiModelPropertyOptional({ type: String, format: 'startDate-time' })
     @Expose()
     createdAt: Date;
 
     @prop()
-    @ApiModelPropertyOptional({ type: String, format: 'date-time' })
+    @ApiModelPropertyOptional({ type: String, format: 'startDate-time' })
     @Expose()
     updatedAt: Date;
 
