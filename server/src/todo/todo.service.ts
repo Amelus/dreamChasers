@@ -6,7 +6,6 @@ import {MapperService} from '../shared/mapper/mapper.service';
 import {Todo} from './models/todo.model';
 import {TodoParams} from './models/view-models/todo-params.model';
 import {TodoStatus} from './models/todo-status.enum';
-import {UserService} from '../user/user.service';
 
 @Injectable()
 export class TodoService extends BaseService<Todo> {
@@ -14,7 +13,6 @@ export class TodoService extends BaseService<Todo> {
         private readonly httpService: HttpService,
         @InjectModel(Todo.modelName) private readonly _todoModel: ModelType<Todo>,
         private readonly _mapperService: MapperService,
-        private readonly userService: UserService,
     ) {
         super();
         this._model = _todoModel;
