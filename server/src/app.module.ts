@@ -1,12 +1,13 @@
-import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { Configuration } from './shared/configuration/configuration.enum';
-import { ConfigurationService } from './shared/configuration/configuration.service';
-import { SharedModule } from './shared/shared.module';
-import { TodoModule } from './todo/todo.module';
-import { UserModule } from './user/user.module';
+import {Module} from '@nestjs/common';
+import {MongooseModule} from '@nestjs/mongoose';
+import {AppController} from './app.controller';
+import {AppService} from './app.service';
+import {Configuration} from './shared/configuration/configuration.enum';
+import {ConfigurationService} from './shared/configuration/configuration.service';
+import {SharedModule} from './shared/shared.module';
+import {TodoModule} from './todo/todo.module';
+import {UserModule} from './user/user.module';
+import {AppointmentModule} from './appointment/appointment.module';
 
 @Module({
     imports: [SharedModule, MongooseModule.forRootAsync({
@@ -20,7 +21,7 @@ import { UserModule } from './user/user.module';
             useCreateIndex: true,
         }),
         inject: [ConfigurationService],
-    }), UserModule, TodoModule],
+    }), UserModule, TodoModule, AppointmentModule],
     controllers: [AppController],
     providers: [AppService],
 })

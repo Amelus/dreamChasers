@@ -1,4 +1,4 @@
-import {HttpService, Injectable, InternalServerErrorException} from '@nestjs/common';
+import {HttpException, HttpService, HttpStatus, Injectable, InternalServerErrorException} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {ModelType} from 'typegoose';
 import {BaseService} from '../shared/base.service';
@@ -6,6 +6,7 @@ import {MapperService} from '../shared/mapper/mapper.service';
 import {Todo} from './models/todo.model';
 import {TodoParams} from './models/view-models/todo-params.model';
 import {TodoStatus} from './models/todo-status.enum';
+import {UserService} from '../user/user.service';
 
 @Injectable()
 export class TodoService extends BaseService<Todo> {
@@ -13,6 +14,7 @@ export class TodoService extends BaseService<Todo> {
         private readonly httpService: HttpService,
         @InjectModel(Todo.modelName) private readonly _todoModel: ModelType<Todo>,
         private readonly _mapperService: MapperService,
+        private readonly userService: UserService,
     ) {
         super();
         this._model = _todoModel;
@@ -20,7 +22,7 @@ export class TodoService extends BaseService<Todo> {
     }
 
     async createTodo(params: TodoParams): Promise<Todo> {
-        const { creator, assignee, title, content, dueDate, status } = params;
+        const {creator, assignee, title, content, dueDate, status} = params;
 
         const newTodo = Todo.createModel();
 
