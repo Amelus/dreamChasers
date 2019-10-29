@@ -33,6 +33,10 @@ export class User extends BaseModel<User> {
 
     @prop()
     @Expose()
+    leadUser?: string;
+
+    @prop()
+    @Expose()
     get fullName(): string {
         return `${this.firstName} ${this.lastName}`;
     }

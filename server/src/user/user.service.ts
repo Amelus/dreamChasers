@@ -1,17 +1,18 @@
-import { forwardRef, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { compare, genSalt, hash } from 'bcryptjs';
-import { ModelType } from 'typegoose';
-import { AuthService } from '../shared/auth/auth.service';
-import { JwtPayload } from '../shared/auth/jwt-payload.model';
-import { BaseService } from '../shared/base.service';
-import { MapperService } from '../shared/mapper/mapper.service';
-import { User } from './models/user.model';
-import { LoginResponseVm } from './models/view-models/login-response-vm.model';
-import { LoginVm } from './models/view-models/login-vm.model';
-import { RegisterVm } from './models/view-models/register-vm.model';
-import { UserVm } from './models/view-models/user-vm.model';
-import { CodeService } from '../code/code.service';
+import {forwardRef, HttpException, HttpStatus, Inject, Injectable} from '@nestjs/common';
+import {InjectModel} from '@nestjs/mongoose';
+import {compare, genSalt, hash} from 'bcryptjs';
+import {ModelType} from 'typegoose';
+import {AuthService} from '../shared/auth/auth.service';
+import {JwtPayload} from '../shared/auth/jwt-payload.model';
+import {BaseService} from '../shared/base.service';
+import {MapperService} from '../shared/mapper/mapper.service';
+import {User} from './models/user.model';
+import {LoginResponseVm} from './models/view-models/login-response-vm.model';
+import {LoginVm} from './models/view-models/login-vm.model';
+import {RegisterVm} from './models/view-models/register-vm.model';
+import {UserVm} from './models/view-models/user-vm.model';
+import {CodeService} from '../code/code.service';
+import {UserRole} from './models/user-role.enum';
 
 @Injectable()
 export class UserService extends BaseService<User> {
@@ -29,14 +30,23 @@ export class UserService extends BaseService<User> {
     }
 
     async register(vm: RegisterVm) {
-        const { registrationCode, username, password, firstName, lastName } = vm;
+        const {registrationCode, username, password, firstName, lastName} = vm;
 
+        let leadUser: User;
         const cCode = await this.codeService.isValidRegistrationCode(registrationCode);
         if (!cCode) {
-            throw new HttpException('Invalid registration code', HttpStatus.BAD_REQUEST);
+            try {
+                leadUser = await this._userModel.findOne({username: registrationCode, role: UserRole.Leader});
+            } catch (e) {
+                throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            if (!leadUser) {
+                throw new HttpException('Invalid registration code', HttpStatus.BAD_REQUEST);
+            }
         }
 
         const newUser = User.createModel();
+        newUser.leadUser = leadUser ? leadUser.username : null;
         newUser.username = username.trim().toLowerCase();
         newUser.firstName = firstName;
         newUser.lastName = lastName;
@@ -53,9 +63,9 @@ export class UserService extends BaseService<User> {
     }
 
     async login(vm: LoginVm): Promise<LoginResponseVm> {
-        const { username, password } = vm;
+        const {username, password} = vm;
 
-        const user = await this.findOne({ username });
+        const user = await this.findOne({username});
 
         if (!user) {
             throw new HttpException('Invalid crendentials', HttpStatus.NOT_FOUND);

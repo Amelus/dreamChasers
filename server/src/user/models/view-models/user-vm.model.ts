@@ -19,4 +19,7 @@ export class UserVm extends BaseModelVm {
     @ApiModelPropertyOptional({enum: UserRole})
     @Expose()
     role?: UserRole;
+    @ApiModelPropertyOptional()
+    @Expose()
+    leadUser?: string;
 }
