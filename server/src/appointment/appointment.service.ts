@@ -5,7 +5,6 @@ import {BaseService} from '../shared/base.service';
 import {MapperService} from '../shared/mapper/mapper.service';
 import {Appointment} from './models/appointment.model';
 import {AppointmentParams} from './models/view-models/appointment-params.model';
-import {AppointmentStatus} from './models/appointment-status.enum';
 
 @Injectable()
 export class AppointmentService extends BaseService<Appointment> {
@@ -20,22 +19,15 @@ export class AppointmentService extends BaseService<Appointment> {
     }
 
     async createAppointment(params: AppointmentParams): Promise<Appointment> {
-        const { creator, assignee, title, content, startDate, endDate, status } = params;
+        const {creator, title, content, startDate, endDate} = params;
 
         const newAppointment = Appointment.createModel();
 
         newAppointment.creator = creator;
-        newAppointment.assignee = assignee;
         newAppointment.title = title;
         newAppointment.content = content;
         newAppointment.startDate = startDate;
         newAppointment.endDate = endDate;
-
-        if (status) {
-            newAppointment.status = status;
-        } else {
-            newAppointment.status = AppointmentStatus.Ongoing;
-        }
 
         try {
             const result = await this.create(newAppointment);

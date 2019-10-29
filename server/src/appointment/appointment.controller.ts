@@ -41,7 +41,7 @@ export class AppointmentController {
     }
 
     @Post()
-    @Roles(UserRole.Admin)
+    @Roles(UserRole.Admin, UserRole.Leader)
     @UseGuards(AuthGuard('jwt'), RolesGuard)
     @ApiCreatedResponse({type: AppointmentVm})
     @ApiBadRequestResponse({type: ApiException})
@@ -56,7 +56,7 @@ export class AppointmentController {
     }
 
     @Get('assigned')
-    @Roles(UserRole.Admin, UserRole.User)
+    @Roles(UserRole.Admin, UserRole.Leader, UserRole.User)
     @UseGuards(AuthGuard('jwt'), RolesGuard)
     @ApiOkResponse({type: AppointmentVm, isArray: true})
     @ApiBadRequestResponse({type: ApiException})
@@ -65,11 +65,11 @@ export class AppointmentController {
     async getAllAssigned(@Query('assignee') assignee?: string): Promise<AppointmentVm[]> {
 
         if (!assignee) {
-            throw new HttpException('Missing parameter assignee', HttpStatus.BAD_REQUEST);
+            throw new HttpException('Missing parameter assignees', HttpStatus.BAD_REQUEST);
         }
 
         const filter = {};
-        filter['assignee'] = assignee;
+        filter['assignees'] = assignee;
 
         try {
             const appointments = await this._appointmentService.findAll(filter);
@@ -80,7 +80,7 @@ export class AppointmentController {
     }
 
     @Get('created')
-    @Roles(UserRole.Admin)
+    @Roles(UserRole.Admin, UserRole.Leader)
     @UseGuards(AuthGuard('jwt'), RolesGuard)
     @ApiOkResponse({type: AppointmentVm, isArray: true})
     @ApiBadRequestResponse({type: ApiException})
@@ -104,13 +104,13 @@ export class AppointmentController {
     }
 
     @Put()
-    // @Roles(UserRole.Admin, UserRole.User)
-    // @UseGuards(AuthGuard('jwt'), RolesGuard)
+    @Roles(UserRole.Admin, UserRole.Leader)
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
     @ApiOkResponse({type: AppointmentVm})
     @ApiBadRequestResponse({type: ApiException})
     @ApiOperation(GetOperationId(Appointment.modelName, 'Update'))
     async update(@Body() vm: AppointmentVm): Promise<AppointmentVm> {
-        const {id, content, status, isCompleted} = vm;
+        const {id, content} = vm;
 
         if (!vm || !id) {
             throw new HttpException('Missing parameters', HttpStatus.BAD_REQUEST);
@@ -122,13 +122,7 @@ export class AppointmentController {
             throw new HttpException(`${id} Not found`, HttpStatus.NOT_FOUND);
         }
 
-        if (exist.isCompleted) {
-            throw new HttpException('Already completed', HttpStatus.BAD_REQUEST);
-        }
-
         exist.content = content;
-        exist.isCompleted = isCompleted;
-        exist.status = status;
 
         try {
             const updated = await this._appointmentService.update(id, exist);
@@ -139,7 +133,7 @@ export class AppointmentController {
     }
 
     @Delete(':id')
-    @Roles(UserRole.Admin)
+    @Roles(UserRole.Admin, UserRole.Leader)
     @UseGuards(AuthGuard('jwt'), RolesGuard)
     @ApiOkResponse({type: AppointmentVm})
     @ApiBadRequestResponse({type: ApiException})

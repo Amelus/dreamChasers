@@ -41,7 +41,7 @@ export class TodoController {
     }
 
     @Post()
-    @Roles(UserRole.Admin)
+    @Roles(UserRole.Admin, UserRole.Leader)
     @UseGuards(AuthGuard('jwt'), RolesGuard)
     @ApiCreatedResponse({type: TodoVm})
     @ApiBadRequestResponse({type: ApiException})
@@ -56,7 +56,7 @@ export class TodoController {
     }
 
     @Get('assigned')
-    @Roles(UserRole.Admin, UserRole.User)
+    @Roles(UserRole.Leader, UserRole.User)
     @UseGuards(AuthGuard('jwt'), RolesGuard)
     @ApiOkResponse({type: TodoVm, isArray: true})
     @ApiBadRequestResponse({type: ApiException})
@@ -80,7 +80,7 @@ export class TodoController {
     }
 
     @Get('created')
-    @Roles(UserRole.Admin)
+    @Roles(UserRole.Admin, UserRole.Leader)
     @UseGuards(AuthGuard('jwt'), RolesGuard)
     @ApiOkResponse({type: TodoVm, isArray: true})
     @ApiBadRequestResponse({type: ApiException})
@@ -139,7 +139,7 @@ export class TodoController {
     }
 
     @Delete(':id')
-    @Roles(UserRole.Admin)
+    @Roles(UserRole.Admin, UserRole.Leader)
     @UseGuards(AuthGuard('jwt'), RolesGuard)
     @ApiOkResponse({type: TodoVm})
     @ApiBadRequestResponse({type: ApiException})

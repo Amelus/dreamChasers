@@ -22,7 +22,7 @@ export class UserController {
         const { registrationCode, username, password } = vm;
 
         if (!registrationCode) {
-            throw new HttpException('Registration Code is required', HttpStatus.BAD_REQUEST);
+            throw new HttpException('Registration code is required', HttpStatus.BAD_REQUEST);
         }
 
         if (!username) {
