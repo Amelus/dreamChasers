@@ -18,7 +18,7 @@ export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 })
 export class Client {
   private http: HttpClient;
-  private baseUrl: string;
+  private baseUrl: string; // http://localhost:4200/api
   protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
   constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {

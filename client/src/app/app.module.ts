@@ -5,7 +5,6 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { en_US, NgZorroAntdModule, NZ_I18N } from 'ng-zorro-antd';
 
 import { AppRoutingModule } from './app-routing.module';
 import { API_BASE_URL } from './app.api';
@@ -27,10 +26,8 @@ registerLocaleData(en);
         FormsModule,
         ReactiveFormsModule,
         HttpClientModule,
-        NgZorroAntdModule,
     ],
     providers: [
-        { provide: NZ_I18N, useValue: en_US },
         { provide: API_BASE_URL, useFactory: baseUrl },
     ],
     bootstrap: [AppComponent],
