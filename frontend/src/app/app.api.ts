@@ -294,14 +294,14 @@ export class TodoClient {
     return _observableOf<TodoVm>(null as any);
   }
 
-  getall(isCompleted?: boolean | null | undefined, level?: Level[] | null | undefined): Observable<TodoVm[]> {
+  getall(isCompleted?: boolean | null | undefined, status?: Status[] | null | undefined): Observable<TodoVm[]> {
     let url = this.baseUrl + '/todos?';
     if (isCompleted !== undefined) {
       url += 'isCompleted=' + encodeURIComponent('' + isCompleted) + '&';
     }
-    if (level !== undefined) {
-      level && level.forEach(item => {
-        url += 'level=' + encodeURIComponent('' + item) + '&';
+    if (status !== undefined) {
+      status && status.forEach(item => {
+        url += 'status=' + encodeURIComponent('' + item) + '&';
       });
     }
     url = url.replace(/[?&]$/, '');
@@ -467,38 +467,7 @@ export class TodoClient {
   }
 
   protected processDelete(response: HttpResponseBase): Observable<TodoVm> {
-    const status = response.status;
-    const responseBlob =
-      response instanceof HttpResponse ? response.body :
-        (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-    const headers: any = {};
-    if (response.headers) {
-      for (const key of response.headers.keys()) {
-        headers[key] = response.headers.get(key);
-      }
-    }
-
-    if (status === 200) {
-      return blobToText(responseBlob).pipe(_observableMergeMap(responseText => {
-        let result200: any = null;
-        const resultData200 = responseText === '' ? null : JSON.parse(responseText, this.jsonParseReviver);
-        result200 = resultData200 ? TodoVm.fromJS(resultData200) : new TodoVm();
-        return _observableOf(result200);
-      }));
-    } else if (status === 400) {
-      return blobToText(responseBlob).pipe(_observableMergeMap(responseText => {
-        let result400: any = null;
-        const resultData400 = responseText === '' ? null : JSON.parse(responseText, this.jsonParseReviver);
-        result400 = resultData400 ? ApiException.fromJS(resultData400) : new ApiException();
-        return throwException('A server error occurred.', status, responseText, headers, result400);
-      }));
-    } else if (status !== 200 && status !== 204) {
-      return blobToText(responseBlob).pipe(_observableMergeMap(responseText => {
-        return throwException('An unexpected server error occurred.', status, responseText, headers);
-      }));
-    }
-    return _observableOf<TodoVm>(null as any);
+    return this.processUpdate(response);
   }
 }
 
@@ -777,8 +746,12 @@ export class TodoParams implements ITodoParams {
       }
     }
   }
+  creator: string;
+  assignee: string;
+  title: string;
   content!: string;
-  level?: TodoParamsLevel | null;
+  status?: TodoParamsStatus | null;
+  dueDate: Date;
 
   static fromJS(data: any): TodoParams {
     data = typeof data === 'object' ? data : {};
@@ -789,22 +762,34 @@ export class TodoParams implements ITodoParams {
 
   init(data?: any) {
     if (data) {
+      this.creator = data.creator !== undefined ? data.creator : null as any;
+      this.assignee = data.assignee !== undefined ? data.assignee : null as any;
+      this.title = data.title !== undefined ? data.title : null as any;
       this.content = data.content !== undefined ? data.content : null as any;
-      this.level = data.level !== undefined ? data.level : null as any;
+      this.dueDate = data.dueDate ? new Date(data.dueDate.toString()) : null as any;
+      this.status = data.status !== undefined ? data.status : null as any;
     }
   }
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
+    data.creator = this.creator !== undefined ? this.creator : null as any;
+    data.assignee = this.assignee !== undefined ? this.assignee : null as any;
+    data.title = this.title !== undefined ? this.title : null as any;
     data.content = this.content !== undefined ? this.content : null as any;
-    data.level = this.level !== undefined ? this.level : null as any;
+    data.status = this.status !== undefined ? this.status : null as any;
+    data.dueDate = this.dueDate ? this.dueDate.toISOString() : null as any;
     return data;
   }
 }
 
 export interface ITodoParams {
+  creator: string;
+  assignee: string;
+  title: string;
   content: string;
-  level?: TodoParamsLevel | null;
+  dueDate: Date;
+  status?: TodoParamsStatus | null;
 }
 
 export class TodoVm implements ITodoVm {
@@ -821,8 +806,12 @@ export class TodoVm implements ITodoVm {
   createdAt?: Date | null;
   updatedAt?: Date | null;
   id?: string | null;
+  creator!: string;
+  assignee!: string;
+  title!: string;
   content!: string;
-  level!: TodoVmLevel;
+  dueDate!: Date;
+  status!: TodoVmStatus;
   isCompleted!: boolean;
 
   static fromJS(data: any): TodoVm {
@@ -837,8 +826,12 @@ export class TodoVm implements ITodoVm {
       this.createdAt = data.createdAt ? new Date(data.createdAt.toString()) : null as any;
       this.updatedAt = data.updatedAt ? new Date(data.updatedAt.toString()) : null as any;
       this.id = data.id !== undefined ? data.id : null as any;
+      this.creator = data.creator !== undefined ? data.creator : null as any;
+      this.assignee = data.assignee !== undefined ? data.assignee : null as any;
+      this.title = data.title !== undefined ? data.title : null as any;
       this.content = data.content !== undefined ? data.content : null as any;
-      this.level = data.level !== undefined ? data.level : null as any;
+      this.dueDate = data.dueDate ? new Date(data.dueDate.toString()) : null as any;
+      this.status = data.status !== undefined ? data.status : null as any;
       this.isCompleted = data.isCompleted !== undefined ? data.isCompleted : null as any;
     }
   }
@@ -848,8 +841,12 @@ export class TodoVm implements ITodoVm {
     data.createdAt = this.createdAt ? this.createdAt.toISOString() : null as any;
     data.updatedAt = this.updatedAt ? this.updatedAt.toISOString() : null as any;
     data.id = this.id !== undefined ? this.id : null as any;
+    data.creator = this.creator !== undefined ? this.creator : null as any;
+    data.assignee = this.assignee !== undefined ? this.assignee : null as any;
+    data.title = this.title !== undefined ? this.title : null as any;
     data.content = this.content !== undefined ? this.content : null as any;
-    data.level = this.level !== undefined ? this.level : null as any;
+    data.status = this.status !== undefined ? this.status : null as any;
+    data.dueDate = this.dueDate ? this.dueDate.toISOString() : null as any;
     data.isCompleted = this.isCompleted !== undefined ? this.isCompleted : null as any;
     return data;
   }
@@ -859,32 +856,34 @@ export interface ITodoVm {
   createdAt?: Date | null;
   updatedAt?: Date | null;
   id?: string | null;
+  creator: string;
+  assignee: string;
+  title: string;
   content: string;
-  level: TodoVmLevel;
+  status: TodoVmStatus;
+  dueDate: Date;
   isCompleted: boolean;
 }
 
-export enum Level {
-  Low = 'Low',
-  Normal = 'Normal',
-  High = 'High',
+export enum Status {
+  Finished = 'Finished',
+  InProgress = 'InProgress',
 }
 
 export enum UserVmRole {
   Admin = 'Admin',
+  Leader = 'Leader',
   User = 'User',
 }
 
-export enum TodoParamsLevel {
-  Low = 'Low',
-  Normal = 'Normal',
-  High = 'High',
+export enum TodoParamsStatus {
+  Finished = 'Finished',
+  InProgress = 'InProgress',
 }
 
-export enum TodoVmLevel {
-  Low = 'Low',
-  Normal = 'Normal',
-  High = 'High',
+export enum TodoVmStatus {
+  Finished = 'Finished',
+  InProgress = 'InProgress',
 }
 
 export class SwaggerException extends Error {

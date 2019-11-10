@@ -1,9 +1,24 @@
 <ion-header>
     <ion-toolbar>
-        <ion-title>login</ion-title>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title class="ion-text-center">Login</ion-title>
     </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-align-items-center ion-padding">
+
+    <ion-item class="ion-padding ios ion-align-items-center">
+        <ion-label position="floating">Username</ion-label>
+        <ion-input autofocus="true" autocomplete="true" required="true"></ion-input>
+    </ion-item>
+
+    <ion-item class="ion-padding ios ion-align-items-center">
+        <ion-label position="floating">Password</ion-label>
+        <ion-input autocomplete="true" required="true" type="password"></ion-input>
+    </ion-item>
+
+    <ion-button class="ion-padding ios ion-align-items-center" expand="block" type="submit">Anmelden</ion-button>
 
 </ion-content>

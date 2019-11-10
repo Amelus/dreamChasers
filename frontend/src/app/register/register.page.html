@@ -1,9 +1,39 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>register</ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Registrieren</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-align-items-center ion-padding">
+
+  <ion-item class="ion-align-items-center ion-padding">
+    <ion-label position="floating">Registrierungscode</ion-label>
+    <ion-input autofocus="true" minlength="6" required="true"></ion-input>
+  </ion-item>
+
+  <ion-item class="ion-align-items-center ion-padding">
+      <ion-label position="floating">Username</ion-label>
+      <ion-input autocomplete="true" required="true"></ion-input>
+    </ion-item>
+
+    <ion-item class="ion-align-items-center ion-padding">
+      <ion-label position="floating">Password</ion-label>
+      <ion-input minlength="8" required="true" type="password"></ion-input>
+    </ion-item>
+
+  <ion-item class="ion-align-items-center ion-padding">
+    <ion-label position="floating">Vorname</ion-label>
+    <ion-input autocomplete="true" required="true"></ion-input>
+  </ion-item>
+
+  <ion-item class="ion-align-items-center ion-padding">
+    <ion-label position="floating">Nachname</ion-label>
+    <ion-input autocomplete="true" required="true"></ion-input>
+  </ion-item>
+
+  <ion-button class="ion-padding ios ion-align-items-center" expand="block" type="submit">Registrieren</ion-button>
 
 </ion-content>
