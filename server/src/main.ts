@@ -6,6 +6,7 @@ import { HttpExceptionFilter } from './shared/filters/http-exception.filter';
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     const hostDomain = AppModule.isDev ? `${AppModule.host}:${AppModule.port}` : AppModule.host;
+    app.enableCors();
 
     const swaggerOptions = new DocumentBuilder()
         .setTitle('Nest MEAN')

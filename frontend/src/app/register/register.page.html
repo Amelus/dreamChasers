@@ -1,39 +1,87 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title class="ion-text-center">Registrieren</ion-title>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title class="ion-text-center">Registrieren</ion-title>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-align-items-center ion-padding">
 
-  <ion-item class="ion-align-items-center ion-padding">
-    <ion-label position="floating">Registrierungscode</ion-label>
-    <ion-input autofocus="true" minlength="6" required="true"></ion-input>
-  </ion-item>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <ion-item class=" ion-align-items-center ion-padding">
+            <ion-label position="floating">Registrierungscode</ion-label>
+            <ion-input minlength="6" required="true" formControlName="registrationCode"></ion-input>
+            <ng-container *ngIf="form.get('registrationCode').dirty && form.get('registrationCode').errors">
+                <div class="error">
+                    <ng-container *ngIf="form.get('registrationCode').hasError('required')">
+                        Registrierungscode ist ein Pflichtfeld
+                    </ng-container>
+                    <ng-container *ngIf="form.get('registrationCode').hasError('minlength')">
+                        Der Registrierungscode muss mindestens 6 Zeichen lang sein
+                    </ng-container>
+                </div>
+            </ng-container>
+        </ion-item>
 
-  <ion-item class="ion-align-items-center ion-padding">
-      <ion-label position="floating">Username</ion-label>
-      <ion-input autocomplete="true" required="true"></ion-input>
-    </ion-item>
+        <ion-item class="ion-align-items-center ion-padding">
+            <ion-label position="floating">Username</ion-label>
+            <ion-input autocomplete="true" required="true" formControlName="username"></ion-input>
+            <ng-container *ngIf="form.get('username').dirty && form.get('username').errors">
+                <div class="error">
+                    <ng-container *ngIf="form.get('username').hasError('required')">
+                        Username ist ein Pflichtfeld
+                    </ng-container>
+                    <ng-container *ngIf="form.get('username').hasError('minlength')">
+                        Der Username muss mindestens 6 Zeichen lang sein
+                    </ng-container>
+                </div>
+            </ng-container>
+        </ion-item>
 
-    <ion-item class="ion-align-items-center ion-padding">
-      <ion-label position="floating">Password</ion-label>
-      <ion-input minlength="8" required="true" type="password"></ion-input>
-    </ion-item>
+        <ion-item class="ion-align-items-center ion-padding">
+            <ion-label position="floating">Password</ion-label>
+            <ion-input minlength="8" required="true" type="password" formControlName="password">
+            </ion-input>
+            <ng-container *ngIf="form.get('password').dirty && form.get('password').errors">
+                <div class="error">
+                    <ng-container *ngIf="form.get('password').hasError('required')">
+                        Passwort ist ein Pflichtfeld
+                    </ng-container>
+                    <ng-container *ngIf="form.get('password').hasError('minlength')">
+                        Das Passwort muss mindestens 8 Zeichen lang sein
+                    </ng-container>
+                </div>
+            </ng-container>
+        </ion-item>
 
-  <ion-item class="ion-align-items-center ion-padding">
-    <ion-label position="floating">Vorname</ion-label>
-    <ion-input autocomplete="true" required="true"></ion-input>
-  </ion-item>
+        <ion-item class="ion-align-items-center ion-padding">
+            <ion-label position="floating">Vorname</ion-label>
+            <ion-input autocomplete="true" required="true" formControlName="firstName"></ion-input>
+            <ng-container *ngIf="form.get('firstName').dirty && form.get('firstName').errors">
+                <div class="error">
+                    <ng-container *ngIf="form.get('firstName').hasError('required')">
+                        Vorname ist ein Pflichtfeld
+                    </ng-container>
+                </div>
+            </ng-container>
+        </ion-item>
 
-  <ion-item class="ion-align-items-center ion-padding">
-    <ion-label position="floating">Nachname</ion-label>
-    <ion-input autocomplete="true" required="true"></ion-input>
-  </ion-item>
+        <ion-item class="ion-align-items-center ion-padding">
+            <ion-label position="floating">Nachname</ion-label>
+            <ion-input autocomplete="true" required="true" formControlName="lastName"></ion-input>
+            <ng-container *ngIf="form.get('lastName').dirty && form.get('lastName').errors">
+                <div class="error">
+                    <ng-container *ngIf="form.get('lastName').hasError('required')">
+                        Nachname ist ein Pflichtfeld
+                    </ng-container>
+                </div>
+            </ng-container>
+        </ion-item>
 
-  <ion-button class="ion-padding ios ion-align-items-center" expand="block" type="submit">Registrieren</ion-button>
+        <ion-button class="ios ion-align-items-center log-button" expand="block" type="submit">Registrieren
+        </ion-button>
+    </form>
 
 </ion-content>

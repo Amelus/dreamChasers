@@ -9,16 +9,42 @@
 
 <ion-content class="ion-align-items-center ion-padding">
 
-    <ion-item class="ion-padding ios ion-align-items-center">
-        <ion-label position="floating">Username</ion-label>
-        <ion-input autofocus="true" autocomplete="true" required="true"></ion-input>
-    </ion-item>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <ion-item class="ion-padding ios ion-align-items-center">
+            <ion-label position="floating">Username</ion-label>
+            <ion-input autocomplete="true" required="true" formControlName="username"></ion-input>
+            <ng-container *ngIf="form.get('username').dirty && form.get('username').errors">
+                <div class="error">
+                    <ng-container *ngIf="form.get('username').hasError('required')">
+                        Username ist ein Pflichtfeld
+                    </ng-container>
+                    <ng-container *ngIf="form.get('username').hasError('minlength')">
+                        Der Username ist mindestens 6 Zeichen lang
+                    </ng-container>
+                </div>
+            </ng-container>
+        </ion-item>
 
-    <ion-item class="ion-padding ios ion-align-items-center">
-        <ion-label position="floating">Password</ion-label>
-        <ion-input autocomplete="true" required="true" type="password"></ion-input>
-    </ion-item>
+        <ion-item class="ion-padding ios ion-align-items-center">
+            <ion-label position="floating">Password</ion-label>
+            <ion-input autocomplete="true" required="true" type="password" formControlName="password"></ion-input>
+            <ng-container *ngIf="form.get('password').dirty && form.get('password').errors">
+                <div class="error">
+                    <ng-container *ngIf="form.get('password').hasError('required')">
+                        Passwort ist ein Pflichtfeld
+                    </ng-container>
+                    <ng-container *ngIf="form.get('password').hasError('minlength')">
+                        Das Passwort ist mindestens 8 Zeichen lang
+                    </ng-container>
+                </div>
+            </ng-container>
+        </ion-item>
 
-    <ion-button class="ion-padding ios ion-align-items-center" expand="block" type="submit">Anmelden</ion-button>
+        <ion-button class="ios ion-align-items-center log-button" expand="block" type="submit">Anmelden</ion-button>
+        <ion-button type="button" class="ios ion-align-items-center log-button" fill="clear"
+                    [routerLink]="['/register']" expand="full">Registrieren
+        </ion-button>
+    </form>
+
 
 </ion-content>

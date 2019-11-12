@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { catchError } from 'rxjs/operators';
-import { throwError } from '../../../node_modules/rxjs';
-import {ApiException, RegisterVm, UserClient, UserVm} from '../../app/app.api';
+import { throwError } from 'rxjs';
+import {ApiException, RegisterVm, UserClient, UserVm} from '../app.api';
 import {Router} from '@angular/router';
 
 @Component({
@@ -25,10 +25,10 @@ export class RegisterPage implements OnInit {
   initForm() {
     this.form = this.formBuilder.group({
       registrationCode: ['', [Validators.required, Validators.minLength(6)]],
-      username: ['', [Validators.required, Validators.minLength(6)]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      firstName: '',
-      lastName: '',
+      username: ['', [Validators.required, Validators.minLength(6)]], // add validator to check for small letters
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      firstName: ['', [Validators.required]],
+      lastName: ['', [Validators.required]],
     });
   }
 
