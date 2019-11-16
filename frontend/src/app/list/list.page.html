@@ -11,11 +11,17 @@
 
 <ion-content>
   <ion-list>
-    <ion-item *ngFor="let item of items">
-      <ion-icon [name]="item.icon" slot="start"></ion-icon>
-      {{item.title}}
-      <div class="item-note" slot="end">
-        {{item.note}}
+    <ion-item *ngFor="let item of todos">
+      <div class="item-note" slot="start">
+        {{item.title}}
+      </div>
+      <ion-icon name="person"></ion-icon>
+      <ion-icon name="person"></ion-icon>
+      <div class="item-note">
+        {{item.status}}
+      </div>
+      <div class="button-inner" slot="end">
+        {{item.dueDate}}
       </div>
     </ion-item>
   </ion-list>

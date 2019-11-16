@@ -294,16 +294,12 @@ export class TodoClient {
     return _observableOf<TodoVm>(null as any);
   }
 
-  getall(isCompleted?: boolean | null | undefined, status?: Status[] | null | undefined): Observable<TodoVm[]> {
-    let url = this.baseUrl + '/todos?';
-    if (isCompleted !== undefined) {
-      url += 'isCompleted=' + encodeURIComponent('' + isCompleted) + '&';
+  getall(assignee: string): Observable<TodoVm[]> {
+    let url = this.baseUrl + '/todos/assigned';
+    if (assignee !== undefined) {
+      url += '?assignee=' + encodeURIComponent('' + assignee);
     }
-    if (status !== undefined) {
-      status && status.forEach(item => {
-        url += 'status=' + encodeURIComponent('' + item) + '&';
-      });
-    }
+
     url = url.replace(/[?&]$/, '');
 
     const options: any = {
