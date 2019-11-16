@@ -2,6 +2,7 @@
 import {Observable, of as _observableOf, throwError as _observableThrow} from 'rxjs';
 import {Inject, Injectable, InjectionToken, Optional} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpResponse, HttpResponseBase} from '@angular/common/http';
+import * as moment from 'moment' ;
 
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
@@ -197,6 +198,7 @@ export class UserClient {
         let result201: any = null;
         const resultData201 = responseText === '' ? null : JSON.parse(responseText, this.jsonParseReviver);
         result201 = resultData201 ? LoginResponseVm.fromJS(resultData201) : new LoginResponseVm();
+        this.setSession(result201);
         return _observableOf(result201);
       }));
     } else if (status === 400) {
@@ -212,6 +214,32 @@ export class UserClient {
       }));
     }
     return _observableOf<LoginResponseVm>(null as any);
+  }
+
+  private setSession(loginResponseVm: LoginResponseVm) {
+    const expiresAt = moment().add(loginResponseVm.expiresIn, 'second');
+
+    localStorage.setItem('id_token', loginResponseVm.token);
+    localStorage.setItem('expires_at', JSON.stringify(expiresAt.valueOf()) );
+  }
+
+  logout() {
+    localStorage.removeItem('id_token');
+    localStorage.removeItem('expires_at');
+  }
+
+  public isLoggedIn() {
+    return moment().isBefore(this.getTokenExpiration());
+  }
+
+  isLoggedOut() {
+    return !this.isLoggedIn();
+  }
+
+  getTokenExpiration() {
+    const expiration = localStorage.getItem('expires_at');
+    const expiresAt = JSON.parse(expiration);
+    return moment(expiresAt);
   }
 }
 
@@ -702,6 +730,7 @@ export class LoginResponseVm implements ILoginResponseVm {
     }
   }
   token!: string;
+  expiresIn!: string;
   user!: UserVm;
 
   static fromJS(data: any): LoginResponseVm {
@@ -714,6 +743,7 @@ export class LoginResponseVm implements ILoginResponseVm {
   init(data?: any) {
     if (data) {
       this.token = data.token !== undefined ? data.token : null as any;
+      this.expiresIn = data.expiresIn !== undefined ? data.expiresIn : null as any;
       this.user = data.user ? UserVm.fromJS(data.user) : new UserVm();
     }
   }
@@ -721,6 +751,7 @@ export class LoginResponseVm implements ILoginResponseVm {
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data.token = this.token !== undefined ? this.token : null as any;
+    data.expiresIn = this.expiresIn !== undefined ? this.expiresIn : null as any;
     data.user = this.user ? this.user.toJSON() : null as any;
     return data;
   }
@@ -728,6 +759,7 @@ export class LoginResponseVm implements ILoginResponseVm {
 
 export interface ILoginResponseVm {
   token: string;
+  expiresIn: string;
   user: UserVm;
 }
 
