@@ -10,7 +10,8 @@ import { API_BASE_URL } from './app.api';
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
 import {FormBuilder} from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {AuthInterceptor} from './auth/auth.interceptor';
 
 @NgModule({
     declarations: [AppComponent],
@@ -26,7 +27,8 @@ import {HttpClientModule} from '@angular/common/http';
         SplashScreen,
         FormBuilder,
         { provide: API_BASE_URL, useFactory: baseUrl },
-        {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}
+        { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor , multi: true }
     ],
     bootstrap: [AppComponent]
 })

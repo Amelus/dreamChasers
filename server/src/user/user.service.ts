@@ -13,7 +13,7 @@ import {RegisterVm} from './models/view-models/register-vm.model';
 import {UserVm} from './models/view-models/user-vm.model';
 import {CodeService} from '../code/code.service';
 import {UserRole} from './models/user-role.enum';
-import {ApiModelProperty} from "@nestjs/swagger";
+import {ApiModelProperty} from '@nestjs/swagger';
 
 @Injectable()
 export class UserService extends BaseService<User> {
