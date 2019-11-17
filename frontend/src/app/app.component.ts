@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import {Component, NgZone} from '@angular/core';
 
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { UserClient } from './app.api';
 
 @Component({
   selector: 'app-root',
@@ -22,6 +23,14 @@ export class AppComponent {
       icon: 'checkbox-outline'
     },
     {
+      title: 'Logout',
+      url: '/logout',
+      icon: 'log-out',
+    }
+  ];
+
+  public loginPages = [
+    {
       title: 'Registrierung',
       url: '/register',
       icon: 'list-box'
@@ -30,18 +39,14 @@ export class AppComponent {
       title: 'Login',
       url: '/login',
       icon: 'log-in'
-    },
-    {
-      title: 'Logout',
-      url: '/login',
-      icon: 'log-out'
     }
   ];
 
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
-    private statusBar: StatusBar
+    private statusBar: StatusBar,
+    private userClient: UserClient
   ) {
     this.initializeApp();
   }
