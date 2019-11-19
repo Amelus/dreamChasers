@@ -71,7 +71,7 @@ export class ListPage implements OnInit {
   }
 
   private getTodos() {
-    this.todoClient.getall('haso') // replace with user from jwc token
+    this.todoClient.getall() // replace with user from jwc token
         .subscribe((todos: TodoVm[]) => {
           this.todos = todos;
           this.updateEditableCache();

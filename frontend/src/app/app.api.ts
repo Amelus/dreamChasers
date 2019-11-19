@@ -323,11 +323,8 @@ export class TodoClient {
         return _observableOf<TodoVm>(null as any);
     }
 
-    getall(assignee: string): Observable<TodoVm[]> {
+    getall(): Observable<TodoVm[]> {
         let url = this.baseUrl + '/todos/assigned';
-        if (assignee !== undefined) {
-            url += '?assignee=' + encodeURIComponent('' + assignee);
-        }
 
         url = url.replace(/[?&]$/, '');
 

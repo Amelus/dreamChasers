@@ -1,7 +1,7 @@
 import {
     Body,
     Controller,
-    Delete,
+    Delete, ExecutionContext,
     Get,
     HttpException,
     HttpStatus,
@@ -9,7 +9,7 @@ import {
     Param,
     Post,
     Put,
-    Query,
+    Query, Req,
     UseGuards,
 } from '@nestjs/common';
 import {
@@ -32,6 +32,8 @@ import {Roles} from '../shared/decorators/roles.decorator';
 import {UserRole} from '../user/models/user-role.enum';
 import {AuthGuard} from '@nestjs/passport';
 import {RolesGuard} from '../shared/guards/roles.guard';
+import {InstanceType} from "typegoose";
+import {User} from "../user/models/user.model";
 
 @Controller('todos')
 @ApiUseTags(Todo.modelName)
@@ -61,15 +63,16 @@ export class TodoController {
     @ApiOkResponse({type: TodoVm, isArray: true})
     @ApiBadRequestResponse({type: ApiException})
     @ApiOperation(GetOperationId(Todo.modelName, 'GetAssigned'))
-    @ApiImplicitQuery({name: 'assignee', required: true})
-    async getAllAssigned(@Query('assignee') assignee?: string): Promise<TodoVm[]> {
+    async getAllAssigned(@Req() request): Promise<TodoVm[]> {
 
-        if (!assignee) {
-            throw new HttpException('Missing parameter assignee', HttpStatus.BAD_REQUEST);
+        const assignee: InstanceType<User> = request.user;
+
+        if (!assignee || !request.headers || !request.headers.authorization) {
+            throw new HttpException('Invalid request', HttpStatus.BAD_REQUEST);
         }
 
         const filter = {};
-        filter['assignee'] = assignee;
+        filter['assignee'] = assignee.username;
 
         try {
             const todos = await this._todoService.findAll(filter);
@@ -151,6 +154,10 @@ export class TodoController {
         } catch (e) {
             throw new InternalServerErrorException(e);
         }
+    }
+
+    private isAuthorizedUser(user: User, authorizationToken): boolean {
+        return true;
     }
 }
 
