@@ -95,4 +95,9 @@ export class UserService extends BaseService<User> {
             user: userVm,
         };
     }
+
+    async isAuthorizedUser(user: User, jwtToken: string): Promise<boolean> {
+        const jwtUser: JwtPayload = await this._authService.decodeToken(jwtToken);
+        return user.username === jwtUser.username;
+    }
 }

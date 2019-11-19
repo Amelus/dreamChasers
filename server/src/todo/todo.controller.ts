@@ -1,7 +1,7 @@
 import {
     Body,
     Controller,
-    Delete, ExecutionContext,
+    Delete,
     Get,
     HttpException,
     HttpStatus,
@@ -9,14 +9,13 @@ import {
     Param,
     Post,
     Put,
-    Query, Req,
+    Req,
     UseGuards,
 } from '@nestjs/common';
 import {
     ApiBadRequestResponse,
     ApiBearerAuth,
     ApiCreatedResponse,
-    ApiImplicitQuery,
     ApiOkResponse,
     ApiOperation,
     ApiUseTags,
@@ -32,8 +31,8 @@ import {Roles} from '../shared/decorators/roles.decorator';
 import {UserRole} from '../user/models/user-role.enum';
 import {AuthGuard} from '@nestjs/passport';
 import {RolesGuard} from '../shared/guards/roles.guard';
-import {InstanceType} from "typegoose";
-import {User} from "../user/models/user.model";
+import {InstanceType} from 'typegoose';
+import {User} from '../user/models/user.model';
 
 @Controller('todos')
 @ApiUseTags(Todo.modelName)
@@ -66,11 +65,6 @@ export class TodoController {
     async getAllAssigned(@Req() request): Promise<TodoVm[]> {
 
         const assignee: InstanceType<User> = request.user;
-
-        if (!assignee || !request.headers || !request.headers.authorization) {
-            throw new HttpException('Invalid request', HttpStatus.BAD_REQUEST);
-        }
-
         const filter = {};
         filter['assignee'] = assignee.username;
 
@@ -88,13 +82,9 @@ export class TodoController {
     @ApiOkResponse({type: TodoVm, isArray: true})
     @ApiBadRequestResponse({type: ApiException})
     @ApiOperation(GetOperationId(Todo.modelName, 'GetCreated'))
-    @ApiImplicitQuery({name: 'creator', required: true})
-    async getAllCreated(@Query('creator') creator?: string): Promise<TodoVm[]> {
+    async getAllCreated(@Req() request): Promise<TodoVm[]> {
 
-        if (!creator) {
-            throw new HttpException('Missing parameter creator', HttpStatus.BAD_REQUEST);
-        }
-
+        const creator: InstanceType<User> = request.user;
         const filter = {};
         filter['creator'] = creator;
 
@@ -107,8 +97,8 @@ export class TodoController {
     }
 
     @Put()
-    // @Roles(UserRole.Admin, UserRole.User)
-    // @UseGuards(AuthGuard('jwt'), RolesGuard)
+    @Roles(UserRole.Admin, UserRole.Leader, UserRole.User)
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
     @ApiOkResponse({type: TodoVm})
     @ApiBadRequestResponse({type: ApiException})
     @ApiOperation(GetOperationId(Todo.modelName, 'Update'))
@@ -141,6 +131,7 @@ export class TodoController {
         }
     }
 
+    // Currently not in use
     @Delete(':id')
     @Roles(UserRole.Admin, UserRole.Leader)
     @UseGuards(AuthGuard('jwt'), RolesGuard)
@@ -156,9 +147,6 @@ export class TodoController {
         }
     }
 
-    private isAuthorizedUser(user: User, authorizationToken): boolean {
-        return true;
-    }
 }
 
 export function EnumToArray(enumVariable: any): string[] {

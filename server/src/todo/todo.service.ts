@@ -1,4 +1,4 @@
-import {HttpException, HttpService, HttpStatus, Injectable, InternalServerErrorException} from '@nestjs/common';
+import {HttpService, Injectable, InternalServerErrorException} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {ModelType} from 'typegoose';
 import {BaseService} from '../shared/base.service';
