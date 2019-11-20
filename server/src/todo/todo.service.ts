@@ -33,7 +33,7 @@ export class TodoService extends BaseService<Todo> {
         if (status) {
             newTodo.status = status;
         } else {
-            newTodo.status = TodoStatus.InProgress;
+            newTodo.status = TodoStatus.Pending;
         }
 
         try {

@@ -13,6 +13,6 @@ export class TodoParams {
 
     @ApiModelProperty() dueDate: Date;
 
-    @ApiModelProperty({enum: TodoStatus, example: TodoStatus.InProgress})
+    @ApiModelProperty({enum: TodoStatus, example: TodoStatus.Pending})
     status: TodoStatus;
 }

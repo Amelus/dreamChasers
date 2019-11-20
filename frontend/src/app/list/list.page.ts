@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TodoClient, TodoParams, TodoVm } from '../app.api';
+import { PopoverController } from '@ionic/angular';
 
 @Component({
   selector: 'app-list',
@@ -12,11 +13,13 @@ export class ListPage implements OnInit {
   form: FormGroup;
   todos: TodoVm[] = [];
   editableCache = {};
+  currentPopover = null;
 
   availableStatuses = [];
 
   constructor(private formBuilder: FormBuilder,
-              private todoClient: TodoClient) { }
+              private todoClient: TodoClient,
+              private popoverController: PopoverController) { }
 
   ngOnInit() {
     this.initForm();
@@ -47,7 +50,7 @@ export class ListPage implements OnInit {
           this.updateEditableCache();
           this.form.get('content').reset();
           this.form.get('status').reset();
-          this.form.get('status').setValue('InProgress');
+          this.form.get('status').setValue('Pending');
         });
   }
 
@@ -67,7 +70,7 @@ export class ListPage implements OnInit {
   }
 
   private getAvailableStatuses() {
-    this.availableStatuses = ['Finished', 'InProgress'];
+    this.availableStatuses = ['Finished', 'Pending'];
   }
 
   private getTodos() {
@@ -81,7 +84,7 @@ export class ListPage implements OnInit {
   private initForm() {
     this.form = this.formBuilder.group({
       content: ['', Validators.required],
-      status: 'InProgress',
+      status: 'Pending',
     });
   }
 
@@ -92,6 +95,16 @@ export class ListPage implements OnInit {
       this.form.controls[key].updateValueAndValidity();
     });
   }
+
+    async openPopover(ev) {
+        const popover = await this.popoverController.create({
+            component: 'popover-example-page',
+            event: ev,
+            translucent: true
+        });
+        this.currentPopover = popover;
+        return popover.present();
+    }
 
   finishEdit(todo: TodoVm, key: string) {
     todo[key] = this.editableCache[todo.id][key].data;

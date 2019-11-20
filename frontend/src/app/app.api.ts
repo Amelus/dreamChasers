@@ -900,7 +900,7 @@ export interface ITodoVm {
 
 export enum Status {
     Finished = 'Finished',
-    InProgress = 'InProgress',
+    Pending = 'Pending',
 }
 
 export enum UserVmRole {
@@ -911,12 +911,12 @@ export enum UserVmRole {
 
 export enum TodoParamsStatus {
     Finished = 'Finished',
-    InProgress = 'InProgress',
+    Pending = 'Pending',
 }
 
 export enum TodoVmStatus {
     Finished = 'Finished',
-    InProgress = 'InProgress',
+    Pending = 'Pending',
 }
 
 export class SwaggerException extends Error {

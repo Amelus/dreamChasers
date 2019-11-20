@@ -1,3 +1,27 @@
+.todo_text {
+  width: 40%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
 
+.todo_icon {
+  width: 20%;
+}
+
+.todo_status {
+  width: 35%;
+  text-align: center;
+  height: 96%;
+  line-height: 300%;
+}
+
+.todo_Pending {
+  background-color: cadetblue;
+}
+
+.todo_Finished {
+  background-color: #0ec254;
+}
 
 /*# sourceMappingURL=list.page.css.map */

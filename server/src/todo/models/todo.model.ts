@@ -25,7 +25,7 @@ export class Todo extends BaseModel<Todo> {
     @Expose()
     dueDate: Date;
 
-    @prop({enum: TodoStatus, default: TodoStatus.InProgress})
+    @prop({enum: TodoStatus, default: TodoStatus.Pending})
     @Expose()
     status: TodoStatus;
 

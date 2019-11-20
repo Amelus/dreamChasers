@@ -11,17 +11,22 @@
 
 <ion-content>
   <ion-list>
-    <ion-item *ngFor="let item of todos">
-      <div class="item-note" slot="start">
+    <ion-item *ngFor="let item of todos"> <!-- (click)="openPopover($event)" -->
+      <div class="item-note todo_text">
         {{item.title}}
       </div>
-      <ion-icon name="person"></ion-icon>
-      <ion-icon name="person"></ion-icon>
-      <div class="item-note">
-        {{item.status}}
+      <ion-icon class="todo_icon" name="person"></ion-icon>
+      <ion-icon class="todo_icon" name="person"></ion-icon>
+      <div class="item-note todo_status todo_{{item.status}}">
+        <ng-container *ngIf="item.status == 'Finished'">
+          Fertig
+        </ng-container>
+        <ng-container *ngIf="item.status == 'Pending'">
+          In Arbeit
+        </ng-container>
       </div>
-      <div class="button-inner" slot="end">
-        {{item.dueDate}}
+      <div class="button-inner">
+        <ion-datetime value="{{item.dueDate}}" display-format="DD.MM.YYYY" readonly="true"></ion-datetime>
       </div>
     </ion-item>
   </ion-list>
