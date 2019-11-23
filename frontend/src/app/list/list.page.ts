@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TodoClient, TodoParams, TodoVm } from '../app.api';
 import { PopoverController } from '@ionic/angular';
@@ -19,12 +19,26 @@ export class ListPage implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
               private todoClient: TodoClient,
-              private popoverController: PopoverController) { }
+              private popoverController: PopoverController,
+              private renderer: Renderer2) { }
 
   ngOnInit() {
     this.initForm();
     this.getTodos();
     this.getAvailableStatuses();
+  }
+
+  expandItem(event, index) {
+      const element = event.target;
+      this.todos[index].isCompleted = !this.todos[index].isCompleted;
+      const panel = this.renderer.nextSibling(element);
+      if (panel !== null) {
+          if (panel.style.maxHeight) {
+              panel.style.maxHeight = null;
+          } else {
+              panel.style.maxHeight = panel.scrollHeight + 'px';
+          }
+      }
   }
 
   onStatusChanged(isCompleted: boolean, todoVm: TodoVm) {

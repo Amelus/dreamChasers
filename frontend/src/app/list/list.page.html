@@ -1,38 +1,57 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>
-      List
-    </ion-title>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>
+            Aufgaben
+        </ion-title>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-list>
-    <ion-item *ngFor="let item of todos"> <!-- (click)="openPopover($event)" -->
-      <div class="item-note todo_text">
-        {{item.title}}
-      </div>
-      <ion-icon class="todo_icon" name="person"></ion-icon>
-      <ion-icon class="todo_icon" name="person"></ion-icon>
-      <div class="item-note todo_status todo_{{item.status}}">
-        <ng-container *ngIf="item.status == 'Finished'">
-          Fertig
-        </ng-container>
-        <ng-container *ngIf="item.status == 'Pending'">
-          In Arbeit
-        </ng-container>
-      </div>
-      <div class="button-inner">
-        <ion-datetime value="{{item.dueDate}}" display-format="DD.MM.YYYY" readonly="true"></ion-datetime>
-      </div>
-    </ion-item>
-  </ion-list>
-  <!--
-    <div *ngIf="selectedItem" padding>
-      You navigated here from <b>{{selectedItem.title }}</b>
-    </div>
-  -->
+    <ion-list>
+        <ion-list-header class="todo_heading">
+            <div class="todo_text_label">Titel</div>
+            <div class="todo_icon_label">Bearbeiter</div>
+            <div class="todo_status_label">Status</div>
+            <div class="todo_date_label">Deadline</div>
+        </ion-list-header>
+
+        <div class="accordion" *ngFor="let item of todos; let i = index;">
+            <ion-item>
+                <div class="todo_title" (click)="expandItem($event, i)">
+                    <div class="item-note todo_text">
+                        {{item.title}}
+                    </div>
+                </div>
+
+                <ion-avatar class="todo_icon">
+                    <ion-img
+                            [src]="'https://rukminim1.flixcart.com/image/352/352/jpodaq80/stuffed-toy/z/d/h/4-feet-cute-blue-fur-heart-teddy-bear-120-stuffed-toy-original-imafbu3nruqfhsev.jpeg?'"></ion-img>
+                </ion-avatar>
+
+                <ng-container *ngIf="item.status == 'Finished'">
+                    <ion-button fill="solid" expand="full" class="item-note todo_status" color="success">
+                        Fertig
+                    </ion-button>
+                </ng-container>
+                <ng-container *ngIf="item.status == 'Pending'">
+                    <ion-button fill="solid" expand="full" class="item-note todo_status" color="danger">
+                        In Arbeit
+                    </ion-button>
+                </ng-container>
+
+                <span class="button-inner">
+                <ion-datetime value="{{item.dueDate}}" display-format="MMM DD" readonly="true"></ion-datetime>
+            </span>
+            </ion-item>
+            <ion-item class="panel" [hidden]="!item.isCompleted">
+                Beschreibung:<br>
+                {{item.content}}<br>
+                Bearbeiter: {{item.assignee}}
+            </ion-item>
+        </div>
+
+    </ion-list>
 </ion-content>
