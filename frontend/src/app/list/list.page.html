@@ -31,27 +31,31 @@
                             [src]="'https://rukminim1.flixcart.com/image/352/352/jpodaq80/stuffed-toy/z/d/h/4-feet-cute-blue-fur-heart-teddy-bear-120-stuffed-toy-original-imafbu3nruqfhsev.jpeg?'"></ion-img>
                 </ion-avatar>
 
-                <ng-container *ngIf="item.status == 'Finished'">
-                    <ion-button fill="solid" expand="full" class="item-note todo_status" color="success">
-                        Fertig
-                    </ion-button>
-                </ng-container>
-                <ng-container *ngIf="item.status == 'Pending'">
-                    <ion-button fill="solid" expand="full" class="item-note todo_status" color="danger">
-                        In Arbeit
-                    </ion-button>
-                </ng-container>
+                    <ng-container *ngIf="item.status == 'Finished'">
+                        <ion-button fill="solid" expand="full" class="item-note todo_status" color="success" (click)="changeStatus($event)">
+                            Fertig
+                        </ion-button>
+                    </ng-container>
+                    <ng-container *ngIf="item.status == 'Pending'">
+                        <ion-button fill="solid" expand="full" class="item-note todo_status" color="danger" (click)="changeStatus($event)">
+                            In Arbeit
+                        </ion-button>
+                    </ng-container>
 
                 <span class="button-inner">
                 <ion-datetime value="{{item.dueDate}}" display-format="MMM DD" readonly="true"></ion-datetime>
             </span>
             </ion-item>
-            <ion-item class="panel" [hidden]="!item.isCompleted">
-                Beschreibung:<br>
-                {{item.content}}<br>
-                Bearbeiter: {{item.assignee}}
-            </ion-item>
+            <ion-row class="panel" [hidden]="!item.isCompleted">
+                <ion-col>
+                    <strong>Beschreibung:</strong><br>
+                    {{item.content}}
+                </ion-col>
+                <ion-col>
+                    <strong>Bearbeiter:</strong><br>
+                    {{item.assignee}}
+                </ion-col>
+            </ion-row>
         </div>
-
     </ion-list>
 </ion-content>

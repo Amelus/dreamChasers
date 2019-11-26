@@ -5,6 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 
 import { ListPage } from './list.page';
+import {StatusChangeComponent} from '../components/status-change/status-change.component';
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import { ListPage } from './list.page';
   exports: [
     ListPage
   ],
-  declarations: [ListPage]
+  declarations: [ListPage, StatusChangeComponent],
+  entryComponents: [ StatusChangeComponent ]
 })
 export class ListPageModule {}

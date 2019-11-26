@@ -67,6 +67,19 @@
   }
 }
 /* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 1560px) {
+  .todo_text_label {
+    width: 23%;
+  }
+
+  .todo_status {
+    width: 41%;
+  }
+
+  .todo_icon {
+    width: 3%;
+  }
+}
 .accordion {
   cursor: pointer;
   width: 100%;
@@ -84,6 +97,7 @@
 .panel {
   margin-top: 1%;
   margin-bottom: 1%;
+  margin-left: 1%;
 }
 
 /*# sourceMappingURL=list.page.css.map */

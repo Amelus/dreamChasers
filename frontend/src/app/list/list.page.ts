@@ -2,6 +2,7 @@ import { Component, OnInit, Renderer2 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TodoClient, TodoParams, TodoVm } from '../app.api';
 import { PopoverController } from '@ionic/angular';
+import {StatusChangeComponent} from "../components/status-change/status-change.component";
 
 @Component({
   selector: 'app-list',
@@ -40,6 +41,16 @@ export class ListPage implements OnInit {
           }
       }
   }
+
+    async changeStatus(ev: any) {
+        const popover = await this.popoverController.create({
+            component: StatusChangeComponent,
+            event: ev,
+            animated: true,
+            showBackdrop: true
+        });
+        return await popover.present();
+    }
 
   onStatusChanged(isCompleted: boolean, todoVm: TodoVm) {
     todoVm.isCompleted = isCompleted;
