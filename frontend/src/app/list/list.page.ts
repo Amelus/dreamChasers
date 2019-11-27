@@ -20,7 +20,7 @@ export class ListPage implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
               private todoClient: TodoClient,
-              private popoverController: PopoverController,
+              public popoverController: PopoverController,
               private renderer: Renderer2) { }
 
   ngOnInit() {

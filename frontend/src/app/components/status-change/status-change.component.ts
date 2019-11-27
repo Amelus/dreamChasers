@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {PopoverController} from '@ionic/angular';
 
 @Component({
   selector: 'app-status-change',
@@ -7,12 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class StatusChangeComponent implements OnInit {
 
-  constructor() { }
+  constructor(public popoverController: PopoverController) { }
 
   ngOnInit() {}
 
-  messages(ev) {
+  setStatus(ev) {
     console.log('you clicked something');
+    this.popoverController.dismiss();
   }
 
 }
