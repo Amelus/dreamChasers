@@ -42,12 +42,13 @@ export class ListPage implements OnInit {
       }
   }
 
-    async changeStatus(ev: any) {
+    async changeStatus(ev: any, target: TodoVm) {
         const popover = await this.popoverController.create({
             component: StatusChangeComponent,
             event: ev,
             animated: true,
-            showBackdrop: true
+            showBackdrop: true,
+            componentProps: {target}
         });
         return await popover.present();
     }

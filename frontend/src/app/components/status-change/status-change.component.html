@@ -3,12 +3,12 @@
     <ion-label class="fw700">Status ändern</ion-label>
   </ion-list-header>
 
-  <ion-item color="light" class="text-10 ion-activatable" (click)="setStatus($event)">
+  <ion-item color="light" class="text-10 ion-activatable" (click)="setStatus(myStatus.Finished)">
     <ion-icon name="checkmark-circle" color="primary"></ion-icon>
     <ion-label>Fertig</ion-label>
   </ion-item>
 
-  <ion-item color="light" class="text-10 ion-activatable" (click)="setStatus($event)">
+  <ion-item id="pending" color="light" class="text-10 ion-activatable" (click)="setStatus(myStatus.Pending)">
     <ion-icon name="sync" color="primary"></ion-icon>
     <ion-label>In Arbeit</ion-label>
   </ion-item>

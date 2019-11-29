@@ -32,12 +32,12 @@
                 </ion-avatar>
 
                     <ng-container *ngIf="item.status == 'Finished'">
-                        <ion-button fill="solid" expand="full" class="item-note todo_status" color="success" (click)="changeStatus($event)">
+                        <ion-button fill="solid" expand="full" class="item-note todo_status" color="success" (click)="changeStatus($event, item)">
                             Fertig
                         </ion-button>
                     </ng-container>
                     <ng-container *ngIf="item.status == 'Pending'">
-                        <ion-button fill="solid" expand="full" class="item-note todo_status" color="danger" (click)="changeStatus($event)">
+                        <ion-button fill="solid" expand="full" class="item-note todo_status" color="danger" (click)="changeStatus($event, item)">
                             In Arbeit
                         </ion-button>
                     </ng-container>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {PopoverController} from '@ionic/angular';
+import {NavParams, PopoverController} from '@ionic/angular';
+import {TodoClient, TodoVm, TodoVmStatus} from '../../app.api';
 
 @Component({
   selector: 'app-status-change',
@@ -7,13 +8,19 @@ import {PopoverController} from '@ionic/angular';
   styleUrls: ['./status-change.component.scss'],
 })
 export class StatusChangeComponent implements OnInit {
+  myStatus = TodoVmStatus;
 
-  constructor(public popoverController: PopoverController) { }
+  constructor(public popoverController: PopoverController,
+              public navParams: NavParams,
+              private todoClient: TodoClient) { }
 
   ngOnInit() {}
 
-  setStatus(ev) {
-    console.log('you clicked something');
+  setStatus(status: TodoVmStatus) {
+    const target: TodoVm = this.navParams.get('target');
+    // console.log('you set status: ' + status + ' on ' + target.id);
+    target.status = status;
+    this.todoClient.update(target);
     this.popoverController.dismiss();
   }
 
