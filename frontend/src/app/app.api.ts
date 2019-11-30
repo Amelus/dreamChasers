@@ -89,11 +89,12 @@ export class UserClient {
 
         localStorage.setItem('id_token', loginResponseVm.token);
         localStorage.setItem('expires_at', JSON.stringify(expiresAt.valueOf()));
-        localStorage.setItem('user', loginResponseVm.user.toJSON());
+        localStorage.setItem('user', JSON.stringify(loginResponseVm.user));
     }
 
     getSessionUser(): UserVm {
-        return UserVm.fromJS(localStorage.getItem('user'));
+        const parsedUser = JSON.parse(localStorage.getItem('user'));
+        return UserVm.fromJS(parsedUser);
     }
 
     register(registerVm: RegisterVm): Observable<UserVm> {
@@ -812,7 +813,7 @@ export class TodoParams implements ITodoParams {
         }
     }
 
-    creator: string;
+    creator?: string;
     assignee: string;
     title: string;
     content!: string;
@@ -850,7 +851,7 @@ export class TodoParams implements ITodoParams {
 }
 
 export interface ITodoParams {
-    creator: string;
+    creator?: string;
     assignee: string;
     title: string;
     content: string;

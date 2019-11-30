@@ -1,22 +1,22 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UpgradeAlertComponent } from './upgrade-alert.component';
+import { TodoCreationPage } from './todo-creation.page';
 
-describe('UpgradeAlertComponent', () => {
-  let component: UpgradeAlertComponent;
-  let fixture: ComponentFixture<UpgradeAlertComponent>;
+describe('TodoCreationPage', () => {
+  let component: TodoCreationPage;
+  let fixture: ComponentFixture<TodoCreationPage>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UpgradeAlertComponent ],
+      declarations: [ TodoCreationPage ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(UpgradeAlertComponent);
+    fixture = TestBed.createComponent(TodoCreationPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

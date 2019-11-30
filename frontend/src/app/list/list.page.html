@@ -55,8 +55,8 @@
         </div>
     </ion-list>
     <ng-container>
-        <ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="alertUpgrade()">
-            <ion-fab-button [disabled]="editorUser" (click)="createTodo()">
+        <ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="triggerAlert()">
+            <ion-fab-button [disabled]="!editorUser">
                 <ion-icon name="add"></ion-icon>
             </ion-fab-button>
         </ion-fab>

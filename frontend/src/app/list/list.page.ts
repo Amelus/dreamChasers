@@ -1,15 +1,16 @@
-import {Component, OnInit, Renderer2} from '@angular/core';
+import {AfterViewInit, Component, OnInit, Renderer2} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {TodoClient, TodoParams, TodoVm, UserClient, UserVmRole} from '../app.api';
-import {PopoverController} from '@ionic/angular';
+import {AlertController, ModalController, PopoverController} from '@ionic/angular';
 import {StatusChangeComponent} from '../components/status-change/status-change.component';
+import {TodoCreationPage} from '../todo-creation/todo-creation.page';
 
 @Component({
     selector: 'app-list',
     templateUrl: 'list.page.html',
     styleUrls: ['list.page.scss']
 })
-export class ListPage implements OnInit {
+export class ListPage implements OnInit, AfterViewInit {
     form: FormGroup;
     todos: TodoVm[] = [];
     editableCache = {};
@@ -21,14 +22,18 @@ export class ListPage implements OnInit {
                 private todoClient: TodoClient,
                 public popoverController: PopoverController,
                 private renderer: Renderer2,
-                private userClient: UserClient) {
+                private userClient: UserClient,
+                private alertController: AlertController,
+                public modalController: ModalController) {
     }
 
     ngOnInit() {
         this.initForm();
         this.getTodos();
         this.getAvailableStatuses();
+    }
 
+    ngAfterViewInit() {
         this.editorUser = this.userClient.getSessionUser() && this.userClient.getSessionUser().role !== UserVmRole.User;
     }
 
@@ -64,12 +69,42 @@ export class ListPage implements OnInit {
         return await popover.present();
     }
 
-    createTodo() {
-        console.log("Forward to creation page");
+    async triggerAlert() {
+        let alert: any;
+        if (this.editorUser) {
+            alert = this.createTodo();
+        } else {
+            alert = this.upgradeAlert();
+        }
+        (await alert).present();
     }
 
-    alertUpgrade() {
-        console.log("Upgrade needed");
+    private async createTodo() {
+        return await this.modalController.create(
+            {
+                component: TodoCreationPage,
+                componentProps: {todos: this.todos}
+            });
+    }
+
+    private async upgradeAlert() {
+        return await this.alertController.create({
+            header: 'Upgrade benötigt',
+            message: 'Möchten Sie Ihren Account upgraden um Aufgaben zu erstellen?',
+            buttons: [
+                {
+                    text: 'Abbruch',
+                    role: 'cancel',
+                    cssClass: 'secondary'
+                }, {
+                    text: 'Upgrade',
+                    cssClass: 'primary',
+                    handler: () => {
+                        console.log('Weiterleitung zum Upgrade');
+                    }
+                }
+            ]
+        });
     }
 
     // ----- keep logic for calender edit appointment --------

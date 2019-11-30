@@ -26,7 +26,8 @@ const routes: Routes = [
   {
     path: 'logout',
     loadChildren: () => import('./logout/logout.module').then(m => m.LogoutPageModule)
-  }
+  },  { path: 'todo-creation', loadChildren: './todo-creation/todo-creation.module#TodoCreationPageModule' }
+
 ];
 
 @NgModule({

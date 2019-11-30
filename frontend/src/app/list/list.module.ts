@@ -6,13 +6,14 @@ import {RouterModule} from '@angular/router';
 
 import {ListPage} from './list.page';
 import {StatusChangeComponent} from '../components/status-change/status-change.component';
-import {UpgradeAlertComponent} from '../components/upgrade-alert/upgrade-alert.component';
+import {TodoCreationPageModule} from '../todo-creation/todo-creation.module';
 
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
         IonicModule,
+        TodoCreationPageModule,
         RouterModule.forChild([
             {
                 path: '',
@@ -23,8 +24,8 @@ import {UpgradeAlertComponent} from '../components/upgrade-alert/upgrade-alert.c
     exports: [
         ListPage
     ],
-    declarations: [ListPage, StatusChangeComponent, UpgradeAlertComponent],
-    entryComponents: [StatusChangeComponent, UpgradeAlertComponent]
+    declarations: [ListPage, StatusChangeComponent],
+    entryComponents: [StatusChangeComponent]
 })
 export class ListPageModule {
 }

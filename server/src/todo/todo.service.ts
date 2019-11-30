@@ -19,12 +19,12 @@ export class TodoService extends BaseService<Todo> {
         this._mapper = _mapperService.mapper;
     }
 
-    async createTodo(params: TodoParams): Promise<Todo> {
+    async createTodo(params: TodoParams, requestCreator: string): Promise<Todo> {
         const {creator, assignee, title, content, dueDate, status} = params;
 
         const newTodo = Todo.createModel();
 
-        newTodo.creator = creator;
+        newTodo.creator = creator !== null ? creator : requestCreator;
         newTodo.assignee = assignee;
         newTodo.title = title;
         newTodo.content = content;

@@ -47,9 +47,9 @@ export class TodoController {
     @ApiCreatedResponse({type: TodoVm})
     @ApiBadRequestResponse({type: ApiException})
     @ApiOperation(GetOperationId(Todo.modelName, 'Create'))
-    async create(@Body() params: TodoParams): Promise<TodoVm> {
+    async create(@Req() request, @Body() params: TodoParams): Promise<TodoVm> {
         try {
-            const newTodo = await this._todoService.createTodo(params);
+            const newTodo = await this._todoService.createTodo(params, request.user.username);
             return this._todoService.map(newTodo, Todo, TodoVm);
         } catch (e) {
             throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
