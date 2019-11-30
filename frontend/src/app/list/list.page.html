@@ -51,11 +51,14 @@
                     <strong>Beschreibung:</strong><br>
                     {{item.content}}
                 </ion-col>
-                <ion-col>
-                    <strong>Bearbeiter:</strong><br>
-                    {{item.assignee}}
-                </ion-col>
             </ion-row>
         </div>
     </ion-list>
+    <ng-container>
+        <ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="alertUpgrade()">
+            <ion-fab-button [disabled]="editorUser" (click)="createTodo()">
+                <ion-icon name="add"></ion-icon>
+            </ion-fab-button>
+        </ion-fab>
+    </ng-container>
 </ion-content>

@@ -89,6 +89,11 @@ export class UserClient {
 
         localStorage.setItem('id_token', loginResponseVm.token);
         localStorage.setItem('expires_at', JSON.stringify(expiresAt.valueOf()));
+        localStorage.setItem('user', loginResponseVm.user.toJSON());
+    }
+
+    getSessionUser(): UserVm {
+        return UserVm.fromJS(localStorage.getItem('user'));
     }
 
     register(registerVm: RegisterVm): Observable<UserVm> {
@@ -227,6 +232,7 @@ export class UserClient {
     logout() {
         localStorage.removeItem('id_token');
         localStorage.removeItem('expires_at');
+        localStorage.removeItem('user');
     }
 
     public isLoggedIn() {
@@ -323,8 +329,36 @@ export class TodoClient {
         return _observableOf<TodoVm>(null as any);
     }
 
-    getall(): Observable<TodoVm[]> {
+    getAssigned(): Observable<TodoVm[]> {
         let url = this.baseUrl + '/todos/assigned';
+
+        url = url.replace(/[?&]$/, '');
+
+        const options: any = {
+            observe: 'response',
+            responseType: 'blob',
+            headers: new HttpHeaders({
+                Accept: 'application/json'
+            })
+        };
+
+        return this.http.request('get', url, options).pipe(_observableMergeMap((response: any) => {
+            return this.processGetall(response);
+        })).pipe(_observableCatch((response: any) => {
+            if (response instanceof HttpResponseBase) {
+                try {
+                    return this.processGetall(response as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<TodoVm[]>;
+                }
+            } else {
+                return _observableThrow(response) as any as Observable<TodoVm[]>;
+            }
+        }));
+    }
+
+    getCreated(): Observable<TodoVm[]> {
+        let url = this.baseUrl + '/todos/created';
 
         url = url.replace(/[?&]$/, '');
 

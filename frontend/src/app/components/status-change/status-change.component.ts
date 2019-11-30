@@ -18,9 +18,8 @@ export class StatusChangeComponent implements OnInit {
 
   setStatus(status: TodoVmStatus) {
     const target: TodoVm = this.navParams.get('target');
-    // console.log('you set status: ' + status + ' on ' + target.id);
     target.status = status;
-    this.todoClient.update(target);
+    this.todoClient.update(target).subscribe();
     this.popoverController.dismiss();
   }
 
