@@ -38,7 +38,7 @@ export class ListPage implements OnInit, AfterViewInit {
     }
 
     private getTodos() {
-        this.todoClient.getAssigned() // replace with user from jwc token
+        this.todoClient.getCreated()
             .subscribe((todos: TodoVm[]) => {
                 this.todos = todos;
                 this.updateEditableCache();

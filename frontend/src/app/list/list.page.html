@@ -4,7 +4,7 @@
             <ion-menu-button></ion-menu-button>
         </ion-buttons>
         <ion-title>
-            Aufgaben
+            Erstellte Aufgaben
         </ion-title>
     </ion-toolbar>
 </ion-header>
@@ -53,6 +53,11 @@
                 </ion-col>
             </ion-row>
         </div>
+        <ng-container *ngIf="todos.length <= 0">
+            <div class="ion-align-self-center" style="color: darkgrey; text-align: center; margin-top: 2%; margin-bottom: 1%;">
+                Keine Aufgaben vorhanden
+            </div>
+        </ng-container>
     </ion-list>
     <ng-container>
         <ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="triggerAlert()">

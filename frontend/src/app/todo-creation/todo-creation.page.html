@@ -9,4 +9,61 @@
 
 <ion-content>
 
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <ion-item class=" ion-align-items-center ion-padding">
+
+      <ion-label position="floating">Bearbeiter</ion-label>
+      <ion-select formControlName="assignee">
+        <ion-select-option *ngFor="let user of assignees;" value="{{user.username}}">{{user.fullName}}</ion-select-option>
+      </ion-select>
+
+      <ng-container *ngIf="form.get('assignee').dirty && form.get('assignee').errors">
+        <div class="error">
+          <ng-container *ngIf="form.get('assignee').hasError('required')">
+            Ein Bearbeiter muss festgelegt werden
+          </ng-container>
+        </div>
+      </ng-container>
+    </ion-item>
+
+    <ion-item class="ion-align-items-center ion-padding">
+      <ion-label position="floating">Titel</ion-label>
+      <ion-input autocomplete="true" required="true" formControlName="title"></ion-input>
+      <ng-container *ngIf="form.get('title').dirty && form.get('title').errors">
+        <div class="error">
+          <ng-container *ngIf="form.get('title').hasError('required')">
+            Ein Titel muss festgelegt werden
+          </ng-container>
+        </div>
+      </ng-container>
+    </ion-item>
+
+    <ion-item class="ion-align-items-center ion-padding">
+      <ion-label position="floating">Inhalt</ion-label>
+      <ion-input autocomplete="true" required="true" formControlName="content"></ion-input>
+      <ng-container *ngIf="form.get('content').dirty && form.get('content').errors">
+        <div class="error">
+          <ng-container *ngIf="form.get('content').hasError('required')">
+            Ein Inhalt muss vorhanden sein
+          </ng-container>
+        </div>
+      </ng-container>
+    </ion-item>
+
+    <ion-item class="ion-align-items-center ion-padding">
+      <ion-label position="floating">Deadline</ion-label>
+      <ion-datetime displayFormat="DD MM YY" formControlName="dueDate" month-short-names></ion-datetime>
+      <ng-container *ngIf="form.get('dueDate').dirty && form.get('dueDate').errors">
+        <div class="error">
+          <ng-container *ngIf="form.get('dueDate').hasError('required')">
+            Eine Deadline muss festgelegt werden
+          </ng-container>
+        </div>
+      </ng-container>
+    </ion-item>
+
+    <ion-button class="ios ion-align-items-center log-button" expand="block" type="submit">Erstellen
+    </ion-button>
+  </form>
+
 </ion-content>

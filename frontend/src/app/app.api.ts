@@ -230,6 +230,74 @@ export class UserClient {
         return _observableOf<LoginResponseVm>(null as any);
     }
 
+    getAssignees(): Observable<UserVm[]> {
+        let url = this.baseUrl + '/user/assignees';
+
+        url = url.replace(/[?&]$/, '');
+
+        const options: any = {
+            observe: 'response',
+            responseType: 'blob',
+            headers: new HttpHeaders({
+                Accept: 'application/json'
+            })
+        };
+
+        return this.http.request('get', url, options).pipe(_observableMergeMap((response: any) => {
+            return this.processGetall(response);
+        })).pipe(_observableCatch((response: any) => {
+            if (response instanceof HttpResponseBase) {
+                try {
+                    return this.processGetall(response as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<UserVm[]>;
+                }
+            } else {
+                return _observableThrow(response) as any as Observable<UserVm[]>;
+            }
+        }));
+    }
+
+    protected processGetall(response: HttpResponseBase): Observable<UserVm[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+                (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        const headers: any = {};
+        if (response.headers) {
+            for (const key of response.headers.keys()) {
+                headers[key] = response.headers.get(key);
+            }
+        }
+
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(responseText => {
+                let result200: any = null;
+                const resultData200 = responseText === '' ? null : JSON.parse(responseText, this.jsonParseReviver);
+                if (resultData200 && resultData200.constructor === Array) {
+                    result200 = [];
+                    for (const item of resultData200) {
+                        result200.push(UserVm.fromJS(item));
+                    }
+                }
+                return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(responseText => {
+                let result400: any = null;
+                const resultData400 = responseText === '' ? null : JSON.parse(responseText, this.jsonParseReviver);
+                result400 = resultData400 ? ApiException.fromJS(resultData400) : new ApiException();
+                return throwException('A server error occurred.', status, responseText, headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(responseText => {
+                return throwException('An unexpected server error occurred.', status, responseText, headers);
+            }));
+        }
+        return _observableOf<UserVm[]>(null as any);
+    }
+
     logout() {
         localStorage.removeItem('id_token');
         localStorage.removeItem('expires_at');
@@ -845,7 +913,7 @@ export class TodoParams implements ITodoParams {
         data.title = this.title !== undefined ? this.title : null as any;
         data.content = this.content !== undefined ? this.content : null as any;
         data.status = this.status !== undefined ? this.status : null as any;
-        data.dueDate = this.dueDate ? this.dueDate.toISOString() : null as any;
+        data.dueDate = this.dueDate ? this.dueDate : null as any;
         return data;
     }
 }

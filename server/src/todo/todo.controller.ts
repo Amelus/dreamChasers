@@ -57,7 +57,7 @@ export class TodoController {
     }
 
     @Get('assigned')
-    @Roles(UserRole.Leader, UserRole.User)
+    @Roles(UserRole.Admin, UserRole.Leader, UserRole.User)
     @UseGuards(AuthGuard('jwt'), RolesGuard)
     @ApiOkResponse({type: TodoVm, isArray: true})
     @ApiBadRequestResponse({type: ApiException})
@@ -77,7 +77,7 @@ export class TodoController {
     }
 
     @Get('created')
-    @Roles(UserRole.Admin, UserRole.Leader)
+    @Roles(UserRole.Admin, UserRole.Leader, UserRole.User)
     @UseGuards(AuthGuard('jwt'), RolesGuard)
     @ApiOkResponse({type: TodoVm, isArray: true})
     @ApiBadRequestResponse({type: ApiException})
@@ -86,7 +86,7 @@ export class TodoController {
 
         const creator: InstanceType<User> = request.user;
         const filter = {};
-        filter['creator'] = creator;
+        filter['creator'] = creator.username;
 
         try {
             const todos = await this._todoService.findAll(filter);
