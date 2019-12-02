@@ -1,8 +1,5 @@
 <ion-header>
     <ion-toolbar>
-        <ion-buttons slot="start">
-            <ion-menu-button></ion-menu-button>
-        </ion-buttons>
         <ion-title class="ion-text-center">Registrieren</ion-title>
     </ion-toolbar>
 </ion-header>
@@ -81,6 +78,9 @@
         </ion-item>
 
         <ion-button class="ios ion-align-items-center log-button" expand="block" type="submit">Registrieren
+        </ion-button>
+        <ion-button type="button" class="ios ion-align-items-center log-button" fill="clear"
+                    [routerLink]="['/login']" expand="full">Login
         </ion-button>
     </form>
 

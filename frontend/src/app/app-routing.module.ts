@@ -16,6 +16,10 @@ const routes: Routes = [
     loadChildren: () => import('./list/list.module').then(m => m.ListPageModule)
   },
   {
+    path: 'list-assigned',
+    loadChildren: () => import('./list-assigned/list-assigned.module').then(m => m.ListAssignedPageModule)
+  },
+  {
     path: 'register',
     loadChildren: () => import('./register/register.module').then(m => m.RegisterPageModule)
   },
@@ -26,7 +30,9 @@ const routes: Routes = [
   {
     path: 'logout',
     loadChildren: () => import('./logout/logout.module').then(m => m.LogoutPageModule)
-  },  { path: 'todo-creation', loadChildren: './todo-creation/todo-creation.module#TodoCreationPageModule' }
+  },
+  { path: 'todo-creation', loadChildren: './todo-creation/todo-creation.module#TodoCreationPageModule' },
+  { path: 'list-assigned', loadChildren: './list-assigned/list-assigned.module#ListAssignedPageModule' }
 
 ];
 

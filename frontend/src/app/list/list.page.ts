@@ -13,8 +13,8 @@ import {TodoCreationPage} from '../todo-creation/todo-creation.page';
 export class ListPage implements OnInit, AfterViewInit {
     form: FormGroup;
     todos: TodoVm[] = [];
-    editableCache = {};
     editorUser: boolean;
+    editableCache = {};
 
     availableStatuses = [];
 

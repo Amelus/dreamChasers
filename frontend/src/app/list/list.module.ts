@@ -5,14 +5,15 @@ import {IonicModule} from '@ionic/angular';
 import {RouterModule} from '@angular/router';
 
 import {ListPage} from './list.page';
-import {StatusChangeComponent} from '../components/status-change/status-change.component';
 import {TodoCreationPageModule} from '../todo-creation/todo-creation.module';
+import {CustomComponentModule} from '../components/custom-component.module';
 
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
         IonicModule,
+        CustomComponentModule,
         TodoCreationPageModule,
         RouterModule.forChild([
             {
@@ -24,8 +25,8 @@ import {TodoCreationPageModule} from '../todo-creation/todo-creation.module';
     exports: [
         ListPage
     ],
-    declarations: [ListPage, StatusChangeComponent],
-    entryComponents: [StatusChangeComponent]
+    declarations: [ListPage],
+    entryComponents: []
 })
 export class ListPageModule {
 }

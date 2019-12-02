@@ -18,7 +18,12 @@ export class AppComponent {
       icon: 'calendar'
     },
     {
-      title: 'Aufgaben',
+      title: 'Meine Aufgaben',
+      url: '/list-assigned',
+      icon: 'checkmark-circle-outline'
+    },
+    {
+      title: 'Erteilte Aufgaben',
       url: '/list',
       icon: 'checkbox-outline'
     },
