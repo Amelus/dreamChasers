@@ -37,7 +37,7 @@ export class ListPage implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.editorUser = this.userClient.getSessionUser() && this.userClient.getSessionUser().role !== UserVmRole.User;
+        this.editorUser = this.isEditorUser();
     }
 
     doRefresh(event) {
@@ -180,6 +180,19 @@ export class ListPage implements OnInit, AfterViewInit {
                 }
             ]
         });
+    }
+
+    private isEditorUser(): boolean {
+        if (!this.userClient.getSessionUser()
+            || this.userClient.getSessionUser() === undefined
+            || this.userClient.getSessionUser() === null) {
+            return false;
+        }
+
+        return !(this.userClient.getSessionUser().role === undefined
+            || this.userClient.getSessionUser().role === null
+            || this.userClient.getSessionUser().role === UserVmRole.User);
+
     }
 
     // ----- keep logic for calender edit appointment --------

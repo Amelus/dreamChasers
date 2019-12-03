@@ -4,6 +4,7 @@ import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import {ApiException, RegisterVm, UserClient, UserVm} from '../app.api';
 import {Router} from '@angular/router';
+import {MenuController} from '@ionic/angular';
 
 @Component({
   selector: 'app-register',
@@ -16,7 +17,10 @@ export class RegisterPage implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
               private userClient: UserClient,
-              private router: Router) { }
+              private router: Router,
+              public menuController: MenuController) {
+    this.menuController.enable(false, 'mainMenu');
+  }
 
   ngOnInit() {
     this.initForm();

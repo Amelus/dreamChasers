@@ -1,6 +1,6 @@
 <ion-app>
   <ion-split-pane contentId="main-content">
-    <ion-menu contentId="main-content" type="overlay">
+    <ion-menu contentId="main-content" type="overlay" menuId="mainMenu">
       <ion-header>
         <ion-toolbar>
           <ion-title>Menu</ion-title>
@@ -9,7 +9,6 @@
       <ion-content>
         <ion-list>
           <ion-menu-toggle auto-hide="false">
-            <!--<ng-container *ngIf="userClient.isLoggedIn()">-->
               <ng-container *ngFor="let p of appPages">
                 <ion-item [routerDirection]="'root'" [routerLink]="[p.url]">
                   <ion-icon slot="start" [name]="p.icon"></ion-icon>
@@ -18,17 +17,6 @@
                   </ion-label>
                 </ion-item>
               </ng-container>
-            <!--</ng-container>
-            <ng-container *ngIf="userClient.isLoggedOut()">-->
-              <ng-container *ngFor="let p of loginPages">
-                <ion-item [routerDirection]="'root'" [routerLink]="[p.url]">
-                  <ion-icon slot="start" [name]="p.icon"></ion-icon>
-                  <ion-label>
-                    {{p.title}}
-                  </ion-label>
-                </ion-item>
-              </ng-container>
-            <!--</ng-container>-->
           </ion-menu-toggle>
         </ion-list>
       </ion-content>

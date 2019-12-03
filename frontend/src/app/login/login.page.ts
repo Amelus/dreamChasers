@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { catchError } from 'rxjs/operators';
 import { of, throwError } from '../../../node_modules/rxjs';
 import { ApiException, LoginResponseVm, LoginVm, UserClient } from '../app.api';
+import {MenuController} from '@ionic/angular';
 
 @Component({
     selector: 'app-login',
@@ -15,7 +16,10 @@ export class LoginPage implements OnInit {
 
     constructor(private formBuilder: FormBuilder,
                 private userClient: UserClient,
-                private router: Router) {}
+                private router: Router,
+                public menuController: MenuController) {
+        this.menuController.enable(false, 'mainMenu');
+    }
 
     ngOnInit() {
         this.initForm();

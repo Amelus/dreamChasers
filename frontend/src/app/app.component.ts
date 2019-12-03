@@ -34,24 +34,10 @@ export class AppComponent {
     }
   ];
 
-  public loginPages = [
-    {
-      title: 'Registrierung',
-      url: '/register',
-      icon: 'list-box'
-    },
-    {
-      title: 'Login',
-      url: '/login',
-      icon: 'log-in'
-    }
-  ];
-
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
-    private statusBar: StatusBar,
-    private userClient: UserClient
+    private statusBar: StatusBar
   ) {
     this.initializeApp();
   }
