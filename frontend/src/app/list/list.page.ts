@@ -15,6 +15,8 @@ export class ListPage implements OnInit, AfterViewInit {
     todos: TodoVm[] = [];
     editorUser: boolean;
     editableCache = {};
+    deletion: boolean;
+    toDelete: TodoVm[] = [];
 
     availableStatuses = [];
 
@@ -31,10 +33,47 @@ export class ListPage implements OnInit, AfterViewInit {
         this.initForm();
         this.getTodos();
         this.getAvailableStatuses();
+        this.deletion = false;
     }
 
     ngAfterViewInit() {
         this.editorUser = this.userClient.getSessionUser() && this.userClient.getSessionUser().role !== UserVmRole.User;
+    }
+
+    doRefresh(event) {
+        setTimeout(() => {
+            console.log('Async operation has ended');
+            this.getTodos();
+            event.target.complete();
+        }, 2000);
+    }
+
+    toggleDeletion() {
+        this.deletion = !this.deletion;
+        this.toDelete = [];
+        this.todos.map((todo: TodoVm) => {
+            todo.isChecked = false;
+            return todo;
+        });
+    }
+
+    checkEvent(item: TodoVm) {
+        if (this.toDelete.includes(item)) {
+            const index = this.toDelete.indexOf(item);
+            this.toDelete.splice(index, 1);
+        } else {
+            this.toDelete = [item, ...this.toDelete];
+        }
+    }
+
+    async alertDeletion() {
+        let alert: any;
+        if (this.editorUser) {
+            alert = this.deleteAlert();
+        } else {
+            alert = this.noPermission2DeleteAlert();
+        }
+        (await alert).present();
     }
 
     private getTodos() {
@@ -102,6 +141,42 @@ export class ListPage implements OnInit, AfterViewInit {
                     handler: () => {
                         console.log('Weiterleitung zum Upgrade');
                     }
+                }
+            ]
+        });
+    }
+
+    private async deleteAlert() {
+        return await this.alertController.create({
+            header: 'Aufgaben löschen',
+            message: 'Sind Sie sicher dass sie diese Aufgaben löschen möchten?',
+            buttons: [
+                {
+                    text: 'Abbruch',
+                    role: 'cancel',
+                    cssClass: 'secondary'
+                }, {
+                    text: 'Löschen',
+                    cssClass: 'primary',
+                    handler: () => {
+                        this.todoClient.delete(this.toDelete.map((todo) => {
+                            return todo.id;
+                        })).subscribe();
+                    }
+                }
+            ]
+        });
+    }
+
+    private async noPermission2DeleteAlert() {
+        return await this.alertController.create({
+            header: 'Keine Berechtigung',
+            message: 'Sie besitzen keine Berechtigung um Aufgaben zu löschen',
+            buttons: [
+                {
+                    text: 'OK',
+                    role: 'cancel',
+                    cssClass: 'secondary'
                 }
             ]
         });

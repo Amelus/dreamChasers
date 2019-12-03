@@ -37,6 +37,10 @@ export class User extends BaseModel<User> {
 
     @prop()
     @Expose()
+    imageUrl?: string;
+
+    @prop()
+    @Expose()
     get fullName(): string {
         return `${this.firstName} ${this.lastName}`;
     }

@@ -560,15 +560,16 @@ export class TodoClient {
         return _observableOf<TodoVm>(null as any);
     }
 
-    delete(id: string): Observable<TodoVm> {
-        let url = this.baseUrl + '/todos/{id}';
-        if (id === undefined || id === null) {
-            throw new Error('The parameter \'id\' must be defined.');
+    delete(ids: string[]): Observable<TodoVm> {
+        let url = this.baseUrl + '/todos/delete';
+
+        if (ids === undefined || ids === null || ids.length <= 0) {
+            throw new Error('The parameter \'ids\' must be defined.');
         }
-        url = url.replace('{id}', encodeURIComponent('' + id));
         url = url.replace(/[?&]$/, '');
 
         const options: any = {
+            body: ids,
             observe: 'response',
             responseType: 'blob',
             headers: new HttpHeaders({
@@ -670,6 +671,7 @@ export class UserVm implements IUserVm {
     lastName?: string | null;
     fullName?: string | null;
     role?: UserVmRole | null;
+    imageUrl?: string | null;
 
     static fromJS(data: any): UserVm {
         data = typeof data === 'object' ? data : {};
@@ -688,6 +690,7 @@ export class UserVm implements IUserVm {
             this.lastName = data.lastName !== undefined ? data.lastName : null as any;
             this.fullName = data.fullName !== undefined ? data.fullName : null as any;
             this.role = data.role !== undefined ? data.role : null as any;
+            this.imageUrl = data.imageUrl !== undefined ? data.imageUrl : null as any;
         }
     }
 
@@ -714,6 +717,7 @@ export interface IUserVm {
     lastName?: string | null;
     fullName?: string | null;
     role?: UserVmRole | null;
+    imageUrl?: string | null;
 }
 
 export class ApiException implements IApiException {
@@ -948,7 +952,8 @@ export class TodoVm implements ITodoVm {
     content!: string;
     dueDate!: Date;
     status!: TodoVmStatus;
-    isCompleted!: boolean;
+    isCompleted?: boolean | false;
+    isChecked?: boolean | false;
 
     static fromJS(data: any): TodoVm {
         data = typeof data === 'object' ? data : {};
@@ -998,7 +1003,8 @@ export interface ITodoVm {
     content: string;
     status: TodoVmStatus;
     dueDate: Date;
-    isCompleted: boolean;
+    isCompleted?: boolean | false;
+    isChecked?: boolean | false;
 }
 
 export enum Status {

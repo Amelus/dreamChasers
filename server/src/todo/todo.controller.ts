@@ -6,7 +6,6 @@ import {
     HttpException,
     HttpStatus,
     InternalServerErrorException,
-    Param,
     Post,
     Put,
     Req,
@@ -131,20 +130,26 @@ export class TodoController {
         }
     }
 
-    // Currently not in use
-    @Delete(':id')
+    @Delete('/delete')
     @Roles(UserRole.Admin, UserRole.Leader)
     @UseGuards(AuthGuard('jwt'), RolesGuard)
-    @ApiOkResponse({type: TodoVm})
+    @ApiOkResponse({type: TodoVm, isArray: true})
     @ApiBadRequestResponse({type: ApiException})
     @ApiOperation(GetOperationId(Todo.modelName, 'Delete'))
-    async delete(@Param('id') id: string): Promise<TodoVm> {
-        try {
-            const deleted = await this._todoService.delete(id);
-            return this._todoService.map(deleted.toJSON(), Todo, TodoVm);
-        } catch (e) {
-            throw new InternalServerErrorException(e);
+    async delete(@Req() request, @Body() ids: string[]): Promise<Promise<TodoVm>[]> {
+
+        if (ids === undefined || ids === null || ids.length <= 0) {
+            throw new HttpException('Missing parameters', HttpStatus.BAD_REQUEST);
         }
+
+        return ids.map(async (id) => {
+            try {
+                const deleted = await this._todoService.delete(id);
+                return this._todoService.map(deleted.toJSON(), Todo, TodoVm);
+            } catch (e) {
+                throw new InternalServerErrorException(e);
+            }
+        });
     }
 
 }

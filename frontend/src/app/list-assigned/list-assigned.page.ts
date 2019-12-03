@@ -22,9 +22,16 @@ export class ListAssignedPage implements OnInit, AfterViewInit {
     this.getTodos();
   }
 
-
   ngAfterViewInit() {
     this.editorUser = this.userClient.getSessionUser() && this.userClient.getSessionUser().role !== UserVmRole.User;
+  }
+
+  doRefresh(event) {
+    setTimeout(() => {
+      console.log('Async operation has ended');
+      this.getTodos();
+      event.target.complete();
+    }, 2000);
   }
 
   private getTodos() {

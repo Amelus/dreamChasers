@@ -10,10 +10,13 @@
 </ion-header>
 
 <ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content>
+    </ion-refresher-content>
+  </ion-refresher>
   <ion-list>
     <ion-list-header class="todo_heading">
       <div class="todo_text_label">Titel</div>
-      <div class="todo_icon_label">Bearbeiter</div>
       <div class="todo_status_label">Status</div>
       <div class="todo_date_label">Deadline</div>
     </ion-list-header>
@@ -25,11 +28,6 @@
             {{item.title}}
           </div>
         </div>
-
-        <ion-avatar class="todo_icon">
-          <ion-img
-                  [src]="'https://rukminim1.flixcart.com/image/352/352/jpodaq80/stuffed-toy/z/d/h/4-feet-cute-blue-fur-heart-teddy-bear-120-stuffed-toy-original-imafbu3nruqfhsev.jpeg?'"></ion-img>
-        </ion-avatar>
 
         <ng-container *ngIf="item.status == 'Finished'">
           <ion-button fill="solid" expand="full" class="item-note todo_status" color="success" (click)="changeStatus($event, item)">

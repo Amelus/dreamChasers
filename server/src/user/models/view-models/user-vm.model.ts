@@ -22,4 +22,7 @@ export class UserVm extends BaseModelVm {
     @ApiModelPropertyOptional()
     @Expose()
     leadUser?: string;
+    @ApiModelPropertyOptional()
+    @Expose()
+    imageUrl?: string;
 }
