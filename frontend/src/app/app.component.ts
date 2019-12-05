@@ -1,51 +1,64 @@
-import {Component, NgZone} from '@angular/core';
+import {Component} from '@angular/core';
 
-import { Platform } from '@ionic/angular';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { UserClient } from './app.api';
+import {Platform} from '@ionic/angular';
+import {SplashScreen} from '@ionic-native/splash-screen/ngx';
+import {StatusBar} from '@ionic-native/status-bar/ngx';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: 'app.component.html',
-  styleUrls: ['app.component.scss']
+    selector: 'app-root',
+    templateUrl: 'app.component.html',
+    styleUrls: ['app.component.scss']
 })
 export class AppComponent {
-  public appPages = [
-    {
-      title: 'Kalender',
-      url: '/home',
-      icon: 'calendar'
-    },
-    {
-      title: 'Meine Aufgaben',
-      url: '/list-assigned',
-      icon: 'checkmark-circle-outline'
-    },
-    {
-      title: 'Erteilte Aufgaben',
-      url: '/list',
-      icon: 'checkbox-outline'
-    },
-    {
-      title: 'Logout',
-      url: '/logout',
-      icon: 'log-out',
+    public homePage =
+        {
+            title: 'Kalender',
+            url: '/home',
+            icon: 'calendar'
+        };
+
+    public assignedTodoListing = {
+        title: 'Meine Aufgaben',
+        url: '/list-assigned',
+        icon: 'checkmark-circle-outline'
+    };
+    public givenTodoListing = {
+        title: 'Erteilte Aufgaben',
+        url: '/list',
+        icon: 'checkbox-outline'
+    };
+    public logout = {
+        title: 'Logout',
+        url: '/logout',
+        icon: 'log-out',
+    };
+  todoIcon: string;
+  expandedTodos: boolean;
+
+
+    constructor(
+        private platform: Platform,
+        private splashScreen: SplashScreen,
+        private statusBar: StatusBar
+    ) {
+        this.initializeApp();
+        this.todoIcon = 'arrow-dropright';
+        this.expandedTodos = false;
     }
-  ];
 
-  constructor(
-    private platform: Platform,
-    private splashScreen: SplashScreen,
-    private statusBar: StatusBar
-  ) {
-    this.initializeApp();
-  }
+    initializeApp() {
+        this.platform.ready().then(() => {
+            this.statusBar.styleDefault();
+            this.splashScreen.hide();
+        });
+    }
 
-  initializeApp() {
-    this.platform.ready().then(() => {
-      this.statusBar.styleDefault();
-      this.splashScreen.hide();
-    });
-  }
+    toggleTodos() {
+      if (this.expandedTodos) {
+        this.todoIcon = 'arrow-dropright';
+      } else {
+        this.todoIcon = 'arrow-dropdown';
+      }
+      this.expandedTodos = !this.expandedTodos;
+    }
 }
