@@ -65,11 +65,14 @@
 
 /* Large devices (laptops/desktops, 992px and up) */
 @media only screen and (min-width: 1560px) {
+  .todo_text {
+    margin-top: 3%;
+  }
   .todo_text_label {
-    width: 30%;
+    width: 53%;
   }
   .todo_status {
-    width: 57%;
+    width: 39%;
   }
   .todo_icon {
     width: 3%;

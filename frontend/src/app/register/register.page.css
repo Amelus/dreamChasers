@@ -2,4 +2,12 @@
   color: red;
 }
 
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (max-width: 650px) {
+  .general_form {
+    margin-left: unset;
+    margin-right: unset;
+  }
+}
+
 /*# sourceMappingURL=register.page.css.map */

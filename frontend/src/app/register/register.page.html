@@ -6,7 +6,7 @@
 
 <ion-content class="ion-align-items-center ion-padding">
 
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="general_form">
         <ion-item class=" ion-align-items-center ion-padding">
             <ion-label position="floating">Registrierungscode</ion-label>
             <ion-input minlength="6" required="true" formControlName="registrationCode"></ion-input>
@@ -31,7 +31,12 @@
                         Username ist ein Pflichtfeld
                     </ng-container>
                     <ng-container *ngIf="form.get('username').hasError('minlength')">
-                        Der Username muss mindestens 6 Zeichen lang sein
+                        Der Username muss mindestens 4 Zeichen lang sein
+                    </ng-container>
+                    <ng-container *ngIf="!form.get('username').hasError('required') &&
+                    !form.get('username').hasError('minlength') &&
+                    form.get('username').hasError('smallCharactersOnly')">
+                        Der Username darf nur lateinische Kleinbuchstaben enthalten
                     </ng-container>
                 </div>
             </ng-container>
@@ -61,6 +66,9 @@
                     <ng-container *ngIf="form.get('firstName').hasError('required')">
                         Vorname ist ein Pflichtfeld
                     </ng-container>
+                    <ng-container *ngIf="!form.get('firstName').hasError('required') && form.get('firstName').hasError('charactersOnly')">
+                        Der Vorname darf nur aus Buchstaben bestehen
+                    </ng-container>
                 </div>
             </ng-container>
         </ion-item>
@@ -72,6 +80,9 @@
                 <div class="error">
                     <ng-container *ngIf="form.get('lastName').hasError('required')">
                         Nachname ist ein Pflichtfeld
+                    </ng-container>
+                    <ng-container *ngIf="!form.get('lastName').hasError('required') && form.get('lastName').hasError('charactersOnly')">
+                        Der Nachname darf nur aus Buchstaben bestehen
                     </ng-container>
                 </div>
             </ng-container>

@@ -82,15 +82,23 @@
   .todo_text_label {
     width: 36%;
   }
+
+  .todo_status {
+    width: 27%;
+  }
 }
 /* Large devices (laptops/desktops, 992px and up) */
 @media only screen and (min-width: 1560px) {
   .todo_text_label {
-    width: 23%;
+    width: 34%;
+  }
+
+  .todo_icon_label {
+    width: 10%;
   }
 
   .todo_status {
-    width: 41%;
+    width: 32%;
   }
 
   .todo_icon {

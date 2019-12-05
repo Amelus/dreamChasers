@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import {ApiException, RegisterVm, UserClient, UserVm} from '../app.api';
@@ -29,11 +29,27 @@ export class RegisterPage implements OnInit {
   initForm() {
     this.form = this.formBuilder.group({
       registrationCode: ['', [Validators.required, Validators.minLength(6)]],
-      username: ['', [Validators.required, Validators.minLength(6)]], // add validator to check for small letters
+      username: ['', [Validators.required, Validators.minLength(4), this.smallCharsValidator()]],
       password: ['', [Validators.required, Validators.minLength(8)]],
-      firstName: ['', [Validators.required]],
-      lastName: ['', [Validators.required]],
+      firstName: ['', [Validators.required, this.charsValidator()]],
+      lastName: ['', [Validators.required, this.charsValidator()]],
     });
+  }
+
+  smallCharsValidator(): ValidatorFn {
+    return (control: AbstractControl): {[key: string]: any} | null => {
+      const smallChars: RegExp = new RegExp('^[a-z0-9_\\-]+$');
+      const valid = smallChars.test(control.value);
+      return valid ? null : {smallCharactersOnly: {value: control.value}};
+    };
+  }
+
+  charsValidator(): ValidatorFn {
+    return (control: AbstractControl): {[key: string]: any} | null => {
+      const smallChars: RegExp = new RegExp('^[a-zA-ZÀ-ž\\-]+$');
+      const valid = smallChars.test(control.value);
+      return valid ? null : {charactersOnly: {value: control.value}};
+    };
   }
 
   onSubmit() {

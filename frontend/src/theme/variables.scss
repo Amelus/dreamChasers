@@ -230,3 +230,19 @@ body.dark {
   margin-left: 10%;
   margin-right: 10%;
 }
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 650px) {
+  .general_form {
+    margin-left: 20%;
+    margin-right: 20%;
+  }
+}
+
+/* Large devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 1500px) {
+  .general_form {
+    margin-left: 35%;
+    margin-right: 35%;
+  }
+}
