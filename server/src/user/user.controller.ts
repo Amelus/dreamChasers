@@ -1,4 +1,4 @@
-import {Body, Controller, Get, HttpException, HttpStatus, Post, Req, UseGuards} from '@nestjs/common';
+import {Body, Controller, Get, HttpException, HttpStatus, Post, Put, Req, UseGuards} from '@nestjs/common';
 import {ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiUseTags} from '@nestjs/swagger';
 import {ApiException} from '../shared/api-exception.model';
 import {GetOperationId} from '../shared/utilities/get-operation-id.helper';
@@ -14,6 +14,7 @@ import {AuthGuard} from '@nestjs/passport';
 import {RolesGuard} from '../shared/guards/roles.guard';
 import {InstanceType} from 'typegoose';
 import {map} from 'lodash';
+import {UpdateUserVm} from './models/view-models/update-user-vm.model';
 
 @Controller('user')
 @ApiUseTags(User.modelName)
@@ -73,6 +74,45 @@ export class UserController {
         });
 
         return this._userService.login(vm);
+    }
+
+    @Put('update')
+    @Roles(UserRole.Admin, UserRole.Leader)
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
+    @ApiCreatedResponse({type: UserVm})
+    @ApiBadRequestResponse({type: ApiException})
+    @ApiOperation(GetOperationId(User.modelName, 'Update'))
+    async update(@Req() request, @Body() vm: UpdateUserVm): Promise<UserVm> {
+        const {oldPassword, newPassword, confirmPassword, imageUrl, role} = vm;
+
+        if (oldPassword) {
+            if (newPassword) {
+                if (!confirmPassword || confirmPassword !== newPassword) {
+                    throw new HttpException('Registration code is required', HttpStatus.BAD_REQUEST);
+                }
+            }
+        } else {
+            if (newPassword || confirmPassword) {
+                throw new HttpException('Registration code is required', HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        const user: InstanceType<User> = request.user;
+        const username = user.username;
+        let exist;
+        try {
+            exist = await this._userService.findOne({username});
+        } catch (e) {
+            throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        if (!exist) {
+            throw new HttpException(`${username} does not exist`, HttpStatus.BAD_REQUEST);
+        }
+
+        const newUser = await this._userService.update(user.id, user);
+        console.log(newUser);
+        return this._userService.map(newUser, User, UserVm);
     }
 
     @Get('assignees')

@@ -13,7 +13,6 @@ import {RegisterVm} from './models/view-models/register-vm.model';
 import {UserVm} from './models/view-models/user-vm.model';
 import {CodeService} from '../code/code.service';
 import {UserRole} from './models/user-role.enum';
-import {ApiModelProperty} from '@nestjs/swagger';
 
 @Injectable()
 export class UserService extends BaseService<User> {
@@ -34,6 +33,7 @@ export class UserService extends BaseService<User> {
         const {registrationCode, username, password, firstName, lastName} = vm;
 
         let leadUser: User;
+        let userRole: UserRole = UserRole.User;
         const cCode = await this.codeService.isValidRegistrationCode(registrationCode);
         if (!cCode) {
             try {
@@ -44,6 +44,8 @@ export class UserService extends BaseService<User> {
             if (!leadUser) {
                 throw new HttpException('Invalid registration code', HttpStatus.BAD_REQUEST);
             }
+        } else {
+            userRole = UserRole.Leader;
         }
 
         const newUser = User.createModel();
@@ -51,6 +53,7 @@ export class UserService extends BaseService<User> {
         newUser.username = username.trim().toLowerCase();
         newUser.firstName = firstName;
         newUser.lastName = lastName;
+        newUser.role = userRole;
 
         const salt = await genSalt(10);
         newUser.password = await hash(password, salt);

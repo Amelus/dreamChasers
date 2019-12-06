@@ -114,10 +114,6 @@ export class TodoController {
             throw new HttpException(`${id} Not found`, HttpStatus.NOT_FOUND);
         }
 
-        if (exist.isCompleted) {
-            throw new HttpException('Already completed', HttpStatus.BAD_REQUEST);
-        }
-
         exist.content = content;
         exist.isCompleted = isCompleted;
         exist.status = status;

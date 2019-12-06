@@ -14,15 +14,56 @@
 
       <ion-title class="content">Vorname Nachname</ion-title>
 
-      <div class="content" style="margin-top: 3%">
+      <div class="content" style="margin-top: 3%; border-top: #0d0d0d">
         <ion-title color="primary">Password ändern</ion-title>
       </div>
-      <ion-label>Old Password</ion-label>
-      <ion-input type="text"></ion-input>
-      <ion-label>New Password</ion-label>
-      <ion-input type="text"></ion-input>
-      <ion-label>Confirm new Password</ion-label>
-      <ion-input type="text"></ion-input>
+
+      <form [formGroup]="passwordForm" (ngSubmit)="submitPwdChange()" class="general_form">
+        <ion-item class=" ion-align-items-center ion-padding">
+          <ion-label position="floating">Altes Passwort</ion-label>
+          <ion-input minlength="1" required="true" formControlName="oldPassword"></ion-input>
+          <ng-container *ngIf="passwordForm.get('oldPassword').dirty && passwordForm.get('oldPassword').errors">
+            <div class="error">
+              <ng-container *ngIf="passwordForm.get('oldPassword').hasError('required')">
+                Das Feld darf nicht leer sein
+              </ng-container>
+            </div>
+          </ng-container>
+        </ion-item>
+
+        <ion-item class=" ion-align-items-center ion-padding">
+          <ion-label position="floating">Neues Passwort</ion-label>
+          <ion-input minlength="8" required="true" formControlName="newPassword"></ion-input>
+          <ng-container *ngIf="passwordForm.get('newPassword').dirty && passwordForm.get('newPassword').errors">
+            <div class="error">
+              <ng-container *ngIf="passwordForm.get('newPassword').hasError('required')">
+                Das Feld darf nicht leer sein
+              </ng-container>
+              <ng-container *ngIf="passwordForm.get('newPassword').hasError('minlength')">
+                Der Registrierungscode muss mindestens 6 Zeichen lang sein
+              </ng-container>
+            </div>
+          </ng-container>
+        </ion-item>
+
+        <ion-item class=" ion-align-items-center ion-padding">
+          <ion-label position="floating">Neues Passwort bestätigen</ion-label>
+          <ion-input minlength="8" required="true" formControlName="confirmPassword"></ion-input>
+          <ng-container *ngIf="passwordForm.get('confirmPassword').dirty && passwordForm.get('confirmPassword').errors">
+            <div class="error">
+              <ng-container *ngIf="passwordForm.get('confirmPassword').hasError('required')">
+                Das Feld darf nicht leer sein
+              </ng-container>
+              <ng-container *ngIf="passwordForm.get('confirmPassword').hasError('inequality')">
+                Die Passwörter sind nicht identisch
+              </ng-container>
+            </div>
+          </ng-container>
+        </ion-item>
+
+        <ion-button class="ios ion-align-items-center log-button" expand="block" type="submit">Änderung speichern
+        </ion-button>
+      </form>
 
       <ng-container> <!-- if role Ruser -->
         <ion-button>Upgrade account</ion-button>

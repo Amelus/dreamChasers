@@ -230,6 +230,72 @@ export class UserClient {
         return _observableOf<LoginResponseVm>(null as any);
     }
 
+    update(updateVm: UpdateUserVm): Observable<UserVm> {
+        let url = this.baseUrl + '/user/update';
+        url = url.replace(/[?&]$/, '');
+
+        const content = JSON.stringify(updateVm);
+
+        const options: any = {
+            body: content,
+            observe: 'response',
+            responseType: 'blob',
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json',
+                Accept: 'application/json'
+            })
+        };
+
+        return this.http.request('put', url, options).pipe(_observableMergeMap((response: any) => {
+            return this.processUpdate(response);
+        })).pipe(_observableCatch((response: any) => {
+            if (response instanceof HttpResponseBase) {
+                try {
+                    return this.processRegister(response as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<UserVm>;
+                }
+            } else {
+                return _observableThrow(response) as any as Observable<UserVm>;
+            }
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<UserVm> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+                (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        const headers: any = {};
+        if (response.headers) {
+            for (const key of response.headers.keys()) {
+                headers[key] = response.headers.get(key);
+            }
+        }
+
+        if (status === 201) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(responseText => {
+                let result201: any = null;
+                const resultData201 = responseText === '' ? null : JSON.parse(responseText, this.jsonParseReviver);
+                result201 = resultData201 ? UserVm.fromJS(resultData201) : new UserVm();
+                return _observableOf(result201);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(responseText => {
+                let result400: any = null;
+                const resultData400 = responseText === '' ? null : JSON.parse(responseText, this.jsonParseReviver);
+                result400 = resultData400 ? ApiException.fromJS(resultData400) : new ApiException();
+                return throwException('A server error occurred.', status, responseText, headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(responseText => {
+                return throwException('An unexpected server error occurred.', status, responseText, headers);
+            }));
+        }
+        return _observableOf<UserVm>(null as any);
+    }
+
     getAssignees(): Observable<UserVm[]> {
         let url = this.baseUrl + '/user/assignees';
 
@@ -649,6 +715,60 @@ export interface IRegisterVm {
     password: string;
     firstName?: string | null;
     lastName?: string | null;
+}
+
+export class UpdateUserVm implements IUpdateUserVm {
+
+    constructor(data?: IUpdateUserVm) {
+        if (data) {
+            for (const property in data) {
+                if (data.hasOwnProperty(property)) {
+                    (this as any)[property] = (data as any)[property];
+                }
+            }
+        }
+    }
+
+    oldPassword?: string;
+    newPassword?: string;
+    confirmPassword?: string;
+    imageUrl?: string | null;
+    role?: UserVmRole | null;
+
+    static fromJS(data: any): UpdateUserVm {
+        data = typeof data === 'object' ? data : {};
+        const result = new UpdateUserVm();
+        result.init(data);
+        return result;
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.oldPassword = data.oldPassword !== undefined ? data.oldPassword : null as any;
+            this.newPassword = data.newPassword !== undefined ? data.newPassword : null as any;
+            this.confirmPassword = data.confirmPassword !== undefined ? data.confirmPassword : null as any;
+            this.imageUrl = data.imageUrl !== undefined ? data.imageUrl : null as any;
+            this.role = data.role !== undefined ? data.role : null as any;
+        }
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data.oldPassword = this.oldPassword !== undefined ? this.oldPassword : null as any;
+        data.newPassword = this.newPassword !== undefined ? this.newPassword : null as any;
+        data.confirmPassword = this.confirmPassword !== undefined ? this.confirmPassword : null as any;
+        data.imageUrl = this.imageUrl !== undefined ? this.imageUrl : null as any;
+        data.role = this.role !== undefined ? this.role : null as any;
+        return data;
+    }
+}
+
+export interface IUpdateUserVm {
+    oldPassword?: string;
+    newPassword?: string;
+    confirmPassword?: string;
+    imageUrl?: string | null;
+    role?: UserVmRole | null;
 }
 
 export class UserVm implements IUserVm {
