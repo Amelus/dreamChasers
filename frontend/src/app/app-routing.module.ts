@@ -32,7 +32,8 @@ const routes: Routes = [
     loadChildren: () => import('./logout/logout.module').then(m => m.LogoutPageModule)
   },
   { path: 'todo-creation', loadChildren: './todo-creation/todo-creation.module#TodoCreationPageModule' },
-  { path: 'list-assigned', loadChildren: './list-assigned/list-assigned.module#ListAssignedPageModule' }
+  { path: 'list-assigned', loadChildren: './list-assigned/list-assigned.module#ListAssignedPageModule' },  { path: 'profile', loadChildren: './profile/profile.module#ProfilePageModule' }
+
 
 ];
 

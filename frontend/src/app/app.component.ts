@@ -10,13 +10,11 @@ import {StatusBar} from '@ionic-native/status-bar/ngx';
     styleUrls: ['app.component.scss']
 })
 export class AppComponent {
-    public homePage =
-        {
-            title: 'Kalender',
-            url: '/home',
-            icon: 'calendar'
-        };
-
+    public homePage = {
+        title: 'Kalender',
+        url: '/home',
+        icon: 'calendar'
+    };
     public assignedTodoListing = {
         title: 'Meine Aufgaben',
         url: '/list-assigned',
@@ -26,6 +24,11 @@ export class AppComponent {
         title: 'Erteilte Aufgaben',
         url: '/list',
         icon: 'checkbox-outline'
+    };
+    public profile = {
+        title: 'Profil',
+        url: '/profile',
+        icon: 'contact'
     };
     public logout = {
         title: 'Logout',

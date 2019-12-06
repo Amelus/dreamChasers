@@ -1,0 +1,34 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>Profil</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+    <div class="general_form">
+      <ion-col>
+        <ion-img class="image" src="/assets/image.png"></ion-img>
+      </ion-col>
+
+
+      <ion-title class="content">Vorname Nachname</ion-title>
+
+      <div class="content" style="margin-top: 3%">
+        <ion-title color="primary">Password ändern</ion-title>
+      </div>
+      <ion-label>Old Password</ion-label>
+      <ion-input type="text"></ion-input>
+      <ion-label>New Password</ion-label>
+      <ion-input type="text"></ion-input>
+      <ion-label>Confirm new Password</ion-label>
+      <ion-input type="text"></ion-input>
+
+      <ng-container> <!-- if role Ruser -->
+        <ion-button>Upgrade account</ion-button>
+      </ng-container>
+
+    </div>
+
+
+</ion-content>
