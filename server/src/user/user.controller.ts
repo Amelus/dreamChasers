@@ -15,6 +15,7 @@ import {RolesGuard} from '../shared/guards/roles.guard';
 import {InstanceType} from 'typegoose';
 import {map} from 'lodash';
 import {UpdateUserVm} from './models/view-models/update-user-vm.model';
+import {UpdateUserResponseVm} from "./models/view-models/update-user-response-vm.model";
 
 @Controller('user')
 @ApiUseTags(User.modelName)
@@ -77,29 +78,29 @@ export class UserController {
     }
 
     @Put('update')
-    @Roles(UserRole.Admin, UserRole.Leader)
+    @Roles(UserRole.Admin, UserRole.Leader, UserRole.User)
     @UseGuards(AuthGuard('jwt'), RolesGuard)
-    @ApiCreatedResponse({type: UserVm})
+    @ApiCreatedResponse({type: UpdateUserResponseVm})
     @ApiBadRequestResponse({type: ApiException})
     @ApiOperation(GetOperationId(User.modelName, 'Update'))
-    async update(@Req() request, @Body() vm: UpdateUserVm): Promise<UserVm> {
-        const {oldPassword, newPassword, confirmPassword, imageUrl, role} = vm;
+    async update(@Req() request, @Body() vm: UpdateUserVm): Promise<UpdateUserResponseVm> {
+        const {oldPassword, newPassword, confirmPassword, imageUrl, upgradeCode} = vm;
 
         if (oldPassword) {
             if (newPassword) {
                 if (!confirmPassword || confirmPassword !== newPassword) {
-                    throw new HttpException('Registration code is required', HttpStatus.BAD_REQUEST);
+                    throw new HttpException('Confirmation password is invalid', HttpStatus.BAD_REQUEST);
                 }
             }
         } else {
             if (newPassword || confirmPassword) {
-                throw new HttpException('Registration code is required', HttpStatus.BAD_REQUEST);
+                throw new HttpException('Old password is required', HttpStatus.BAD_REQUEST);
             }
         }
 
         const user: InstanceType<User> = request.user;
         const username = user.username;
-        let exist;
+        let exist: InstanceType<User>;
         try {
             exist = await this._userService.findOne({username});
         } catch (e) {
@@ -110,9 +111,10 @@ export class UserController {
             throw new HttpException(`${username} does not exist`, HttpStatus.BAD_REQUEST);
         }
 
-        const newUser = await this._userService.update(user.id, user);
-        console.log(newUser);
-        return this._userService.map(newUser, User, UserVm);
+        const newUser = await this._userService.updateUser(exist, vm);
+        console.log('User image: ' + newUser.imageUrl);
+        console.log('User role: ' + newUser.role);
+        return this._userService.getUpdateResponseFromUser(newUser);
     }
 
     @Get('assignees')

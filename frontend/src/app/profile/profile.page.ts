@@ -1,54 +1,132 @@
-import { Component, OnInit } from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from '@angular/forms';
-import {UserClient} from '../app.api';
+import {ApiException, UpdateUserResponseVm, UpdateUserVm, UserClient, UserVm, UserVmRole} from '../app.api';
+import {AlertController, PopoverController} from '@ionic/angular';
+import {catchError} from 'rxjs/operators';
+import {throwError} from 'rxjs';
 
 @Component({
-  selector: 'app-profile',
-  templateUrl: './profile.page.html',
-  styleUrls: ['./profile.page.scss'],
+    selector: 'app-profile',
+    templateUrl: './profile.page.html',
+    styleUrls: ['./profile.page.scss'],
 })
-export class ProfilePage implements OnInit {
-  passwordForm: FormGroup;
+export class ProfilePage implements OnInit, AfterViewInit {
+    form: FormGroup;
+    currentUser: UserVm;
+    profilePicture: string;
+    needsUpgrade: boolean;
 
-  constructor(private formBuilder: FormBuilder,
-              private userClient: UserClient) { }
-
-  ngOnInit() {
-    this.initForm();
-  }
-
-  submitPwdChange() {
-    if (this.passwordForm.invalid) {
-      this.displayValidationErrors();
-      return;
+    constructor(private formBuilder: FormBuilder,
+                private userClient: UserClient,
+                private alertController: AlertController) {
     }
 
-    console.log('send update request');
-  }
+    ngOnInit() {
+        this.initForm();
+        this.initUser();
+    }
 
-  private equalityValidator(): ValidatorFn {
-    return (control: AbstractControl): {[key: string]: any} | null => {
-      if (control.value === this.passwordForm.get('newPassword')) {
-        return null;
-      } else {
-        return {inequality: {value: control.value}};
-      }
-    };
-  }
+    ngAfterViewInit() {
+      this.initUser();
+    }
 
-  private initForm() {
-    this.passwordForm = this.formBuilder.group({
-      oldPassword: ['', [Validators.required]],
-      newPassword: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', [Validators.required, Validators.minLength(8), this.equalityValidator]]
-    });
-  }
+  submitPwdChange() {
+        if (this.form.invalid) {
+            this.displayValidationErrors();
+            return;
+        }
 
-  private displayValidationErrors() {
-    const formKeys = Object.keys(this.passwordForm.controls);
-    formKeys.forEach(key => {
-      this.passwordForm.controls[key].markAsDirty();
-      this.passwordForm.controls[key].updateValueAndValidity();
-    });
-  }
+        if (this.form.dirty) {
+          console.log('send update request');
+          const userVm: UpdateUserVm = new UpdateUserVm(this.form.value);
+          this.userClient.update(userVm)
+              .pipe(catchError((err: ApiException) => throwError(err)))
+              .subscribe((user: UpdateUserResponseVm) => {
+                console.log(user);
+                this.profilePicture = user.imageUrl;
+                this.needsUpgrade = user.role === UserVmRole.User;
+              }, (err: ApiException) => {
+                console.log(err);
+              });
+
+        } else {
+          console.log('Nothing to change');
+        }
+    }
+
+    private oldPwdSetValidator(): ValidatorFn {
+        return (control: AbstractControl): { [key: string]: any } | null => {
+            if (this.form.get('newPassword')) {
+                return null;
+            } else {
+                return {oldPwdSet: {value: control.value}};
+            }
+        };
+    }
+
+    private equalityValidator(): ValidatorFn {
+        return (control: AbstractControl): { [key: string]: any } | null => {
+            if (control.value === this.form.get('newPassword')) {
+                return null;
+            } else {
+                return {inequality: {value: control.value}};
+            }
+        };
+    }
+
+    private initUser() {
+        this.currentUser = this.userClient.getSessionUser();
+        if (this.currentUser.imageUrl) {
+            this.profilePicture = this.currentUser.imageUrl;
+        }
+        this.needsUpgrade = this.currentUser.role === UserVmRole.User;
+    }
+
+    private initForm() {
+        this.form = this.formBuilder.group({
+            oldPassword: [''],
+            newPassword: ['', [Validators.minLength(8), this.oldPwdSetValidator]],
+            confirmPassword: ['', [Validators.minLength(8), this.equalityValidator]],
+            upgradeCode: [''],
+            imageUrl: ['']
+        });
+    }
+
+    private displayValidationErrors() {
+        const formKeys = Object.keys(this.form.controls);
+        formKeys.forEach(key => {
+            this.form.controls[key].markAsDirty();
+            this.form.controls[key].updateValueAndValidity();
+        });
+    }
+
+    public async openChangeImg() {
+        const alert = await this.alertController.create({
+            header: 'Bild ändern',
+            message: 'Geben Sie die URL zu ihrem Profilbild an',
+            inputs: [
+                {
+                    name: 'imageUrl',
+                    type: 'text',
+                    placeholder: 'zb. https://imgur.com/LQMNSzl.png'
+                }],
+            buttons: [
+                {
+                    text: 'Abbruch',
+                    role: 'cancel',
+                    cssClass: 'secondary'
+                }, {
+                    text: 'Bestätigen',
+                    cssClass: 'primary',
+                    handler: (data) => {
+                        console.log('trigger changePic function');
+                        this.form.get('imageUrl').setValue(data.imageUrl);
+                        this.form.get('imageUrl').markAsDirty();
+                        this.userClient.updateSessionUserImage(data.imageUrl);
+                    }
+                }
+            ]
+        });
+        await alert.present();
+    }
 }

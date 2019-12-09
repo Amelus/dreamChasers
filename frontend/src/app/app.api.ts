@@ -97,6 +97,12 @@ export class UserClient {
         return UserVm.fromJS(parsedUser);
     }
 
+    updateSessionUserImage(imageUrl: string) {
+        const sessionUser: UserVm = this.getSessionUser();
+        sessionUser.imageUrl = imageUrl;
+        localStorage.setItem('user', JSON.stringify(sessionUser));
+    }
+
     register(registerVm: RegisterVm): Observable<UserVm> {
         let url = this.baseUrl + '/user/register';
         url = url.replace(/[?&]$/, '');
@@ -230,7 +236,7 @@ export class UserClient {
         return _observableOf<LoginResponseVm>(null as any);
     }
 
-    update(updateVm: UpdateUserVm): Observable<UserVm> {
+    update(updateVm: UpdateUserVm): Observable<UpdateUserResponseVm> {
         let url = this.baseUrl + '/user/update';
         url = url.replace(/[?&]$/, '');
 
@@ -274,12 +280,12 @@ export class UserClient {
             }
         }
 
-        if (status === 201) {
+        if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(responseText => {
-                let result201: any = null;
-                const resultData201 = responseText === '' ? null : JSON.parse(responseText, this.jsonParseReviver);
-                result201 = resultData201 ? UserVm.fromJS(resultData201) : new UserVm();
-                return _observableOf(result201);
+                let result200: any = null;
+                const resultData200 = responseText === '' ? null : JSON.parse(responseText, this.jsonParseReviver);
+                result200 = resultData200 ? UpdateUserResponseVm.fromJS(resultData200) : new UpdateUserResponseVm();
+                return _observableOf(result200);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap(responseText => {
@@ -733,7 +739,7 @@ export class UpdateUserVm implements IUpdateUserVm {
     newPassword?: string;
     confirmPassword?: string;
     imageUrl?: string | null;
-    role?: UserVmRole | null;
+    upgradeCode?: string | null;
 
     static fromJS(data: any): UpdateUserVm {
         data = typeof data === 'object' ? data : {};
@@ -748,7 +754,7 @@ export class UpdateUserVm implements IUpdateUserVm {
             this.newPassword = data.newPassword !== undefined ? data.newPassword : null as any;
             this.confirmPassword = data.confirmPassword !== undefined ? data.confirmPassword : null as any;
             this.imageUrl = data.imageUrl !== undefined ? data.imageUrl : null as any;
-            this.role = data.role !== undefined ? data.role : null as any;
+            this.upgradeCode = data.upgradeCode !== undefined ? data.upgradeCode : null as any;
         }
     }
 
@@ -758,7 +764,7 @@ export class UpdateUserVm implements IUpdateUserVm {
         data.newPassword = this.newPassword !== undefined ? this.newPassword : null as any;
         data.confirmPassword = this.confirmPassword !== undefined ? this.confirmPassword : null as any;
         data.imageUrl = this.imageUrl !== undefined ? this.imageUrl : null as any;
-        data.role = this.role !== undefined ? this.role : null as any;
+        data.upgradeCode = this.upgradeCode !== undefined ? this.upgradeCode : null as any;
         return data;
     }
 }
@@ -767,6 +773,47 @@ export interface IUpdateUserVm {
     oldPassword?: string;
     newPassword?: string;
     confirmPassword?: string;
+    imageUrl?: string | null;
+    upgradeCode?: string | null;
+}
+
+export class UpdateUserResponseVm implements IUpdateUserResponseVm {
+
+    constructor(data?: IUpdateUserVm) {
+        if (data) {
+            for (const property in data) {
+                if (data.hasOwnProperty(property)) {
+                    (this as any)[property] = (data as any)[property];
+                }
+            }
+        }
+    }
+
+    imageUrl?: string | null;
+    role?: UserVmRole | null;
+
+    static fromJS(data: any): UpdateUserResponseVm {
+        data = typeof data === 'object' ? data : {};
+        const result = new UpdateUserResponseVm();
+        result.init(data);
+        return result;
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.imageUrl = data.imageUrl !== undefined ? data.imageUrl : null as any;
+            this.role = data.role !== undefined ? data.role : null as any;
+        }
+    }
+
+    toJSON(data?: any) {
+        data.imageUrl = this.imageUrl !== undefined ? this.imageUrl : null as any;
+        data.role = this.role !== undefined ? this.role : null as any;
+        return data;
+    }
+}
+
+export interface IUpdateUserResponseVm {
     imageUrl?: string | null;
     role?: UserVmRole | null;
 }
@@ -824,6 +871,7 @@ export class UserVm implements IUserVm {
         data.lastName = this.lastName !== undefined ? this.lastName : null as any;
         data.fullName = this.fullName !== undefined ? this.fullName : null as any;
         data.role = this.role !== undefined ? this.role : null as any;
+        data.imageUrl = this.imageUrl !== undefined ? this.imageUrl : null as any;
         return data;
     }
 }

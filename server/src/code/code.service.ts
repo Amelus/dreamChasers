@@ -32,4 +32,11 @@ export class CodeService extends BaseService<Code> {
         }
         return true;
     }
+
+    async removeUsedCode(code: string): Promise<void> {
+        const codeModel = await this._model.findOneAndDelete({pin: code});
+        if (!codeModel) {
+            console.log('Code ' + code + ' could not be found');
+        }
+    }
 }
