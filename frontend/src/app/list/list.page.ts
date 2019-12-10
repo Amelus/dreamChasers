@@ -42,7 +42,6 @@ export class ListPage implements OnInit, AfterViewInit {
 
     doRefresh(event) {
         setTimeout(() => {
-            console.log('Async operation has ended');
             this.getTodos();
             event.target.complete();
         }, 2000);
@@ -218,6 +217,8 @@ export class ListPage implements OnInit, AfterViewInit {
             .subscribe((newTodo: TodoVm) => {
                 this.todos = [newTodo, ...this.todos];
                 this.updateEditableCache();
+                this.form.get('assignee').reset();
+                this.form.get('userImage').reset();
                 this.form.get('content').reset();
                 this.form.get('status').reset();
                 this.form.get('status').setValue('Pending');

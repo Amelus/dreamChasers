@@ -1195,6 +1195,7 @@ export class TodoVm implements ITodoVm {
     status!: TodoVmStatus;
     isCompleted?: boolean | false;
     isChecked?: boolean | false;
+    userImage?: string | null;
 
     static fromJS(data: any): TodoVm {
         data = typeof data === 'object' ? data : {};
@@ -1215,6 +1216,7 @@ export class TodoVm implements ITodoVm {
             this.dueDate = data.dueDate ? new Date(data.dueDate.toString()) : null as any;
             this.status = data.status !== undefined ? data.status : null as any;
             this.isCompleted = data.isCompleted !== undefined ? data.isCompleted : null as any;
+            this.userImage = data.userImage !== undefined ? data.userImage : null as any;
         }
     }
 
@@ -1230,6 +1232,7 @@ export class TodoVm implements ITodoVm {
         data.status = this.status !== undefined ? this.status : null as any;
         data.dueDate = this.dueDate ? this.dueDate.toISOString() : null as any;
         data.isCompleted = this.isCompleted !== undefined ? this.isCompleted : null as any;
+        data.userImage = this.userImage !== undefined ? this.userImage : null as any;
         return data;
     }
 }
@@ -1246,6 +1249,7 @@ export interface ITodoVm {
     dueDate: Date;
     isCompleted?: boolean | false;
     isChecked?: boolean | false;
+    userImage?: string | null;
 }
 
 export enum UpdateUserStatus {

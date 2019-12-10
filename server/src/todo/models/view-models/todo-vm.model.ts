@@ -32,4 +32,8 @@ export class TodoVm extends BaseModelVm {
     @ApiModelProperty()
     @Expose()
     isCompleted: boolean;
+
+    @ApiModelProperty()
+    @Expose()
+    userImage: string;
 }

@@ -40,7 +40,13 @@
                         </div>
 
                         <ion-avatar class="todo_icon"> <!-- insert User Image here -->
-                            <ion-img [src]="'/assets/image.png'"></ion-img>
+                            <ng-container *ngIf="item.userImage">
+                                <ion-img [src]="item.userImage"></ion-img>
+                            </ng-container>
+                            <ng-container *ngIf="!item.userImage">
+                                <ion-img [src]="'/assets/image.png'"></ion-img>
+                                <ion-label>{{item.assignee}}</ion-label>
+                            </ng-container>
                         </ion-avatar>
 
                         <ng-container *ngIf="item.status == 'Finished'">

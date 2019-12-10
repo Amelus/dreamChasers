@@ -33,6 +33,10 @@ export class Todo extends BaseModel<Todo> {
     @Expose()
     isCompleted: boolean;
 
+    @prop()
+    @Expose()
+    userImage: string;
+
     static get model(): ModelType<Todo> {
         return new Todo().getModelForClass(Todo, {schemaOptions});
     }
