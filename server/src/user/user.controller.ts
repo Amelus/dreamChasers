@@ -15,12 +15,36 @@ import {RolesGuard} from '../shared/guards/roles.guard';
 import {InstanceType} from 'typegoose';
 import {map} from 'lodash';
 import {UpdateUserVm} from './models/view-models/update-user-vm.model';
-import {UpdateUserResponseVm} from "./models/view-models/update-user-response-vm.model";
+import {UpdateUserResponseVm} from './models/view-models/update-user-response-vm.model';
 
 @Controller('user')
 @ApiUseTags(User.modelName)
 export class UserController {
     constructor(private readonly _userService: UserService) {
+    }
+
+    @Get()
+    @Roles(UserRole.Admin, UserRole.Leader, UserRole.User)
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
+    @ApiCreatedResponse({type: UpdateUserResponseVm})
+    @ApiBadRequestResponse({type: ApiException})
+    @ApiOperation(GetOperationId(User.modelName, 'Update'))
+    async get(@Req() request): Promise<UserVm> {
+
+        const user: InstanceType<User> = request.user;
+        const username = user.username;
+        let exist: InstanceType<User>;
+        try {
+            exist = await this._userService.findOne({username});
+        } catch (e) {
+            throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        if (!exist) {
+            throw new HttpException(`${username} does not exist`, HttpStatus.BAD_REQUEST);
+        }
+
+        return exist;
     }
 
     @Post('register')
@@ -88,7 +112,7 @@ export class UserController {
 
         if (oldPassword) {
             if (newPassword) {
-                if (!confirmPassword || confirmPassword !== newPassword) {
+                if (!confirmPassword || (confirmPassword !== newPassword)) {
                     throw new HttpException('Confirmation password is invalid', HttpStatus.BAD_REQUEST);
                 }
             }
@@ -111,10 +135,7 @@ export class UserController {
             throw new HttpException(`${username} does not exist`, HttpStatus.BAD_REQUEST);
         }
 
-        const newUser = await this._userService.updateUser(exist, vm);
-        console.log('User image: ' + newUser.imageUrl);
-        console.log('User role: ' + newUser.role);
-        return this._userService.getUpdateResponseFromUser(newUser);
+        return  await this._userService.updateUser(exist, vm);
     }
 
     @Get('assignees')

@@ -1,7 +1,7 @@
 import {forwardRef, HttpException, HttpStatus, Inject, Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {compare, genSalt, hash} from 'bcryptjs';
-import {InstanceType, ModelType} from 'typegoose';
+import {ModelType} from 'typegoose';
 import {AuthService} from '../shared/auth/auth.service';
 import {JwtPayload} from '../shared/auth/jwt-payload.model';
 import {BaseService} from '../shared/base.service';
@@ -14,8 +14,8 @@ import {UserVm} from './models/view-models/user-vm.model';
 import {CodeService} from '../code/code.service';
 import {UserRole} from './models/user-role.enum';
 import {UpdateUserVm} from './models/view-models/update-user-vm.model';
-import {Constructable} from "automapper-nartc/types";
-import {UpdateUserResponseVm} from "./models/view-models/update-user-response-vm.model";
+import {UpdateUserResponseVm} from './models/view-models/update-user-response-vm.model';
+import {UpdateUserStatus} from './models/view-models/update-user-status.enum';
 
 @Injectable()
 export class UserService extends BaseService<User> {
@@ -102,7 +102,7 @@ export class UserService extends BaseService<User> {
         };
     }
 
-    async updateUser(user, vm: UpdateUserVm): Promise<User> {
+    async updateUser(user, vm: UpdateUserVm): Promise<UpdateUserResponseVm> {
         const {oldPassword, newPassword, confirmPassword, imageUrl, upgradeCode} = vm;
 
         let updated = false;
@@ -128,27 +128,26 @@ export class UserService extends BaseService<User> {
             }
         }
 
+        const response: UpdateUserResponseVm = new UpdateUserResponseVm();
+
         if (updated) {
             try {
-                const result = await this.update(user.id, user);
-                return result.toJSON() as User;
+                const updateResult = await this.update(user.id, user);
+                response.imageUrl = updateResult.imageUrl;
+                response.role = updateResult.role;
+                response.status = UpdateUserStatus.Success;
             } catch (e) {
-                throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+                response.status = UpdateUserStatus.Failed;
             }
         } else {
-            return user;
+            response.status = UpdateUserStatus.Needless;
         }
+
+        return response;
     }
 
     async isAuthorizedUser(user: User, jwtToken: string): Promise<boolean> {
         const jwtUser: JwtPayload = await this._authService.decodeToken(jwtToken);
         return user.username === jwtUser.username;
-    }
-
-    async getUpdateResponseFromUser(source: User): Promise<UpdateUserResponseVm> {
-        const response: UpdateUserResponseVm = new UpdateUserResponseVm();
-        response.imageUrl = source.imageUrl;
-        response.role = source.role;
-        return response;
     }
 }

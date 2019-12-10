@@ -1,5 +1,5 @@
 ﻿import {catchError as _observableCatch, mergeMap as _observableMergeMap} from 'rxjs/operators';
-import {Observable, of as _observableOf, throwError as _observableThrow} from 'rxjs';
+import {Observable, of as _observableOf, Subscriber, Subscription, throwError as _observableThrow} from 'rxjs';
 import {Inject, Injectable, InjectionToken, Optional} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpResponse, HttpResponseBase} from '@angular/common/http';
 import * as moment from 'moment';
@@ -101,6 +101,75 @@ export class UserClient {
         const sessionUser: UserVm = this.getSessionUser();
         sessionUser.imageUrl = imageUrl;
         localStorage.setItem('user', JSON.stringify(sessionUser));
+    }
+
+    refreshSessionUser(): Subscription {
+        return this.getUser().subscribe((user: UserVm) => {
+            localStorage.setItem('user', JSON.stringify(user));
+        });
+    }
+
+    getUser(): Observable<UserVm> {
+        let url = this.baseUrl + '/user';
+        url = url.replace(/[?&]$/, '');
+
+        const options: any = {
+            observe: 'response',
+            responseType: 'blob',
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json',
+                Accept: 'application/json'
+            })
+        };
+
+        return this.http.request('get', url, options).pipe(_observableMergeMap((response: any) => {
+            return this.processGet(response);
+        })).pipe(_observableCatch((response: any) => {
+            if (response instanceof HttpResponseBase) {
+                try {
+                    return this.processRegister(response as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<UserVm>;
+                }
+            } else {
+                return _observableThrow(response) as any as Observable<UserVm>;
+            }
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<UserVm> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+                (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        const headers: any = {};
+        if (response.headers) {
+            for (const key of response.headers.keys()) {
+                headers[key] = response.headers.get(key);
+            }
+        }
+
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(responseText => {
+                let result200: any = null;
+                const resultData200 = responseText === '' ? null : JSON.parse(responseText, this.jsonParseReviver);
+                result200 = resultData200 ? UserVm.fromJS(resultData200) : new UserVm();
+                return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(responseText => {
+                let result400: any = null;
+                const resultData400 = responseText === '' ? null : JSON.parse(responseText, this.jsonParseReviver);
+                result400 = resultData400 ? ApiException.fromJS(resultData400) : new ApiException();
+                return throwException('A server error occurred.', status, responseText, headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(responseText => {
+                return throwException('An unexpected server error occurred.', status, responseText, headers);
+            }));
+        }
+        return _observableOf<UserVm>(null as any);
     }
 
     register(registerVm: RegisterVm): Observable<UserVm> {
@@ -257,17 +326,17 @@ export class UserClient {
         })).pipe(_observableCatch((response: any) => {
             if (response instanceof HttpResponseBase) {
                 try {
-                    return this.processRegister(response as any);
+                    return this.processUpdate(response as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<UserVm>;
+                    return _observableThrow(e) as any as Observable<UpdateUserResponseVm>;
                 }
             } else {
-                return _observableThrow(response) as any as Observable<UserVm>;
+                return _observableThrow(response) as any as Observable<UpdateUserResponseVm>;
             }
         }));
     }
 
-    protected processUpdate(response: HttpResponseBase): Observable<UserVm> {
+    protected processUpdate(response: HttpResponseBase): Observable<UpdateUserResponseVm> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -299,7 +368,7 @@ export class UserClient {
                 return throwException('An unexpected server error occurred.', status, responseText, headers);
             }));
         }
-        return _observableOf<UserVm>(null as any);
+        return _observableOf<UpdateUserResponseVm>(null as any);
     }
 
     getAssignees(): Observable<UserVm[]> {
@@ -791,6 +860,7 @@ export class UpdateUserResponseVm implements IUpdateUserResponseVm {
 
     imageUrl?: string | null;
     role?: UserVmRole | null;
+    status!: UpdateUserStatus;
 
     static fromJS(data: any): UpdateUserResponseVm {
         data = typeof data === 'object' ? data : {};
@@ -803,12 +873,14 @@ export class UpdateUserResponseVm implements IUpdateUserResponseVm {
         if (data) {
             this.imageUrl = data.imageUrl !== undefined ? data.imageUrl : null as any;
             this.role = data.role !== undefined ? data.role : null as any;
+            this.status = data.status !== undefined ? data.status : null as any;
         }
     }
 
     toJSON(data?: any) {
         data.imageUrl = this.imageUrl !== undefined ? this.imageUrl : null as any;
         data.role = this.role !== undefined ? this.role : null as any;
+        data.status = this.status !== undefined ? this.status : null as any;
         return data;
     }
 }
@@ -816,6 +888,7 @@ export class UpdateUserResponseVm implements IUpdateUserResponseVm {
 export interface IUpdateUserResponseVm {
     imageUrl?: string | null;
     role?: UserVmRole | null;
+    status: UpdateUserStatus;
 }
 
 export class UserVm implements IUserVm {
@@ -1175,9 +1248,10 @@ export interface ITodoVm {
     isChecked?: boolean | false;
 }
 
-export enum Status {
-    Finished = 'Finished',
-    Pending = 'Pending',
+export enum UpdateUserStatus {
+    Success = 'Success',
+    Failed = 'Failed',
+    Needless = 'Needless',
 }
 
 export enum UserVmRole {

@@ -5,7 +5,9 @@
 </ion-header>
 
 <ion-content>
-
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <div class="general_form">
 
     <ion-item button (click)="openChangeImg()">
@@ -21,12 +23,12 @@
       <form [formGroup]="form" (ngSubmit)="submitPwdChange()">
         <ion-item class=" ion-align-items-center ">
           <ion-label position="floating">Altes Passwort</ion-label>
-          <ion-input minlength="1" required="false" formControlName="oldPassword"></ion-input>
+          <ion-input minlength="1" required="false" type="password" formControlName="oldPassword"></ion-input>
         </ion-item>
 
         <ion-item class=" ion-align-items-center ">
           <ion-label position="floating">Neues Passwort</ion-label>
-          <ion-input minlength="8" required="false" formControlName="newPassword"></ion-input>
+          <ion-input minlength="8" required="false" type="password" formControlName="newPassword"></ion-input>
           <ng-container *ngIf="form.get('newPassword').dirty && form.get('newPassword').errors">
             <div class="error">
               <ng-container *ngIf="form.get('newPassword').hasError('oldPwdSet')">
@@ -41,7 +43,7 @@
 
         <ion-item class=" ion-align-items-center ">
           <ion-label position="floating">Neues Passwort bestätigen</ion-label>
-          <ion-input minlength="8" required="false" formControlName="confirmPassword"></ion-input>
+          <ion-input minlength="8" required="false" type="password" formControlName="confirmPassword"></ion-input>
           <ng-container *ngIf="form.get('confirmPassword').dirty && form.get('confirmPassword').errors">
             <div class="error">
               <ng-container *ngIf="form.get('confirmPassword').hasError('required')">

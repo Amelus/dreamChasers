@@ -4,13 +4,14 @@ import {ApiException, UpdateUserResponseVm, UpdateUserVm, UserClient, UserVm, Us
 import {AlertController, PopoverController} from '@ionic/angular';
 import {catchError} from 'rxjs/operators';
 import {throwError} from 'rxjs';
+import {ObserveOnSubscriber} from "rxjs/internal/operators/observeOn";
 
 @Component({
     selector: 'app-profile',
     templateUrl: './profile.page.html',
     styleUrls: ['./profile.page.scss'],
 })
-export class ProfilePage implements OnInit, AfterViewInit {
+export class ProfilePage implements OnInit {
     form: FormGroup;
     currentUser: UserVm;
     profilePicture: string;
@@ -26,10 +27,6 @@ export class ProfilePage implements OnInit, AfterViewInit {
         this.initUser();
     }
 
-    ngAfterViewInit() {
-      this.initUser();
-    }
-
   submitPwdChange() {
         if (this.form.invalid) {
             this.displayValidationErrors();
@@ -37,7 +34,6 @@ export class ProfilePage implements OnInit, AfterViewInit {
         }
 
         if (this.form.dirty) {
-          console.log('send update request');
           const userVm: UpdateUserVm = new UpdateUserVm(this.form.value);
           this.userClient.update(userVm)
               .pipe(catchError((err: ApiException) => throwError(err)))
@@ -48,6 +44,8 @@ export class ProfilePage implements OnInit, AfterViewInit {
               }, (err: ApiException) => {
                 console.log(err);
               });
+
+          this.form.reset();
 
         } else {
           console.log('Nothing to change');
@@ -108,7 +106,8 @@ export class ProfilePage implements OnInit, AfterViewInit {
                 {
                     name: 'imageUrl',
                     type: 'text',
-                    placeholder: 'zb. https://imgur.com/LQMNSzl.png'
+                    placeholder: 'zb. https://imgur.com/profilBild.png',
+                    value: this.profilePicture
                 }],
             buttons: [
                 {
@@ -122,11 +121,17 @@ export class ProfilePage implements OnInit, AfterViewInit {
                         console.log('trigger changePic function');
                         this.form.get('imageUrl').setValue(data.imageUrl);
                         this.form.get('imageUrl').markAsDirty();
-                        this.userClient.updateSessionUserImage(data.imageUrl);
                     }
                 }
             ]
         });
         await alert.present();
     }
+
+  doRefresh(event) {
+    setTimeout(() => {
+        this.userClient.refreshSessionUser();
+        event.target.complete();
+    }, 2000);
+  }
 }

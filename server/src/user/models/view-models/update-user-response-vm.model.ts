@@ -1,5 +1,6 @@
-import {ApiModelPropertyOptional} from '@nestjs/swagger';
+import {ApiModelProperty, ApiModelPropertyOptional} from '@nestjs/swagger';
 import {UserRole} from '../user-role.enum';
+import {UpdateUserStatus} from './update-user-status.enum';
 
 export class UpdateUserResponseVm {
 
@@ -8,4 +9,7 @@ export class UpdateUserResponseVm {
 
     @ApiModelPropertyOptional({enum: UserRole})
     role?: UserRole;
+
+    @ApiModelProperty({enum: UpdateUserStatus})
+    status: UpdateUserStatus;
 }
