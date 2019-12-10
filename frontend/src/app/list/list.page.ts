@@ -42,7 +42,6 @@ export class ListPage implements OnInit, AfterViewInit {
 
     doRefresh(event) {
         setTimeout(() => {
-            console.log('Async operation has ended');
             this.getTodos();
             event.target.complete();
         }, 2000);

@@ -65,7 +65,7 @@ export class TodoController {
 
         const assignee: InstanceType<User> = request.user;
         const filter = {};
-        filter['assignee'] = assignee.username;
+        filter['assignee'] = assignee;
 
         try {
             const todos = await this._todoService.findAll(filter);

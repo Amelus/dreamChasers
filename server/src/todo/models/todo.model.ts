@@ -1,7 +1,8 @@
-import {InstanceType, ModelType, prop} from 'typegoose';
+import {InstanceType, ModelType, prop, Ref} from 'typegoose';
 import {BaseModel, schemaOptions} from '../../shared/base.model';
 import {TodoStatus} from './todo-status.enum';
 import {Expose} from 'class-transformer';
+import {User} from '../../user/models/user.model';
 
 export class Todo extends BaseModel<Todo> {
 
@@ -9,9 +10,9 @@ export class Todo extends BaseModel<Todo> {
     @Expose()
     creator: string;
 
-    @prop({required: [true, 'Assignee is required']})
+    @prop({required: [true, 'Assignee is required'], ref: User})
     @Expose()
-    assignee: string;
+    assignee: Ref<User>;
 
     @prop({required: [true, 'Title is required']})
     @Expose()

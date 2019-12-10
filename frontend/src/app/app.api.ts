@@ -1188,7 +1188,7 @@ export class TodoVm implements ITodoVm {
     updatedAt?: Date | null;
     id?: string | null;
     creator!: string;
-    assignee!: string;
+    assignee!: UserVm;
     title!: string;
     content!: string;
     dueDate!: Date;
@@ -1239,7 +1239,7 @@ export interface ITodoVm {
     updatedAt?: Date | null;
     id?: string | null;
     creator: string;
-    assignee: string;
+    assignee: UserVm;
     title: string;
     content: string;
     status: TodoVmStatus;

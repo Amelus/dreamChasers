@@ -1,10 +1,9 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 import {ApiException, UpdateUserResponseVm, UpdateUserVm, UserClient, UserVm, UserVmRole} from '../app.api';
 import {AlertController, PopoverController} from '@ionic/angular';
 import {catchError} from 'rxjs/operators';
 import {throwError} from 'rxjs';
-import {ObserveOnSubscriber} from "rxjs/internal/operators/observeOn";
 
 @Component({
     selector: 'app-profile',

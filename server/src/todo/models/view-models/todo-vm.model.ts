@@ -2,6 +2,8 @@ import { ApiModelProperty } from '@nestjs/swagger';
 import { BaseModelVm } from '../../../shared/base.model';
 import { TodoStatus } from '../todo-status.enum';
 import { Expose } from 'class-transformer';
+import {UserVm} from '../../../user/models/view-models/user-vm.model';
+import {User} from '../../../user/models/user.model';
 
 export class TodoVm extends BaseModelVm {
 
@@ -11,7 +13,7 @@ export class TodoVm extends BaseModelVm {
 
     @ApiModelProperty()
     @Expose()
-    assignee: string;
+    assignee: UserVm;
 
     @ApiModelProperty()
     @Expose()
