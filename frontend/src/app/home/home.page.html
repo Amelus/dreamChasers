@@ -10,16 +10,13 @@
 </ion-header>
 
 <ion-content>
-  <ion-card class="welcome-card">
-      <img src="/assets/shapes.svg" alt="" />
-      <ion-card-header>
-        <ion-card-subtitle>Platzhalter</ion-card-subtitle>
-        <ion-card-title>Hier wird der Kalender sein</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <p>Der Kalender wird dann dynamisch eingebunden anhand von den User Daten</p>
-      </ion-card-content>
-    </ion-card>
+
+  <full-calendar defaultView="dayGridMonth" [plugins]="calendarPlugins"
+                 [weekends]="true"
+                 [events]="calendarEvents"
+                 (dateClick)="handleDateClick($event)">
+  </full-calendar>
+
     <ion-list lines="none">
       <ion-item href="https://ionicframework.com/docs/">
         <ion-icon slot="start" color="medium" name="book"></ion-icon>
