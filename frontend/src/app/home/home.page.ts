@@ -15,14 +15,21 @@ import {FullCalendarComponent} from '@fullcalendar/angular';
 })
 export class HomePage implements OnInit, AfterViewInit {
 
-    @ViewChild('calendarComponent', {static: false}) calendarComponent: FullCalendarComponent;
+    @ViewChild('monthCalendar', {static: false}) monthCalendar: FullCalendarComponent;
+    @ViewChild('dayListCalendar', {static: true}) dayListCalendar: FullCalendarComponent;
 
     editorUser: boolean;
     calendarPlugins = [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin, bootstrapPlugin];
     calendarEvents = [
         {title: 'event 1', date: '2019-12-15'},
-        {title: 'event 2', date: '2019-12-18'}
+        {title: 'event 2', date: '2019-12-18'},
+        {title: 'event 3', date: '2019-12-13'}
     ];
+    header = {
+        left:   'prev',
+        center: 'title',
+        right:  'next'
+    };
     selectedEvent: any;
 
     constructor(public menuController: MenuController,
@@ -73,7 +80,7 @@ export class HomePage implements OnInit, AfterViewInit {
     }
 
     showDateClick($event: any) {
-        const calendarApi = this.calendarComponent.getApi();
+        const calendarApi = this.dayListCalendar.getApi();
         calendarApi.gotoDate($event.date);
     }
 }

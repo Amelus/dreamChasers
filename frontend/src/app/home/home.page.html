@@ -11,20 +11,17 @@
 
 <ion-content>
 
-    <full-calendar defaultView="dayGridMonth" [plugins]="calendarPlugins"
+    <full-calendar #monthCalendar defaultView="dayGridMonth" [plugins]="calendarPlugins"
                    [weekends]="true"
                    [events]="calendarEvents"
                    [locale]="'de'"
                    [themeSystem]="'bootstrap'"
-                   [header]="{
-  left:   'prev',
-  center: 'title',
-  right:  'next'
-}"
+                   [header]="header"
+                   [nowIndicator]="true"
                    (dateClick)="showDateClick($event)"
                    >
     </full-calendar>
-    <full-calendar #calendarComponent defaultView="listDay" [plugins]="calendarPlugins"
+    <full-calendar #dayListCalendar defaultView="listDay" [plugins]="calendarPlugins"
                    [weekends]="true"
                    [events]="calendarEvents"
                    [locale]="'de'"
