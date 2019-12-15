@@ -23,11 +23,11 @@ export class AppointmentService extends BaseService<Appointment> {
 
         const newAppointment = Appointment.createModel();
 
-        newAppointment.creator = creator;
+        // newAppointment.creator = creator;
         newAppointment.title = title;
-        newAppointment.content = content;
-        newAppointment.startDate = startDate;
-        newAppointment.endDate = endDate;
+        // newAppointment.content = content;
+        newAppointment.start = startDate;
+        newAppointment.end = endDate;
 
         try {
             const result = await this.create(newAppointment);

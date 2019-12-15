@@ -4,25 +4,47 @@ import {Expose} from 'class-transformer';
 
 export class Appointment extends BaseModel<Appointment> {
 
-    @prop({required: [true, 'Creator is required']})
-    @Expose()
-    creator: string;
-
     @prop({required: [true, 'Title is required']})
     @Expose()
     title: string;
 
-    @prop({required: [true, 'Content is required']})
+    @prop({required: [true, 'Creator and Content required']})
     @Expose()
-    content: string;
+    extendedProps: object;
 
-    @prop({required: [true, 'Start Date is required']})
+    @prop()
     @Expose()
-    startDate: Date;
+    start: Date;
 
-    @prop({required: [true, 'End DAte is required']})
+    @prop()
     @Expose()
-    endDate: Date;
+    end: Date;
+
+    @prop()
+    @Expose()
+    allDay: boolean;
+
+    // --- recurring event props ---
+
+    @prop() // eg. [0, 1, 4] -> Sunday, Monday, Thursday
+    @Expose()
+    daysOfWeek: number[];
+
+    @prop() // eg. '10:45:00'
+    @Expose()
+    startTime: string;
+
+    @prop()
+    @Expose()
+    endTime: string;
+
+    @prop()
+    @Expose()
+    startRecur: Date;
+
+    @prop()
+    @Expose()
+    endRecur: Date;
 
     static get model(): ModelType<Appointment> {
         return new Appointment().getModelForClass(Appointment, {schemaOptions});

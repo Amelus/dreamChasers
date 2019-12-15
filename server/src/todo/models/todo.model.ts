@@ -21,7 +21,7 @@ export class Todo extends BaseModel<Todo> {
     @Expose()
     content: string;
 
-    @prop({required: [true, 'Due startDate is required']})
+    @prop({required: [true, 'Due start is required']})
     @Expose()
     dueDate: Date;
 
