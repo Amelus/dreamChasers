@@ -2,13 +2,37 @@ import {ApiModelProperty} from '@nestjs/swagger';
 
 export class AppointmentParams {
 
-    @ApiModelProperty() creator: string;
+    @ApiModelProperty()
+    extendedProps: {
+        creator: string,
+        content: string,
+        global: boolean,
+    };
 
-    @ApiModelProperty() title: string;
+    @ApiModelProperty()
+    title: string;
 
-    @ApiModelProperty() content: string;
+    @ApiModelProperty()
+    start: Date;
 
-    @ApiModelProperty() startDate: Date;
+    @ApiModelProperty()
+    end: Date;
 
-    @ApiModelProperty() endDate: Date;
+    @ApiModelProperty()
+    allDay: boolean;
+
+    @ApiModelProperty() // eg. [0, 1, 4] -> Sunday, Monday, Thursday
+    daysOfWeek: number[];
+
+    @ApiModelProperty() // eg. '10:45:00'
+    startTime: string;
+
+    @ApiModelProperty()
+    endTime: string;
+
+    @ApiModelProperty()
+    startRecur: Date;
+
+    @ApiModelProperty()
+    endRecur: Date;
 }

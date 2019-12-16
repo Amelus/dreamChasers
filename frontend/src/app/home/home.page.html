@@ -19,6 +19,7 @@
                    [header]="header"
                    [nowIndicator]="true"
                    (dateClick)="showDateClick($event)"
+                   (eventClick)="handleDateClick($event)"
                    >
     </full-calendar>
     <full-calendar #dayListCalendar defaultView="listDay" [plugins]="calendarPlugins"

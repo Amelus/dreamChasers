@@ -21,14 +21,14 @@ export class HomePage implements OnInit, AfterViewInit {
     editorUser: boolean;
     calendarPlugins = [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin, bootstrapPlugin];
     calendarEvents = [
-        {title: 'event 1', date: '2019-12-15'},
-        {title: 'event 2', date: '2019-12-18'},
+        {title: 'Meeting', date: '2019-12-15'},
+        {title: 'event 2', daysOfWeek: [3], startRecur: '2019-12-18', endRecur: '2020-01-05', allDay: true},
         {title: 'event 3', date: '2019-12-13'}
     ];
     header = {
-        left:   'prev',
+        left:   'timeGridWeek dayGridMonth',
         center: 'title',
-        right:  'next'
+        right:  'prev next'
     };
     selectedEvent: any;
 
@@ -57,8 +57,7 @@ export class HomePage implements OnInit, AfterViewInit {
     }
 
     handleDateClick($event: any) {
-        console.log('click');
-        alert($event.dateStr);
+        alert('Das Event am ' + $event.date + 'wurde angeklickt');
     }
 
 

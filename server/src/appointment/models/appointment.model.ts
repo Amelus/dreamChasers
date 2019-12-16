@@ -10,7 +10,11 @@ export class Appointment extends BaseModel<Appointment> {
 
     @prop({required: [true, 'Creator and Content required']})
     @Expose()
-    extendedProps: object;
+    extendedProps: {
+        creator: string,
+        content: string,
+        global: boolean,
+    };
 
     @prop()
     @Expose()

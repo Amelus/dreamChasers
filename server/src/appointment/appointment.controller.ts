@@ -10,6 +10,7 @@ import {
     Post,
     Put,
     Query,
+    Req,
     UseGuards,
 } from '@nestjs/common';
 import {
@@ -32,6 +33,8 @@ import {Roles} from '../shared/decorators/roles.decorator';
 import {UserRole} from '../user/models/user-role.enum';
 import {AuthGuard} from '@nestjs/passport';
 import {RolesGuard} from '../shared/guards/roles.guard';
+import {InstanceType} from 'typegoose';
+import {User} from '../user/models/user.model';
 
 @Controller('appointments')
 @ApiUseTags(Appointment.modelName)
@@ -55,52 +58,52 @@ export class AppointmentController {
         }
     }
 
-    @Get('assigned')
+    @Get()
     @Roles(UserRole.Admin, UserRole.Leader, UserRole.User)
     @UseGuards(AuthGuard('jwt'), RolesGuard)
     @ApiOkResponse({type: AppointmentVm, isArray: true})
     @ApiBadRequestResponse({type: ApiException})
-    @ApiOperation(GetOperationId(Appointment.modelName, 'GetAssigned'))
-    @ApiImplicitQuery({name: 'assignee', required: true})
-    async getAllAssigned(@Query('assignee') assignee?: string): Promise<AppointmentVm[]> {
+    @ApiOperation(GetOperationId(Appointment.modelName, 'GetAll'))
+    async getAll(@Req() request): Promise<AppointmentVm[]> {
 
-        if (!assignee) {
-            throw new HttpException('Missing parameter assignees', HttpStatus.BAD_REQUEST);
+        const user: InstanceType<User> = request.user;
+
+        if (!user) {
+            throw new HttpException('Missing parameter user', HttpStatus.BAD_REQUEST);
         }
 
+        let created: InstanceType<Appointment>[] = [];
+        let fromLead: InstanceType<Appointment>[] = [];
         const filter = {};
-        filter['assignees'] = assignee;
 
-        try {
-            const appointments = await this._appointmentService.findAll(filter);
-            return this._appointmentService.mapArray(map(appointments, appointment => appointment.toJSON()), Appointment, AppointmentVm);
-        } catch (e) {
-            throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @Get('created')
-    @Roles(UserRole.Admin, UserRole.Leader)
-    @UseGuards(AuthGuard('jwt'), RolesGuard)
-    @ApiOkResponse({type: AppointmentVm, isArray: true})
-    @ApiBadRequestResponse({type: ApiException})
-    @ApiOperation(GetOperationId(Appointment.modelName, 'GetCreated'))
-    @ApiImplicitQuery({name: 'creator', required: true})
-    async getAllCreated(@Query('creator') creator?: string): Promise<AppointmentVm[]> {
-
-        if (!creator) {
-            throw new HttpException('Missing parameter creator', HttpStatus.BAD_REQUEST);
+        if (user.role === UserRole.Admin || user.role === UserRole.Leader) {
+            filter['extendedProps.creator'] = user;
+            created = await this._appointmentService.findAll(filter);
         }
 
-        const filter = {};
-        filter['creator'] = creator;
-
-        try {
-            const appointments = await this._appointmentService.findAll(filter);
-            return this._appointmentService.mapArray(map(appointments, appointment => appointment.toJSON()), Appointment, AppointmentVm);
-        } catch (e) {
-            throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        if (user.role === UserRole.Leader || user.role === UserRole.User) {
+            filter['extendedProps.creator'] = user.leadUser;
+            filter['start'] = {$gte: 'Mon May 30 18:47:00 +0000 2015',
+                $lt: 'Sun May 30 20:40:36 +0000 2010'};
+            fromLead = await this._appointmentService.findAll(filter);
+            fromLead.forEach((appointment) => {
+                if (!appointment.extendedProps.global) {
+                    appointment.title = 'Blocked';
+                }
+            });
         }
+
+        let appointments = [];
+        appointments = appointments.concat(fromLead, created);
+
+        if (appointments.length > 0) {
+            try {
+                return this._appointmentService.mapArray(map(appointments, appointment => appointment.toJSON()), Appointment, AppointmentVm);
+            } catch (e) {
+                throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+        return null;
     }
 
     @Put()
@@ -110,7 +113,7 @@ export class AppointmentController {
     @ApiBadRequestResponse({type: ApiException})
     @ApiOperation(GetOperationId(Appointment.modelName, 'Update'))
     async update(@Body() vm: AppointmentVm): Promise<AppointmentVm> {
-        const {id, content} = vm;
+        const {id} = vm;
 
         if (!vm || !id) {
             throw new HttpException('Missing parameters', HttpStatus.BAD_REQUEST);
@@ -122,7 +125,6 @@ export class AppointmentController {
             throw new HttpException(`${id} Not found`, HttpStatus.NOT_FOUND);
         }
 
-        exist.content = content;
 
         try {
             const updated = await this._appointmentService.update(id, exist);

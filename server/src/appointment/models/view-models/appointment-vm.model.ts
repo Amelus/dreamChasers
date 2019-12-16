@@ -6,7 +6,11 @@ export class AppointmentVm extends BaseModelVm {
 
     @ApiModelProperty()
     @Expose()
-    creator: string;
+    extendedProps: {
+        creator: string,
+        content: string,
+        global: boolean,
+    };
 
     @ApiModelProperty()
     @Expose()
@@ -14,13 +18,34 @@ export class AppointmentVm extends BaseModelVm {
 
     @ApiModelProperty()
     @Expose()
-    content: string;
+    start: Date;
 
     @ApiModelProperty()
     @Expose()
-    startDate: Date;
+    end: Date;
 
     @ApiModelProperty()
     @Expose()
-    endDate: Date;
+    allDay: boolean;
+
+    @ApiModelProperty() // eg. [0, 1, 4] -> Sunday, Monday, Thursday
+    @Expose()
+    daysOfWeek: number[];
+
+    @ApiModelProperty() // eg. '10:45:00'
+    @Expose()
+    startTime: string;
+
+    @ApiModelProperty()
+    @Expose()
+    endTime: string;
+
+    @ApiModelProperty()
+    @Expose()
+    startRecur: Date;
+
+    @ApiModelProperty()
+    @Expose()
+    endRecur: Date;
+
 }

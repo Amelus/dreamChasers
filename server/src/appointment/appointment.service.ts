@@ -19,15 +19,18 @@ export class AppointmentService extends BaseService<Appointment> {
     }
 
     async createAppointment(params: AppointmentParams): Promise<Appointment> {
-        const {creator, title, content, startDate, endDate} = params;
 
         const newAppointment = Appointment.createModel();
 
-        // newAppointment.creator = creator;
-        newAppointment.title = title;
-        // newAppointment.content = content;
-        newAppointment.start = startDate;
-        newAppointment.end = endDate;
+        newAppointment.extendedProps = params.extendedProps;
+        newAppointment.title = params.title;
+
+        if (params.daysOfWeek) {
+
+        } else {
+            newAppointment.start = params.start;
+            newAppointment.end = params.end;
+        }
 
         try {
             const result = await this.create(newAppointment);
