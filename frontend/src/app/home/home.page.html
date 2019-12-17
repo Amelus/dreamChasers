@@ -11,7 +11,10 @@
 
 <ion-content>
 
-    <full-calendar #monthCalendar defaultView="dayGridMonth" [plugins]="calendarPlugins"
+    <full-calendar #monthCalendar
+                   *ngIf="defaultView"
+                   [defaultView]="defaultView"
+                   [plugins]="calendarPlugins"
                    [weekends]="true"
                    [events]="calendarEvents"
                    [locale]="'de'"
@@ -19,18 +22,20 @@
                    [header]="header"
                    [nowIndicator]="true"
                    (dateClick)="showDateClick($event)"
-                   (eventClick)="handleDateClick($event)"
+                   (eventClick)="eventClick($event)"
+                   contentHeight="auto"
                    >
     </full-calendar>
-    <full-calendar #dayListCalendar defaultView="listDay" [plugins]="calendarPlugins"
+    <full-calendar #dayListCalendar defaultView="listDay"
+                   [plugins]="calendarPlugins"
                    [weekends]="true"
-                   [events]="calendarEvents"
+                   [events]="getEvents()"
                    [locale]="'de'"
                    [header]="false"
                    [themeSystem]="'bootstrap'"
-                   (eventClick)="handleDateClick($event)">
+                   (eventClick)="eventClick($event)">
     </full-calendar>
-    <ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="addAppointmentModal()">
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="triggerAlert()">
         <ion-fab-button [disabled]="!editorUser">
             <ion-icon name="add"></ion-icon>
         </ion-fab-button>

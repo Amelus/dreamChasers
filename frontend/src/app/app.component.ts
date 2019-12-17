@@ -58,9 +58,9 @@ export class AppComponent {
 
     toggleTodos() {
       if (this.expandedTodos) {
-        this.todoIcon = 'arrow-dropright';
-      } else {
         this.todoIcon = 'arrow-dropdown';
+      } else {
+        this.todoIcon = 'arrow-dropup';
       }
       this.expandedTodos = !this.expandedTodos;
     }

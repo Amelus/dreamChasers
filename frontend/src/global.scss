@@ -35,3 +35,23 @@
 @import "~bootswatch/dist/darkly/bootswatch";
 
 @import '~@fortawesome/fontawesome-free/css/all.css';
+
+@media only screen and (max-width: 410px) {
+  .btn {
+    font-size: 0.6rem;
+  }
+  .fc-center {
+    font-size: 0.5rem;
+  }
+}
+
+@media screen and (max-width: 479px) {
+  .btn {
+    font-size: 0.8rem;
+  }
+  .fc-center {
+    font-size: 0.7rem;
+  }
+
+
+}

@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {MenuController} from '@ionic/angular';
+import {AlertController, MenuController, ModalController} from '@ionic/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -7,6 +7,10 @@ import listPlugin from '@fullcalendar/list';
 import bootstrapPlugin from '@fullcalendar/bootstrap';
 import {UserClient, UserVmRole} from '../app.api';
 import {FullCalendarComponent} from '@fullcalendar/angular';
+import {Router} from '@angular/router';
+import {AppointmentCreationPage} from '../appointment/appointment-creation/appointment-creation.page';
+import {AppointmentEditPage} from '../appointment/appointment-edit/appointment-edit.page';
+import {Observable} from "rxjs";
 
 @Component({
     selector: 'app-home',
@@ -19,6 +23,7 @@ export class HomePage implements OnInit, AfterViewInit {
     @ViewChild('dayListCalendar', {static: true}) dayListCalendar: FullCalendarComponent;
 
     editorUser: boolean;
+    defaultView: string;
     calendarPlugins = [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin, bootstrapPlugin];
     calendarEvents = [
         {title: 'Meeting', date: '2019-12-15'},
@@ -30,39 +35,83 @@ export class HomePage implements OnInit, AfterViewInit {
         center: 'title',
         right:  'prev next'
     };
-    selectedEvent: any;
+    showList: boolean;
 
     constructor(public menuController: MenuController,
-                private userClient: UserClient) {
+                private userClient: UserClient,
+                private router: Router,
+                private alertController: AlertController,
+                private modalController: ModalController) {
         this.menuController.enable(true, 'mainMenu');
     }
 
     ngOnInit(): void {
+        this.defaultView = 'dayGridMonth';
+        this.showList = true;
     }
 
     ngAfterViewInit(): void {
         this.editorUser = this.isEditorUser();
     }
 
-    addEvent() {
-        this.calendarEvents = this.calendarEvents.concat({title: 'event 3', date: '2019-12-22'});
+    showDateClick(day: any) {
+        const calendarApi = this.dayListCalendar.getApi();
+        if (this.monthCalendar.getApi().view.type !== 'timeGridWeek') {
+            calendarApi.render();
+            calendarApi.gotoDate(day.date);
+        } else {
+            calendarApi.destroy();
+        }
     }
 
-    modifyTitle(eventIndex, newTitle) {
-        const calendarEvents = this.calendarEvents.slice(); // a clone
-        const singleEvent = Object.assign({}, calendarEvents[eventIndex]); // a clone
-        singleEvent.title = newTitle;
-        calendarEvents[eventIndex] = singleEvent;
-        this.calendarEvents = calendarEvents; // reassign the array
+    getEvents() {
+        return this.calendarEvents;
     }
 
-    handleDateClick($event: any) {
-        alert('Das Event am ' + $event.date + 'wurde angeklickt');
+    async eventClick($event: any) {
+        return await this.modalController.create(
+            {
+                component: AppointmentEditPage,
+                componentProps: {appointments: this.calendarEvents, selected: $event}
+            });
     }
 
+    async triggerAlert() {
+        let alert: any;
+        if (this.editorUser) {
+            alert = this.createAppointment();
+        } else {
+            alert = this.upgradeAlert();
+        }
+        (await alert).present();
+    }
 
-    addAppointmentModal() {
-        // trigger modal
+    private async createAppointment() {
+        return await this.modalController.create(
+            {
+                component: AppointmentCreationPage,
+                componentProps: {appointments: this.calendarEvents}
+            });
+    }
+
+    private async upgradeAlert() {
+        return await this.alertController.create({
+            header: 'Upgrade benötigt',
+            message: 'Möchten Sie Ihren Account upgraden um Aufgaben zu erstellen?',
+            buttons: [
+                {
+                    text: 'Abbruch',
+                    role: 'cancel',
+                    cssClass: 'secondary'
+                }, {
+                    text: 'Upgrade',
+                    cssClass: 'primary',
+                    handler: () => {
+                        this.router.navigate(['/profile']);
+                    }
+                }
+            ]
+        });
     }
 
     private isEditorUser(): boolean {
@@ -76,10 +125,5 @@ export class HomePage implements OnInit, AfterViewInit {
             || this.userClient.getSessionUser().role === null
             || this.userClient.getSessionUser().role === UserVmRole.User);
 
-    }
-
-    showDateClick($event: any) {
-        const calendarApi = this.dayListCalendar.getApi();
-        calendarApi.gotoDate($event.date);
     }
 }

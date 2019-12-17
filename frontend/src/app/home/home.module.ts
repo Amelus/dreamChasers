@@ -6,12 +6,14 @@ import {RouterModule} from '@angular/router';
 
 import {HomePage} from './home.page';
 import {FullCalendarModule} from '@fullcalendar/angular';
+import {AppointmentCreationPageModule} from "../appointment/appointment-creation/appointment-creation.module";
 
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
         IonicModule,
+        AppointmentCreationPageModule,
         RouterModule.forChild([
             {
                 path: '',

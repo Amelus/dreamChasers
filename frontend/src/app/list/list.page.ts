@@ -4,6 +4,7 @@ import {TodoClient, TodoParams, TodoVm, UserClient, UserVmRole} from '../app.api
 import {AlertController, ModalController, PopoverController} from '@ionic/angular';
 import {StatusChangeComponent} from '../components/status-change/status-change.component';
 import {TodoCreationPage} from '../todo-creation/todo-creation.page';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-list',
@@ -26,7 +27,8 @@ export class ListPage implements OnInit, AfterViewInit {
                 private renderer: Renderer2,
                 private userClient: UserClient,
                 private alertController: AlertController,
-                public modalController: ModalController) {
+                public modalController: ModalController,
+                private router: Router) {
     }
 
     ngOnInit() {
@@ -139,7 +141,7 @@ export class ListPage implements OnInit, AfterViewInit {
                     text: 'Upgrade',
                     cssClass: 'primary',
                     handler: () => {
-                        console.log('Weiterleitung zum Upgrade');
+                        this.router.navigate(['/profile']);
                     }
                 }
             ]
