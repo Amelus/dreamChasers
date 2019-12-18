@@ -1,12 +1,84 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Termin anlegen</ion-title>
-    <ion-button slot="end" (click)="dismiss()">
-      Schließen
+    <ion-button slot="end" (click)="dismiss()" color="primary">
+      Abbruch
     </ion-button>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
+    <ion-item class="ion-align-items-center ion-padding">
+      <ion-label position="floating">Titel</ion-label>
+      <ion-input autocomplete="true" required="true" formControlName="title"></ion-input>
+      <ng-container *ngIf="form.get('title').dirty && form.get('title').errors">
+        <div class="error">
+          <ng-container *ngIf="form.get('title').hasError('required')">
+            Ein Titel muss festgelegt werden
+          </ng-container>
+        </div>
+      </ng-container>
+    </ion-item>
+
+    <ion-item class="ion-align-items-center ion-padding">
+      <ion-label>Ganztägig</ion-label>
+      <ion-toggle color="primary" (change)="toggleAllDay()"></ion-toggle>
+    </ion-item>
+
+    <ion-item class="ion-align-items-center ion-padding">
+      <ion-datetime slot="start" displayFormat="DD MMM YY" formControlName="startDay" month-short-names placeholder="Start" [min]="minDate" [max]="maxDate"></ion-datetime>
+      <ng-container *ngIf="form.get('startDay').dirty && form.get('startDay').errors">
+        <div class="error">
+          <ng-container *ngIf="form.get('startDay').hasError('required')">
+            Eine Startzeit muss festgelegt werden
+          </ng-container>
+        </div>
+      </ng-container>
+      <ion-datetime slot="end" displayFormat="DD MMM YY" formControlName="endDay" month-short-names placeholder="Ende" [min]="minDate" [max]="maxDate"></ion-datetime>
+      <ng-container *ngIf="form.get('endDay').dirty && form.get('endDay').errors">
+        <div class="error">
+          <ng-container *ngIf="form.get('endDay').hasError('required')">
+            Eine Endzeit muss festgelegt werden
+          </ng-container>
+        </div>
+      </ng-container>
+    </ion-item>
+
+    <ion-item class="ion-align-items-center ion-padding" *ngIf="!allDay">
+      <ion-datetime displayFormat="HH:mm" formControlName="startHour" month-short-names placeholder="Von"></ion-datetime>
+      <ng-container *ngIf="form.get('startHour').dirty && form.get('startHour').errors">
+        <div class="error">
+          <ng-container *ngIf="form.get('startHour').hasError('required')">
+            Eine Start-Uhrzeit muss festgelegt werden
+          </ng-container>
+        </div>
+      </ng-container>
+      <ion-datetime displayFormat="HH:mm" formControlName="endHour" month-short-names placeholder="Bis"></ion-datetime>
+      <ng-container *ngIf="form.get('endHour').dirty && form.get('endHour').errors">
+        <div class="error">
+          <ng-container *ngIf="form.get('endHour').hasError('required')">
+            Eine End-Uhrzeit muss festgelegt werden
+          </ng-container>
+        </div>
+      </ng-container>
+    </ion-item>
+
+    <ion-item class="ion-align-items-center ion-padding">
+      <ion-label position="floating">Beschreibung</ion-label>
+      <ion-input autocomplete="true" required="true" formControlName="content"></ion-input>
+      <ng-container *ngIf="form.get('content').dirty && form.get('content').errors">
+        <div class="error">
+          <ng-container *ngIf="form.get('content').hasError('required')">
+            Ein Inhalt muss vorhanden sein
+          </ng-container>
+        </div>
+      </ng-container>
+    </ion-item>
+
+
+    <ion-button class="ios ion-align-items-center log-button" expand="block" type="submit">Erstellen
+    </ion-button>
+  </form>
 </ion-content>

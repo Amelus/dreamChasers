@@ -3,14 +3,13 @@ import {ApiModelProperty} from '@nestjs/swagger';
 export class AppointmentParams {
 
     @ApiModelProperty()
-    extendedProps: {
-        creator: string,
-        content: string,
-        global: boolean,
-    };
+    title: string;
 
     @ApiModelProperty()
-    title: string;
+    content: string;
+
+    @ApiModelProperty()
+    global: boolean;
 
     @ApiModelProperty()
     start: Date;

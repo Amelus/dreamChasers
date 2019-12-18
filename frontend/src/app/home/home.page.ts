@@ -10,7 +10,6 @@ import {FullCalendarComponent} from '@fullcalendar/angular';
 import {Router} from '@angular/router';
 import {AppointmentCreationPage} from '../appointment/appointment-creation/appointment-creation.page';
 import {AppointmentEditPage} from '../appointment/appointment-edit/appointment-edit.page';
-import {Observable} from "rxjs";
 
 @Component({
     selector: 'app-home',

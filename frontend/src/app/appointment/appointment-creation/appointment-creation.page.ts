@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {ModalController} from '@ionic/angular';
+import {ModalController, NavParams} from '@ionic/angular';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {AppointmentClient, AppointmentVm} from '../../app.api';
 
 @Component({
   selector: 'app-appointment-creation',
@@ -8,14 +10,40 @@ import {ModalController} from '@ionic/angular';
 })
 export class AppointmentCreationPage implements OnInit {
 
-  constructor(public modalController: ModalController) { }
+  private form: FormGroup;
+  private appointments: AppointmentVm[];
+  private recurring: boolean;
+  private allDay: boolean;
+  private minDate: Date;
+  private maxDate: Date;
+
+  constructor(public modalController: ModalController,
+              private formBuilder: FormBuilder,
+              private params: NavParams,
+              private appointmentClient: AppointmentClient) { }
 
   ngOnInit() {
+    this.recurring = false;
+    this.allDay = false;
+    this.minDate = new Date();
+    this.maxDate.setDate(this.minDate.getDate() + 365);
   }
 
   public async dismiss() {
     this.modalController.dismiss({
       dismissed: true
     });
+  }
+
+    onSubmit() {
+
+    }
+
+  toggleRecur() {
+    this.recurring = !this.recurring;
+  }
+
+  toggleAllDay() {
+    this.allDay = !this.allDay;
   }
 }

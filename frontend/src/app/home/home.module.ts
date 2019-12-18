@@ -6,7 +6,8 @@ import {RouterModule} from '@angular/router';
 
 import {HomePage} from './home.page';
 import {FullCalendarModule} from '@fullcalendar/angular';
-import {AppointmentCreationPageModule} from "../appointment/appointment-creation/appointment-creation.module";
+import {AppointmentCreationPageModule} from '../appointment/appointment-creation/appointment-creation.module';
+import {AppointmentEditPageModule} from '../appointment/appointment-edit/appointment-edit.module';
 
 @NgModule({
     imports: [
@@ -14,6 +15,7 @@ import {AppointmentCreationPageModule} from "../appointment/appointment-creation
         FormsModule,
         IonicModule,
         AppointmentCreationPageModule,
+        AppointmentEditPageModule,
         RouterModule.forChild([
             {
                 path: '',

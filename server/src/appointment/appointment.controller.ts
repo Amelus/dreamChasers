@@ -49,10 +49,15 @@ export class AppointmentController {
     @ApiCreatedResponse({type: AppointmentVm})
     @ApiBadRequestResponse({type: ApiException})
     @ApiOperation(GetOperationId(Appointment.modelName, 'Create'))
-    async create(@Body() params: AppointmentParams): Promise<AppointmentVm> {
+    async create(@Req() request, @Body() params: AppointmentParams): Promise<AppointmentVm> {
+        const user: InstanceType<User> = request.user;
+
+        if (!user) {
+            throw new HttpException('Missing parameter user', HttpStatus.BAD_REQUEST);
+        }
+
         try {
-            const newAppointment = await this._appointmentService.createAppointment(params);
-            return this._appointmentService.map(newAppointment, Appointment, AppointmentVm);
+            return await this._appointmentService.createAppointment(params, user.username);
         } catch (e) {
             throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -81,29 +86,21 @@ export class AppointmentController {
             created = await this._appointmentService.findAll(filter);
         }
 
-        if (user.role === UserRole.Leader || user.role === UserRole.User) {
-            filter['extendedProps.creator'] = user.leadUser;
-            filter['start'] = {$gte: 'Mon May 30 18:47:00 +0000 2015',
-                $lt: 'Sun May 30 20:40:36 +0000 2010'};
-            fromLead = await this._appointmentService.findAll(filter);
-            fromLead.forEach((appointment) => {
-                if (!appointment.extendedProps.global) {
-                    appointment.title = 'Blocked';
-                }
-            });
-        }
+        fromLead = await this._appointmentService.findLeadEvents(user, filter, fromLead);
 
         let appointments = [];
         appointments = appointments.concat(fromLead, created);
 
         if (appointments.length > 0) {
             try {
-                return this._appointmentService.mapArray(map(appointments, appointment => appointment.toJSON()), Appointment, AppointmentVm);
+                return appointments.map((appointment) => {
+                    return this._appointmentService.map2Vm(appointment);
+                });
             } catch (e) {
                 throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
-        return null;
+        return [];
     }
 
     @Put()
@@ -125,10 +122,9 @@ export class AppointmentController {
             throw new HttpException(`${id} Not found`, HttpStatus.NOT_FOUND);
         }
 
-
         try {
             const updated = await this._appointmentService.update(id, exist);
-            return this._appointmentService.map(updated.toJSON(), Appointment, AppointmentVm);
+            return this._appointmentService.map2Vm(updated);
         } catch (e) {
             throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -143,7 +139,7 @@ export class AppointmentController {
     async delete(@Param('id') id: string): Promise<AppointmentVm> {
         try {
             const deleted = await this._appointmentService.delete(id);
-            return this._appointmentService.map(deleted.toJSON(), Appointment, AppointmentVm);
+            return this._appointmentService.map2Vm(deleted);
         } catch (e) {
             throw new InternalServerErrorException(e);
         }

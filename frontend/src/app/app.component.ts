@@ -45,7 +45,7 @@ export class AppComponent {
         private statusBar: StatusBar
     ) {
         this.initializeApp();
-        this.todoIcon = 'arrow-dropright';
+        this.todoIcon = 'arrow-dropdown';
         this.expandedTodos = false;
     }
 

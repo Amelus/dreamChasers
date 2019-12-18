@@ -738,6 +738,257 @@ export class TodoClient {
     }
 }
 
+@Injectable({
+    providedIn: 'root'
+})
+export class AppointmentClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : 'http://localhost:8080/api';
+    }
+
+    create(appointmentParams: AppointmentParams): Observable<AppointmentVm> {
+        let url = this.baseUrl + '/appointment';
+        url = url.replace(/[?&]$/, '');
+
+        const content = JSON.stringify(appointmentParams);
+
+        const options: any = {
+            body: content,
+            observe: 'response',
+            responseType: 'blob',
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json',
+                Accept: 'application/json'
+            })
+        };
+
+        return this.http.request('post', url, options).pipe(_observableMergeMap((response: any) => {
+            return this.processCreate(response);
+        })).pipe(_observableCatch((response: any) => {
+            if (response instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(response as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<AppointmentVm>;
+                }
+            } else {
+                return _observableThrow(response) as any as Observable<AppointmentVm>;
+            }
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<AppointmentVm> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+                (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        const headers: any = {};
+        if (response.headers) {
+            for (const key of response.headers.keys()) {
+                headers[key] = response.headers.get(key);
+            }
+        }
+
+        if (status === 201) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(responseText => {
+                let result201: any = null;
+                const resultData201 = responseText === '' ? null : JSON.parse(responseText, this.jsonParseReviver);
+                result201 = resultData201 ? AppointmentVm.fromJS(resultData201) : new AppointmentVm();
+                return _observableOf(result201);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(responseText => {
+                let result400: any = null;
+                const resultData400 = responseText === '' ? null : JSON.parse(responseText, this.jsonParseReviver);
+                result400 = resultData400 ? ApiException.fromJS(resultData400) : new ApiException();
+                return throwException('A server error occurred.', status, responseText, headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(responseText => {
+                return throwException('An unexpected server error occurred.', status, responseText, headers);
+            }));
+        }
+        return _observableOf<AppointmentVm>(null as any);
+    }
+
+    getAll(): Observable<AppointmentVm[]> {
+        let url = this.baseUrl + '/appointments';
+
+        url = url.replace(/[?&]$/, '');
+
+        const options: any = {
+            observe: 'response',
+            responseType: 'blob',
+            headers: new HttpHeaders({
+                Accept: 'application/json'
+            })
+        };
+
+        return this.http.request('get', url, options).pipe(_observableMergeMap((response: any) => {
+            return this.processGetall(response);
+        })).pipe(_observableCatch((response: any) => {
+            if (response instanceof HttpResponseBase) {
+                try {
+                    return this.processGetall(response as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<AppointmentVm[]>;
+                }
+            } else {
+                return _observableThrow(response) as any as Observable<AppointmentVm[]>;
+            }
+        }));
+    }
+
+
+    protected processGetall(response: HttpResponseBase): Observable<AppointmentVm[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+                (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        const headers: any = {};
+        if (response.headers) {
+            for (const key of response.headers.keys()) {
+                headers[key] = response.headers.get(key);
+            }
+        }
+
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(responseText => {
+                let result200: any = null;
+                const resultData200 = responseText === '' ? null : JSON.parse(responseText, this.jsonParseReviver);
+                if (resultData200 && resultData200.constructor === Array) {
+                    result200 = [];
+                    for (const item of resultData200) {
+                        result200.push(AppointmentVm.fromJS(item));
+                    }
+                }
+                return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(responseText => {
+                let result400: any = null;
+                const resultData400 = responseText === '' ? null : JSON.parse(responseText, this.jsonParseReviver);
+                result400 = resultData400 ? ApiException.fromJS(resultData400) : new ApiException();
+                return throwException('A server error occurred.', status, responseText, headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(responseText => {
+                return throwException('An unexpected server error occurred.', status, responseText, headers);
+            }));
+        }
+        return _observableOf<AppointmentVm[]>(null as any);
+    }
+
+    update(appointmentVm: AppointmentVm): Observable<AppointmentVm> {
+        let url = this.baseUrl + '/appointment';
+        url = url.replace(/[?&]$/, '');
+
+        const content = JSON.stringify(appointmentVm);
+
+        const options: any = {
+            body: content,
+            observe: 'response',
+            responseType: 'blob',
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json',
+                Accept: 'application/json'
+            })
+        };
+
+        return this.http.request('put', url, options).pipe(_observableMergeMap((response: any) => {
+            return this.processUpdate(response);
+        })).pipe(_observableCatch((response: any) => {
+            if (response instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(response as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<AppointmentVm>;
+                }
+            } else {
+                return _observableThrow(response) as any as Observable<AppointmentVm>;
+            }
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<AppointmentVm> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+                (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        const headers: any = {};
+        if (response.headers) {
+            for (const key of response.headers.keys()) {
+                headers[key] = response.headers.get(key);
+            }
+        }
+
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(responseText => {
+                let result200: any = null;
+                const resultData200 = responseText === '' ? null : JSON.parse(responseText, this.jsonParseReviver);
+                result200 = resultData200 ? AppointmentVm.fromJS(resultData200) : new AppointmentVm();
+                return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(responseText => {
+                let result400: any = null;
+                const resultData400 = responseText === '' ? null : JSON.parse(responseText, this.jsonParseReviver);
+                result400 = resultData400 ? ApiException.fromJS(resultData400) : new ApiException();
+                return throwException('A server error occurred.', status, responseText, headers, result400);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(responseText => {
+                return throwException('An unexpected server error occurred.', status, responseText, headers);
+            }));
+        }
+        return _observableOf<AppointmentVm>(null as any);
+    }
+
+    delete(id: string): Observable<AppointmentVm> {
+        let url = this.baseUrl + '/appointment/delete';
+
+        if (id === undefined || id === null) {
+            throw new Error('The parameter \'id\' must be defined.');
+        }
+        url = url.replace(/[?&]$/, '');
+
+        const options: any = {
+            body: id,
+            observe: 'response',
+            responseType: 'blob',
+            headers: new HttpHeaders({
+                Accept: 'application/json'
+            })
+        };
+
+        return this.http.request('delete', url, options).pipe(_observableMergeMap((response: any) => {
+            return this.processDelete(response);
+        })).pipe(_observableCatch((response: any) => {
+            if (response instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(response as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<AppointmentVm>;
+                }
+            } else {
+                return _observableThrow(response) as any as Observable<AppointmentVm>;
+            }
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<AppointmentVm> {
+        return this.processUpdate(response);
+    }
+}
+
 export class RegisterVm implements IRegisterVm {
 
     constructor(data?: IRegisterVm) {
@@ -1246,6 +1497,184 @@ export interface ITodoVm {
     dueDate: Date;
     isCompleted?: boolean | false;
     isChecked?: boolean | false;
+}
+
+export class AppointmentParams implements IAppointmentParams {
+
+    constructor(data?: IAppointmentParams) {
+        if (data) {
+            for (const property in data) {
+                if (data.hasOwnProperty(property)) {
+                    (this as any)[property] = (data as any)[property];
+                }
+            }
+        }
+    }
+
+    title: string;
+    content?: string | null;
+    global: boolean;
+    allDay: boolean;
+    start?: Date | null;
+    end?: Date | null;
+    daysOfWeek?: number[] | null;
+    startTime?: string | null;
+    endTime?: string | null;
+    startRecur?: Date | null;
+    endRecur?: Date | null;
+
+    static fromJS(data: any): AppointmentParams {
+        data = typeof data === 'object' ? data : {};
+        const result = new AppointmentParams();
+        result.init(data);
+        return result;
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.title = data.title !== undefined ? data.title : null as any;
+            this.content = data.content !== undefined ? data.content : null as any;
+            this.global = data.global !== undefined ? data.global : null as any;
+            this.allDay = data.allDay !== undefined ? data.allDay : null as any;
+
+            this.start = data.start ? new Date(data.start.toString()) : null as any;
+            this.end = data.end ? new Date(data.end.toString()) : null as any;
+
+            this.daysOfWeek = data.daysOfWeek !== undefined ? data.daysOfWeek : null as any;
+            this.startTime = data.startTime !== undefined ? data.startTime : null as any;
+            this.endTime = data.endTime !== undefined ? data.endTime : null as any;
+            this.startRecur = data.startRecur ? new Date(data.startRecur.toString()) : null as any;
+            this.endRecur = data.endRecur ? new Date(data.endRecur.toString()) : null as any;
+        }
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data.title = this.title !== undefined ? this.title : null as any;
+        data.content = this.content !== undefined ? this.content : null as any;
+        data.global = this.global !== undefined ? this.global : null as any;
+
+        data.start = data.start ? new Date(data.start.toString()) : null as any;
+        data.end = data.end ? new Date(data.end.toString()) : null as any;
+
+        data.startTime = data.startTime !== undefined ? data.startTime : null as any;
+        data.endTime = data.endTime !== undefined ? data.endTime : null as any;
+        data.startRecur = data.startRecur ? new Date(data.startRecur.toString()) : null as any;
+        data.endRecur = data.endRecur ? new Date(data.endRecur.toString()) : null as any;
+        return data;
+    }
+}
+
+export interface IAppointmentParams {
+    title: string;
+    content?: string | null;
+    global: boolean;
+    start?: Date | null;
+    end?: Date | null;
+    allDay: boolean;
+    daysOfWeek?: number[] | null;
+    startTime?: string | null;
+    endTime?: string | null;
+    startRecur?: Date | null;
+    endRecur?: Date | null;
+}
+
+export class AppointmentVm implements IAppointmentVm {
+
+    constructor(data?: IAppointmentVm) {
+        if (data) {
+            for (const property in data) {
+                if (data.hasOwnProperty(property)) {
+                    (this as any)[property] = (data as any)[property];
+                }
+            }
+        }
+    }
+
+    createdAt?: Date | null;
+    updatedAt?: Date | null;
+    id?: string | null;
+    extendedProps: {
+        creator: string,
+        content?: string | null,
+        global: boolean,
+    };
+    title: string;
+    start?: Date | null;
+    end?: Date | null;
+    allDay: boolean;
+    daysOfWeek?: number[] | null;
+    startTime?: string | null;
+    endTime?: string | null;
+    startRecur?: Date | null;
+    endRecur?: Date | null;
+
+    static fromJS(data: any): AppointmentVm {
+        data = typeof data === 'object' ? data : {};
+        const result = new AppointmentVm();
+        result.init(data);
+        return result;
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.createdAt = data.createdAt ? new Date(data.createdAt.toString()) : null as any;
+            this.updatedAt = data.updatedAt ? new Date(data.updatedAt.toString()) : null as any;
+            this.id = data.id !== undefined ? data.id : null as any;
+            this.extendedProps = data.extendedProps !== undefined ? data.extendedProps : null as any;
+            this.title = data.title !== undefined ? data.title : null as any;
+            this.allDay = data.allDay !== undefined ? data.allDay : null as any;
+
+            this.start = data.start ? new Date(data.start.toString()) : null as any;
+            this.end = data.end ? new Date(data.end.toString()) : null as any;
+
+            this.daysOfWeek = data.daysOfWeek !== undefined ? data.daysOfWeek : null as any;
+            this.startTime = data.startTime !== undefined ? data.startTime : null as any;
+            this.endTime = data.endTime !== undefined ? data.endTime : null as any;
+            this.startRecur = data.startRecur ? new Date(data.startRecur.toString()) : null as any;
+            this.endRecur = data.endRecur ? new Date(data.endRecur.toString()) : null as any;
+        }
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data.createdAt = this.createdAt ? this.createdAt.toISOString() : null as any;
+        data.updatedAt = this.updatedAt ? this.updatedAt.toISOString() : null as any;
+        data.id = this.id !== undefined ? this.id : null as any;
+        data.extendedProps = data.extendedProps !== undefined ? data.extendedProps : null as any;
+        data.title = data.title !== undefined ? data.title : null as any;
+        data.allDay = data.allDay !== undefined ? data.allDay : null as any;
+
+        data.start = data.start ? new Date(data.start.toString()) : null as any;
+        data.end = data.end ? new Date(data.end.toString()) : null as any;
+
+        data.daysOfWeek = data.daysOfWeek !== undefined ? data.daysOfWeek : null as any;
+        data.startTime = data.startTime !== undefined ? data.startTime : null as any;
+        data.endTime = data.endTime !== undefined ? data.endTime : null as any;
+        data.startRecur = data.startRecur ? new Date(data.startRecur.toString()) : null as any;
+        data.endRecur = data.endRecur ? new Date(data.endRecur.toString()) : null as any;
+        return data;
+    }
+}
+
+export interface IAppointmentVm {
+    createdAt?: Date | null;
+    updatedAt?: Date | null;
+    id?: string | null;
+    extendedProps: {
+        creator: string,
+        content?: string | null,
+        global: boolean,
+    };
+    title: string;
+    start?: Date | null;
+    end?: Date | null;
+    allDay: boolean;
+    daysOfWeek?: number[] | null;
+    startTime?: string | null;
+    endTime?: string | null;
+    startRecur?: Date | null;
+    endRecur?: Date | null;
 }
 
 export enum UpdateUserStatus {

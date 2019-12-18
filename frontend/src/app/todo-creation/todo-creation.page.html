@@ -52,7 +52,7 @@
 
     <ion-item class="ion-align-items-center ion-padding">
       <ion-label position="floating">Deadline</ion-label>
-      <ion-datetime displayFormat="DD MM YY" formControlName="dueDate" month-short-names></ion-datetime>
+      <ion-datetime displayFormat="DD MM YY" formControlName="dueDate" month-short-names [min]="minDate" [max]="maxDate"></ion-datetime>
       <ng-container *ngIf="form.get('dueDate').dirty && form.get('dueDate').errors">
         <div class="error">
           <ng-container *ngIf="form.get('dueDate').hasError('required')">

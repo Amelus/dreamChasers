@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import {ModalController, NavParams} from '@ionic/angular';
 import {TodoClient, TodoParams, TodoVm, UserClient, UserVm} from '../app.api';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import * as moment from 'moment';
+import {Moment} from 'moment';
+
 
 @Component({
   selector: 'app-todo-creation',
@@ -13,6 +16,8 @@ export class TodoCreationPage implements OnInit {
   private form: FormGroup;
   private todos: TodoVm[];
   private assignees: UserVm[];
+  private minDate: string;
+  private maxDate: string;
 
   constructor(public modalController: ModalController,
               private formBuilder: FormBuilder,
@@ -24,6 +29,10 @@ export class TodoCreationPage implements OnInit {
     this.todos = this.params.get('todos');
     this.initForm();
     this.getAssignableUsers();
+    const now: Moment = moment();
+    this.minDate = (now).toISOString();
+    const newDate = moment(now).add(1, 'year');
+    this.maxDate = newDate.toISOString();
   }
 
   onSubmit() {

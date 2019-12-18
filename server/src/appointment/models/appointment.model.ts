@@ -4,17 +4,21 @@ import {Expose} from 'class-transformer';
 
 export class Appointment extends BaseModel<Appointment> {
 
+    @prop({required: [true, 'Creator is required']})
+    @Expose()
+    creator: string;
+
     @prop({required: [true, 'Title is required']})
     @Expose()
     title: string;
 
-    @prop({required: [true, 'Creator and Content required']})
+    @prop()
     @Expose()
-    extendedProps: {
-        creator: string,
-        content: string,
-        global: boolean,
-    };
+    content: string;
+
+    @prop({required: [true, 'Global flag is required']})
+    @Expose()
+    global: boolean;
 
     @prop()
     @Expose()
