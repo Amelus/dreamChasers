@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {ModalController, NavParams} from '@ionic/angular';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AppointmentClient, AppointmentVm} from '../../app.api';
+import * as moment from 'moment';
+import {Moment} from 'moment';
 
 @Component({
   selector: 'app-appointment-creation',
@@ -12,21 +14,24 @@ export class AppointmentCreationPage implements OnInit {
 
   private form: FormGroup;
   private appointments: AppointmentVm[];
-  private recurring: boolean;
   private allDay: boolean;
-  private minDate: Date;
-  private maxDate: Date;
+  private minDate: string;
+  private maxDate: string;
+  private monthNames = 'Jan, Feb, Mar, Apr, Mai, Jun, Jul, Aug, Sep, Oct, Nov, Dec';
 
   constructor(public modalController: ModalController,
               private formBuilder: FormBuilder,
               private params: NavParams,
-              private appointmentClient: AppointmentClient) { }
+              private appointmentClient: AppointmentClient) {
+  }
 
   ngOnInit() {
-    this.recurring = false;
+    this.initForm();
     this.allDay = false;
-    this.minDate = new Date();
-    this.maxDate.setDate(this.minDate.getDate() + 365);
+    const now: Moment = moment();
+    this.minDate = (now).toISOString();
+    const newDate = moment(now).add(1, 'year');
+    this.maxDate = newDate.toISOString();
   }
 
   public async dismiss() {
@@ -36,14 +41,34 @@ export class AppointmentCreationPage implements OnInit {
   }
 
     onSubmit() {
+      if (this.form.invalid) {
+        this.displayValidationErrors();
+        return;
+      }
 
+
+
+      this.dismiss();
     }
-
-  toggleRecur() {
-    this.recurring = !this.recurring;
-  }
 
   toggleAllDay() {
     this.allDay = !this.allDay;
+  }
+
+  private initForm() {
+    this.form = this.formBuilder.group({
+      title: ['', Validators.required],
+      content: [''],
+      startDay: ['', Validators.required],
+      endDay: [''],
+      startHour: [''],
+      endHour: [''],
+      allDay: [''],
+      daysOfWeek: [''],
+    });
+  }
+
+  private displayValidationErrors() {
+
   }
 }

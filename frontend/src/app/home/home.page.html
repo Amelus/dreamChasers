@@ -26,14 +26,15 @@
                    contentHeight="auto"
                    >
     </full-calendar>
-    <full-calendar #dayListCalendar defaultView="listDay"
+    <full-calendar #dayListCalendar *ngIf="showList" defaultView="listDay"
                    [plugins]="calendarPlugins"
                    [weekends]="true"
                    [events]="getEvents()"
                    [locale]="'de'"
                    [header]="false"
                    [themeSystem]="'bootstrap'"
-                   (eventClick)="eventClick($event)">
+                   (eventClick)="eventClick($event)"
+                   noEventsMessage="">
     </full-calendar>
     <ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="triggerAlert()">
         <ion-fab-button [disabled]="!editorUser">

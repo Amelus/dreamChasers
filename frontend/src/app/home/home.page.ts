@@ -25,14 +25,14 @@ export class HomePage implements OnInit, AfterViewInit {
     defaultView: string;
     calendarPlugins = [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin, bootstrapPlugin];
     calendarEvents = [
-        {title: 'Meeting', date: '2019-12-15'},
+        {title: 'Meeting', start: '2019-12-15T15:01:37.213Z', end: '2019-12-16T09:01:37.213Z'},
         {title: 'event 2', daysOfWeek: [3], startRecur: '2019-12-18', endRecur: '2020-01-05', allDay: true},
         {title: 'event 3', date: '2019-12-13'}
     ];
     header = {
         left:   'timeGridWeek dayGridMonth',
         center: 'title',
-        right:  'prev next'
+        right: 'prev next'
     };
     showList: boolean;
 
@@ -51,6 +51,17 @@ export class HomePage implements OnInit, AfterViewInit {
 
     ngAfterViewInit(): void {
         this.editorUser = this.isEditorUser();
+        document.getElementsByClassName('fc-timeGridWeek-button')[0].addEventListener('click', () => {this.viewChange('timeGridWeek')}, false);
+    }
+
+    viewChange(view: string) {
+        const calendar = this.monthCalendar.getApi();
+        calendar.changeView(view);
+        if (view === 'dayGridMonth') {
+            this.showList = true;
+        } else if (view === 'timeGridWeek') {
+            this.showList = false;
+        }
     }
 
     showDateClick(day: any) {
