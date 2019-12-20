@@ -66,24 +66,36 @@
 
     <ion-item class="ion-align-items-center ion-padding">
         <ion-label>Teamrelevant</ion-label>
-        <ion-toggle color="primary" (click)="toggleGlobal()" formControlName="global"></ion-toggle>
+        <ion-toggle color="primary" (click)="toggleGlobal()" [checked]="global"></ion-toggle>
     </ion-item>
 
     <ion-item class="ion-align-items-center ion-padding">
         <ion-label>Ganztägig</ion-label>
-        <ion-toggle color="primary" (click)="toggleAllDay()" formControlName="allDay"></ion-toggle>
+        <ion-toggle color="primary" (click)="toggleAllDay()"></ion-toggle>
     </ion-item>
 
     <ion-item class="ion-align-items-center ion-padding">
-      <ion-datetime slot="start" displayFormat="DD MMM YY" formControlName="start" [monthShortNames]="monthNames" [value]="minDate" [min]="minDate" [max]="maxDate"></ion-datetime>
+      <ion-datetime slot="start" displayFormat="DD MMM YY" formControlName="start"
+                    [monthShortNames]="monthNames"
+                    [value]="minDate"
+                    [min]="minDate"
+                    [max]="maxDate"></ion-datetime>
       <ion-icon class="time-arrow" name="arrow-dropright"></ion-icon>
-      <ion-datetime slot="end" displayFormat="DD MMM YY" formControlName="end" [monthShortNames]="monthNames" [value]="minDate" [min]="minDate" [max]="maxDate"></ion-datetime>
+      <ion-datetime slot="end" displayFormat="DD MMM YY" formControlName="end"
+                    [monthShortNames]="monthNames"
+                    [value]="minDate"
+                    [min]="minDate"
+                    [max]="maxDate"></ion-datetime>
     </ion-item>
 
     <ion-item class="ion-align-items-center ion-padding" *ngIf="!allDay">
-      <ion-datetime slot="start" displayFormat="HH:mm" formControlName="startTime" [minuteValues]="minuteValues" [value]="minDate"></ion-datetime>
+      <ion-datetime slot="start" displayFormat="HH:mm" formControlName="startTime"
+                    [minuteValues]="minuteValues"
+                    [value]="minDate"></ion-datetime>
       <ion-icon class="time-arrow" name="arrow-dropright"></ion-icon>
-      <ion-datetime slot="end" displayFormat="HH:mm" formControlName="endTime" [minuteValues]="minuteValues" [value]="minDate"></ion-datetime>
+      <ion-datetime slot="end" displayFormat="HH:mm" formControlName="endTime"
+                    [minuteValues]="minuteValues"
+                    [value]="minDate"></ion-datetime>
     </ion-item>
 
     <ion-item class="ion-align-items-center ion-padding">

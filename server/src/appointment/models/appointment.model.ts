@@ -32,6 +32,10 @@ export class Appointment extends BaseModel<Appointment> {
     @Expose()
     allDay: boolean;
 
+    @prop()
+    @Expose()
+    backgroundColor: string;
+
     // --- recurring event props ---
 
     @prop() // eg. [0, 1, 4] -> Sunday, Monday, Thursday

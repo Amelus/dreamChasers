@@ -31,6 +31,7 @@ export class AppointmentService extends BaseService<Appointment> {
         newAppointment.global = params.global;
         newAppointment.allDay = params.allDay;
 
+
         if (params.daysOfWeek) {
             newAppointment.daysOfWeek = params.daysOfWeek;
             newAppointment.startRecur = params.startRecur;

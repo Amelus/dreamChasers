@@ -28,6 +28,10 @@ export class AppointmentVm extends BaseModelVm {
     @Expose()
     allDay: boolean;
 
+    @ApiModelProperty()
+    @Expose()
+    backgroundColor: string;
+
     @ApiModelProperty() // eg. [0, 1, 4] -> Sunday, Monday, Thursday
     @Expose()
     daysOfWeek: number[];

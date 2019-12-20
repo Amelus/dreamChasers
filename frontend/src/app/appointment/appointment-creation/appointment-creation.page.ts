@@ -30,7 +30,7 @@ export class AppointmentCreationPage implements OnInit {
     ngOnInit() {
         this.initForm();
         this.allDay = false;
-        this.global = false;
+        this.global = true;
         const now: Moment = moment();
         this.minDate = (now).toISOString();
         const newDate = moment(now).add(1, 'year');
@@ -44,7 +44,7 @@ export class AppointmentCreationPage implements OnInit {
     }
 
     onSubmit() {
-        this.setStandardValue();
+        this.setStandardValues();
 
         if (this.form.invalid) {
             this.displayValidationErrors();
@@ -70,19 +70,21 @@ export class AppointmentCreationPage implements OnInit {
         this.dismiss();
     }
 
-    private setStandardValue() {
+    private setStandardValues() {
         if (this.form.get('start').value === '') {
             this.form.get('start').setValue(this.minDate);
-        }
-        if (this.form.get('startTime').value === '' && this.form.get('allDay').value === '') {
-            this.form.get('startTime').setValue(this.minDate);
         }
         if (this.form.get('end').value === '') {
             this.form.get('end').setValue(this.minDate);
         }
+        if (this.form.get('startTime').value === '' && this.form.get('allDay').value === '') {
+            this.form.get('startTime').setValue(this.minDate);
+        }
         if (this.form.get('endTime').value === '' && this.form.get('allDay').value === '') {
             this.form.get('endTime').setValue(this.minDate);
         }
+        this.form.get('global').setValue(this.global);
+        this.form.get('allDay').setValue(this.allDay);
     }
 
 
@@ -102,16 +104,13 @@ export class AppointmentCreationPage implements OnInit {
     }
 
     private displayValidationErrors() {
-
     }
 
     toggleAllDay() {
         this.allDay = !this.allDay;
-        this.form.get('allDay').setValue(this.allDay);
     }
 
     toggleGlobal() {
         this.global = !this.global;
-        this.form.get('global').setValue(this.global);
     }
 }

@@ -34,4 +34,7 @@ export class AppointmentParams {
 
     @ApiModelProperty()
     endRecur: Date;
+
+    @ApiModelProperty()
+    backgroundColor: string;
 }

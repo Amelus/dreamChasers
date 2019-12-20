@@ -36,7 +36,7 @@ import {RolesGuard} from '../shared/guards/roles.guard';
 import {InstanceType} from 'typegoose';
 import {User} from '../user/models/user.model';
 
-@Controller('appointments')
+@Controller('appointment')
 @ApiUseTags(Appointment.modelName)
 @ApiBearerAuth()
 export class AppointmentController {
