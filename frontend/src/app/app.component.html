@@ -9,21 +9,21 @@
             <ion-content>
                 <ion-list>
                     <ion-menu-toggle auto-hide="false">
-
                         <ion-item [routerDirection]="'root'" [routerLink]="[homePage.url]">
                             <ion-icon slot="start" [name]="homePage.icon"></ion-icon>
                             <ion-label>
                                 {{homePage.title}}
                             </ion-label>
                         </ion-item>
-
-                      <ion-item button="" (click)="toggleTodos()">
+                    </ion-menu-toggle>
+                    <ion-item button="" (click)="toggleTodos()">
                         <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon>
                         <ion-icon slot="end" [name]="todoIcon"></ion-icon>
                         <ion-label>
                           Aufgaben
                         </ion-label>
-                      </ion-item>
+                    </ion-item>
+                    <ion-menu-toggle>
                       <ng-container *ngIf="expandedTodos">
                         <ion-item [routerDirection]="'root'" [routerLink]="[assignedTodoListing.url]">
                           <ion-icon slot="start" [name]=""></ion-icon>

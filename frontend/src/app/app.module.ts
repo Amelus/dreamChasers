@@ -12,6 +12,7 @@ import {AppRoutingModule} from './app-routing.module';
 import {FormBuilder} from '@angular/forms';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {AuthInterceptor} from './auth/auth.interceptor';
+import {AuthGuard} from './auth/auth.guard';
 
 @NgModule({
     declarations: [AppComponent],
@@ -28,7 +29,8 @@ import {AuthInterceptor} from './auth/auth.interceptor';
         FormBuilder,
         { provide: API_BASE_URL, useFactory: baseUrl },
         { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor , multi: true }
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor , multi: true },
+        AuthGuard
     ],
     bootstrap: [AppComponent]
 })
