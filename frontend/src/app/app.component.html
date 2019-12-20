@@ -23,7 +23,7 @@
                           Aufgaben
                         </ion-label>
                     </ion-item>
-                    <ion-menu-toggle>
+                    <ion-menu-toggle auto-hide="false">
                       <ng-container *ngIf="expandedTodos">
                         <ion-item [routerDirection]="'root'" [routerLink]="[assignedTodoListing.url]">
                           <ion-icon slot="start" [name]=""></ion-icon>
