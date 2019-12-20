@@ -82,7 +82,7 @@ export class AppointmentController {
         const filter = {};
 
         if (user.role === UserRole.Admin || user.role === UserRole.Leader) {
-            filter['extendedProps.creator'] = user;
+            filter['creator'] = user.username;
             created = await this._appointmentService.findAll(filter);
         }
 

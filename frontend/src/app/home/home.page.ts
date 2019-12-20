@@ -1,11 +1,11 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {AlertController, MenuController, ModalController} from '@ionic/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
 import bootstrapPlugin from '@fullcalendar/bootstrap';
-import {UserClient, UserVmRole} from '../app.api';
+import {AppointmentClient, AppointmentVm, UserClient, UserVmRole} from '../app.api';
 import {FullCalendarComponent} from '@fullcalendar/angular';
 import {Router} from '@angular/router';
 import {AppointmentCreationPage} from '../appointment/appointment-creation/appointment-creation.page';
@@ -24,11 +24,7 @@ export class HomePage implements OnInit, AfterViewInit {
     editorUser: boolean;
     defaultView: string;
     calendarPlugins = [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin, bootstrapPlugin];
-    calendarEvents = [
-        {title: 'Meeting', start: '2019-12-15T15:01:37.213Z', end: '2019-12-16T09:01:37.213Z'},
-        {title: 'event 2', daysOfWeek: [3], startRecur: '2019-12-18', endRecur: '2020-01-05', allDay: true},
-        {title: 'event 3', date: '2019-12-13'}
-    ];
+    calendarEvents: AppointmentVm[] = [];
     header = {
         left:   'timeGridWeek dayGridMonth',
         center: 'title',
@@ -44,6 +40,7 @@ export class HomePage implements OnInit, AfterViewInit {
 
     constructor(public menuController: MenuController,
                 private userClient: UserClient,
+                private appointmentClient: AppointmentClient,
                 private router: Router,
                 private alertController: AlertController,
                 private modalController: ModalController) {
@@ -53,14 +50,15 @@ export class HomePage implements OnInit, AfterViewInit {
     ngOnInit(): void {
         this.defaultView = 'dayGridMonth';
         this.showList = true;
+        this.getEvents();
     }
 
     ngAfterViewInit(): void {
         this.editorUser = this.isEditorUser();
         document.getElementsByClassName('fc-timeGridWeek-button')[0]
-            .addEventListener('click', () => {this.viewChange('timeGridWeek')}, false);
+            .addEventListener('click', () => {this.viewChange('timeGridWeek'); }, false);
         document.getElementsByClassName('fc-dayGridMonth-button')[0]
-            .addEventListener('click', () => {this.viewChange('dayGridMonth')}, false);
+            .addEventListener('click', () => {this.viewChange('dayGridMonth'); }, false);
 
         if (document.body.classList.contains('dark')) {
             this.themeSystem = 'bootstrap';
@@ -88,15 +86,19 @@ export class HomePage implements OnInit, AfterViewInit {
     }
 
     getEvents() {
-        return this.calendarEvents;
+        this.appointmentClient.getAll()
+            .subscribe((appointments: AppointmentVm[]) => {
+                this.calendarEvents = appointments;
+            });
     }
 
     async eventClick($event: any) {
-        return await this.modalController.create(
+        const eventView = await this.modalController.create(
             {
                 component: AppointmentEditPage,
                 componentProps: {appointments: this.calendarEvents, selected: $event}
             });
+        (await eventView).present();
     }
 
     async triggerAlert() {

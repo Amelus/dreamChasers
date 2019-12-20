@@ -15,6 +15,7 @@ export class ProfilePage implements OnInit {
     currentUser: UserVm;
     profilePicture: string;
     needsUpgrade: boolean;
+    darkMode: boolean;
 
     constructor(private formBuilder: FormBuilder,
                 private userClient: UserClient,
@@ -24,6 +25,7 @@ export class ProfilePage implements OnInit {
     ngOnInit() {
         this.initForm();
         this.initUser();
+        this.initDarkMode();
     }
 
     submitPwdChange() {
@@ -142,5 +144,9 @@ export class ProfilePage implements OnInit {
             this.userClient.refreshSessionUser();
             event.target.complete();
         }, 2000);
+    }
+
+    private initDarkMode() {
+        this.darkMode = document.body.classList.contains('dark');
     }
 }

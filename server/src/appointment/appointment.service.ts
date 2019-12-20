@@ -30,7 +30,7 @@ export class AppointmentService extends BaseService<Appointment> {
         newAppointment.content = params.content;
         newAppointment.global = params.global;
         newAppointment.allDay = params.allDay;
-
+        newAppointment.backgroundColor = params.backgroundColor;
 
         if (params.daysOfWeek) {
             newAppointment.daysOfWeek = params.daysOfWeek;
@@ -59,6 +59,7 @@ export class AppointmentService extends BaseService<Appointment> {
         const target: AppointmentVm = new AppointmentVm();
         target.title = source.title;
         target.allDay = source.allDay;
+        target.backgroundColor = source.backgroundColor;
         target.extendedProps = {
             creator: source.creator,
             content: source.content,
@@ -85,11 +86,8 @@ export class AppointmentService extends BaseService<Appointment> {
 
     async findLeadEvents(user: InstanceType<User>, filter, fromLead: InstanceType<Appointment>[]) {
         if (user.role === UserRole.Leader || user.role === UserRole.User) {
-            filter['extendedProps.creator'] = user.leadUser;
-            filter['start'] = {
-                $gte: 'Mon May 30 18:47:00 +0000 2015',
-                $lt: 'Sun May 30 20:40:36 +0000 2010',
-            };
+            filter['creator'] = user.leadUser;
+            // filter relevant events - time
             fromLead = await this.findAll(filter);
             fromLead.forEach((appointment) => {
                 if (!appointment.global) {

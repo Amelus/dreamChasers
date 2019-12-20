@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { catchError } from 'rxjs/operators';
-import { of, throwError } from '../../../node_modules/rxjs';
 import { ApiException, LoginResponseVm, LoginVm, UserClient } from '../app.api';
 import {MenuController} from '@ionic/angular';
 
@@ -23,6 +21,7 @@ export class LoginPage implements OnInit {
 
     ngOnInit() {
         this.initForm();
+        this.userClient.logout();
     }
 
     private initForm() {
