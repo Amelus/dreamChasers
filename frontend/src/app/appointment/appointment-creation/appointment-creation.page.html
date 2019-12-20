@@ -14,30 +14,30 @@
       </ng-container>
     </div>
   </ng-container>
-  <ng-container *ngIf="form.get('startDay').dirty && form.get('startDay').errors">
+  <ng-container *ngIf="form.get('start').dirty && form.get('start').errors">
   <div class="error">
-    <ng-container *ngIf="form.get('startDay').hasError('required')">
+    <ng-container *ngIf="form.get('start').hasError('required')">
       Eine Startzeit muss festgelegt werden
     </ng-container>
   </div>
   </ng-container>
-  <ng-container *ngIf="form.get('endDay').dirty && form.get('endDay').errors">
+  <ng-container *ngIf="form.get('end').dirty && form.get('end').errors">
     <div class="error">
-      <ng-container *ngIf="form.get('endDay').hasError('required')">
+      <ng-container *ngIf="form.get('end').hasError('required')">
         Eine Endzeit muss festgelegt werden
       </ng-container>
     </div>
   </ng-container>
-  <ng-container *ngIf="form.get('startHour').dirty && form.get('startHour').errors">
+  <ng-container *ngIf="form.get('startTime').dirty && form.get('startTime').errors">
     <div class="error">
-      <ng-container *ngIf="form.get('startHour').hasError('required')">
+      <ng-container *ngIf="form.get('startTime').hasError('required')">
         Eine Uhrzeit muss festgelegt werden
       </ng-container>
     </div>
   </ng-container>
-  <ng-container *ngIf="form.get('endHour').dirty && form.get('endHour').errors">
+  <ng-container *ngIf="form.get('endTime').dirty && form.get('endTime').errors">
     <div class="error">
-      <ng-container *ngIf="form.get('endHour').hasError('required')">
+      <ng-container *ngIf="form.get('endTime').hasError('required')">
         Eine End-Uhrzeit muss festgelegt werden
       </ng-container>
     </div>
@@ -49,20 +49,41 @@
     </ion-item>
 
     <ion-item class="ion-align-items-center ion-padding">
-        <ion-label>Ganztägig</ion-label>
-        <ion-toggle color="primary" (click)="toggleAllDay()"></ion-toggle>
+      <ion-label>Terminfarbe</ion-label>
+      <ion-select multiple="false" cancelText="Abbruch" okText="Bestätigen" formControlName="backgroundColor">
+        <ion-select-option value="grey">Grau</ion-select-option>
+        <ion-select-option value="blue">Blau</ion-select-option>
+        <ion-select-option value="#93A661">Grün</ion-select-option>
+        <ion-select-option value="#c02f1d">Rot</ion-select-option>
+        <ion-select-option value="#f26d21">Orange</ion-select-option>
+        <ion-select-option value="#d3b53d">Dunkelgelb</ion-select-option>
+        <ion-select-option value="#0d3d56">Dunkelblau</ion-select-option>
+        <ion-select-option value="#9a2617">Dunkelrot</ion-select-option>
+        <ion-select-option value="#829356">Dunkelgrün</ion-select-option>
+        <ion-select-option value="#c2571a">Dunkelorange</ion-select-option>
+      </ion-select>
     </ion-item>
 
     <ion-item class="ion-align-items-center ion-padding">
-      <ion-datetime slot="start" displayFormat="DD MMM YY" formControlName="startDay" [monthShortNames]="monthNames" [value]="minDate" [min]="minDate" [max]="maxDate"></ion-datetime>
+        <ion-label>Teamrelevant</ion-label>
+        <ion-toggle color="primary" (click)="toggleGlobal()" formControlName="global"></ion-toggle>
+    </ion-item>
+
+    <ion-item class="ion-align-items-center ion-padding">
+        <ion-label>Ganztägig</ion-label>
+        <ion-toggle color="primary" (click)="toggleAllDay()" formControlName="allDay"></ion-toggle>
+    </ion-item>
+
+    <ion-item class="ion-align-items-center ion-padding">
+      <ion-datetime slot="start" displayFormat="DD MMM YY" formControlName="start" [monthShortNames]="monthNames" [value]="minDate" [min]="minDate" [max]="maxDate"></ion-datetime>
       <ion-icon class="time-arrow" name="arrow-dropright"></ion-icon>
-      <ion-datetime slot="end" displayFormat="DD MMM YY" formControlName="endDay" [monthShortNames]="monthNames" [value]="minDate" [min]="minDate" [max]="maxDate"></ion-datetime>
+      <ion-datetime slot="end" displayFormat="DD MMM YY" formControlName="end" [monthShortNames]="monthNames" [value]="minDate" [min]="minDate" [max]="maxDate"></ion-datetime>
     </ion-item>
 
     <ion-item class="ion-align-items-center ion-padding" *ngIf="!allDay">
-      <ion-datetime slot="start" displayFormat="HH:mm" formControlName="startHour" [value]="minDate"></ion-datetime>
+      <ion-datetime slot="start" displayFormat="HH:mm" formControlName="startTime" [minuteValues]="minuteValues" [value]="minDate"></ion-datetime>
       <ion-icon class="time-arrow" name="arrow-dropright"></ion-icon>
-      <ion-datetime slot="end" displayFormat="HH:mm" formControlName="endHour" [value]="minDate"></ion-datetime>
+      <ion-datetime slot="end" displayFormat="HH:mm" formControlName="endTime" [minuteValues]="minuteValues" [value]="minDate"></ion-datetime>
     </ion-item>
 
     <ion-item class="ion-align-items-center ion-padding">
@@ -88,7 +109,7 @@
     <ion-button slot="end" (click)="dismiss()" fill="clear">
       Abbruch
     </ion-button>
-    <ion-button slot="end" (click)="onSubmit()" fill="clear" [disabled]="form.invalid">
+    <ion-button slot="end" (click)="onSubmit()" fill="clear" >
       Speichern
     </ion-button>
   </ion-toolbar>

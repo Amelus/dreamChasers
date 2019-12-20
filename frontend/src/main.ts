@@ -11,4 +11,6 @@ if (environment.production) {
 platformBrowserDynamic().bootstrapModule(AppModule)
   .catch(err => console.log(err));
 
-document.body.classList.toggle('dark', true);
+if (localStorage.getItem('darkMode')) {
+  document.body.classList.toggle('dark', true);
+}

@@ -18,21 +18,23 @@
                    [weekends]="true"
                    [events]="calendarEvents"
                    [locale]="'de'"
-                   [themeSystem]="'bootstrap'"
+                   [themeSystem]="themeSystem"
                    [header]="header"
                    [nowIndicator]="true"
+                   [buttonText]="buttonText"
+                   eventTextColor="white"
                    (dateClick)="showDateClick($event)"
                    (eventClick)="eventClick($event)"
                    contentHeight="auto"
                    >
     </full-calendar>
-    <full-calendar #dayListCalendar *ngIf="showList" defaultView="listDay"
+    <full-calendar #dayListCalendar [hidden]="!showList" defaultView="listDay"
                    [plugins]="calendarPlugins"
                    [weekends]="true"
                    [events]="getEvents()"
                    [locale]="'de'"
                    [header]="false"
-                   [themeSystem]="'bootstrap'"
+                   [themeSystem]="themeSystem"
                    (eventClick)="eventClick($event)"
                    noEventsMessage="">
     </full-calendar>

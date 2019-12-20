@@ -1,74 +1,117 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ModalController, NavParams} from '@ionic/angular';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {AppointmentClient, AppointmentVm} from '../../app.api';
+import {AppointmentClient, AppointmentParams, AppointmentVm} from '../../app.api';
 import * as moment from 'moment';
 import {Moment} from 'moment';
 
 @Component({
-  selector: 'app-appointment-creation',
-  templateUrl: './appointment-creation.page.html',
-  styleUrls: ['./appointment-creation.page.scss'],
+    selector: 'app-appointment-creation',
+    templateUrl: './appointment-creation.page.html',
+    styleUrls: ['./appointment-creation.page.scss'],
 })
 export class AppointmentCreationPage implements OnInit {
 
-  private form: FormGroup;
-  private appointments: AppointmentVm[];
-  private allDay: boolean;
-  private minDate: string;
-  private maxDate: string;
-  private monthNames = 'Jan, Feb, Mar, Apr, Mai, Jun, Jul, Aug, Sep, Oct, Nov, Dec';
+    private form: FormGroup;
+    private appointments: AppointmentVm[];
+    private allDay: boolean;
+    private minDate: string;
+    private maxDate: string;
+    private monthNames = 'Jan, Feb, Mar, Apr, Mai, Jun, Jul, Aug, Sep, Oct, Nov, Dec';
+    private minuteValues = '0,5,10,15,20,25,30,35,40,45,50,55';
+    private global: boolean;
 
-  constructor(public modalController: ModalController,
-              private formBuilder: FormBuilder,
-              private params: NavParams,
-              private appointmentClient: AppointmentClient) {
-  }
-
-  ngOnInit() {
-    this.initForm();
-    this.allDay = false;
-    const now: Moment = moment();
-    this.minDate = (now).toISOString();
-    const newDate = moment(now).add(1, 'year');
-    this.maxDate = newDate.toISOString();
-  }
-
-  public async dismiss() {
-    this.modalController.dismiss({
-      dismissed: true
-    });
-  }
-
-    onSubmit() {
-      if (this.form.invalid) {
-        this.displayValidationErrors();
-        return;
-      }
-
-
-
-      this.dismiss();
+    constructor(public modalController: ModalController,
+                private formBuilder: FormBuilder,
+                private params: NavParams,
+                private appointmentClient: AppointmentClient) {
     }
 
-  toggleAllDay() {
-    this.allDay = !this.allDay;
-  }
+    ngOnInit() {
+        this.initForm();
+        this.allDay = false;
+        this.global = false;
+        const now: Moment = moment();
+        this.minDate = (now).toISOString();
+        const newDate = moment(now).add(1, 'year');
+        this.maxDate = newDate.toISOString();
+    }
 
-  private initForm() {
-    this.form = this.formBuilder.group({
-      title: ['', Validators.required],
-      content: [''],
-      startDay: ['', Validators.required],
-      endDay: [''],
-      startHour: [''],
-      endHour: [''],
-      allDay: [''],
-      daysOfWeek: [''],
-    });
-  }
+    public async dismiss() {
+        this.modalController.dismiss({
+            dismissed: true
+        });
+    }
 
-  private displayValidationErrors() {
+    onSubmit() {
+        this.setStandardValue();
 
-  }
+        if (this.form.invalid) {
+            this.displayValidationErrors();
+            return;
+        }
+
+        const appointmentParams: AppointmentParams = new AppointmentParams(this.form.value);
+        this.appointmentClient.create(appointmentParams)
+            .subscribe((newAppointment: AppointmentVm) => {
+                this.appointments = [newAppointment, ...this.appointments];
+                this.form.get('title').reset();
+                this.form.get('content').reset();
+                this.form.get('start').reset();
+                this.form.get('end').reset();
+                this.form.get('startTime').reset();
+                this.form.get('endTime').reset();
+                this.form.get('allDay').reset();
+                this.form.get('daysOfWeek').reset();
+                this.form.get('backgroundColor').reset();
+                this.form.get('global').reset();
+            });
+
+        this.dismiss();
+    }
+
+    private setStandardValue() {
+        if (this.form.get('start').value === '') {
+            this.form.get('start').setValue(this.minDate);
+        }
+        if (this.form.get('startTime').value === '' && this.form.get('allDay').value === '') {
+            this.form.get('startTime').setValue(this.minDate);
+        }
+        if (this.form.get('end').value === '') {
+            this.form.get('end').setValue(this.minDate);
+        }
+        if (this.form.get('endTime').value === '' && this.form.get('allDay').value === '') {
+            this.form.get('endTime').setValue(this.minDate);
+        }
+    }
+
+
+    private initForm() {
+        this.form = this.formBuilder.group({
+            title: ['', Validators.required],
+            content: [''],
+            start: ['', Validators.required],
+            end: ['', Validators.required],
+            startTime: [''],
+            endTime: [''],
+            allDay: [''],
+            daysOfWeek: [''],
+            backgroundColor: [''],
+            global: ['']
+        });
+    }
+
+    private displayValidationErrors() {
+
+    }
+
+    toggleAllDay() {
+        this.allDay = !this.allDay;
+        this.form.get('allDay').setValue(this.allDay);
+    }
+
+    toggleGlobal() {
+        this.global = !this.global;
+        this.form.get('global').setValue(this.global);
+    }
 }

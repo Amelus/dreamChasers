@@ -1522,6 +1522,7 @@ export class AppointmentParams implements IAppointmentParams {
     endTime?: string | null;
     startRecur?: Date | null;
     endRecur?: Date | null;
+    backgroundColor?: string | null;
 
     static fromJS(data: any): AppointmentParams {
         data = typeof data === 'object' ? data : {};
@@ -1536,6 +1537,7 @@ export class AppointmentParams implements IAppointmentParams {
             this.content = data.content !== undefined ? data.content : null as any;
             this.global = data.global !== undefined ? data.global : null as any;
             this.allDay = data.allDay !== undefined ? data.allDay : null as any;
+            this.backgroundColor = data.backgroundColor !== undefined ? data.backgroundColor : null as any;
 
             this.start = data.start ? new Date(data.start.toString()) : null as any;
             this.end = data.end ? new Date(data.end.toString()) : null as any;
@@ -1553,6 +1555,8 @@ export class AppointmentParams implements IAppointmentParams {
         data.title = this.title !== undefined ? this.title : null as any;
         data.content = this.content !== undefined ? this.content : null as any;
         data.global = this.global !== undefined ? this.global : null as any;
+        data.allDay = data.allDay !== undefined ? data.allDay : null as any;
+        data.backgroundColor = data.backgroundColor !== undefined ? data.backgroundColor : null as any;
 
         data.start = data.start ? new Date(data.start.toString()) : null as any;
         data.end = data.end ? new Date(data.end.toString()) : null as any;
@@ -1608,6 +1612,8 @@ export class AppointmentVm implements IAppointmentVm {
     endTime?: string | null;
     startRecur?: Date | null;
     endRecur?: Date | null;
+    backgroundColor?: string | null;
+    borderColor?: string | null;
 
     static fromJS(data: any): AppointmentVm {
         data = typeof data === 'object' ? data : {};
@@ -1624,6 +1630,8 @@ export class AppointmentVm implements IAppointmentVm {
             this.extendedProps = data.extendedProps !== undefined ? data.extendedProps : null as any;
             this.title = data.title !== undefined ? data.title : null as any;
             this.allDay = data.allDay !== undefined ? data.allDay : null as any;
+            this.backgroundColor = data.backgroundColor !== undefined ? data.backgroundColor : null as any;
+            this.borderColor = data.backgroundColor !== undefined ? data.backgroundColor : null as any;
 
             this.start = data.start ? new Date(data.start.toString()) : null as any;
             this.end = data.end ? new Date(data.end.toString()) : null as any;
@@ -1644,6 +1652,8 @@ export class AppointmentVm implements IAppointmentVm {
         data.extendedProps = data.extendedProps !== undefined ? data.extendedProps : null as any;
         data.title = data.title !== undefined ? data.title : null as any;
         data.allDay = data.allDay !== undefined ? data.allDay : null as any;
+        data.backgroundColor = data.backgroundColor !== undefined ? data.backgroundColor : null as any;
+        data.borderColor = data.backgroundColor !== undefined ? data.backgroundColor : null as any;
 
         data.start = data.start ? new Date(data.start.toString()) : null as any;
         data.end = data.end ? new Date(data.end.toString()) : null as any;

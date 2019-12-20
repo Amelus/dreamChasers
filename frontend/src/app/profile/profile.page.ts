@@ -1,10 +1,9 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 import {ApiException, UpdateUserResponseVm, UpdateUserVm, UserClient, UserVm, UserVmRole} from '../app.api';
-import {AlertController, PopoverController} from '@ionic/angular';
+import {AlertController} from '@ionic/angular';
 import {catchError} from 'rxjs/operators';
 import {throwError} from 'rxjs';
-import {ObserveOnSubscriber} from "rxjs/internal/operators/observeOn";
 
 @Component({
     selector: 'app-profile',
@@ -27,28 +26,28 @@ export class ProfilePage implements OnInit {
         this.initUser();
     }
 
-  submitPwdChange() {
+    submitPwdChange() {
         if (this.form.invalid) {
             this.displayValidationErrors();
             return;
         }
 
         if (this.form.dirty) {
-          const userVm: UpdateUserVm = new UpdateUserVm(this.form.value);
-          this.userClient.update(userVm)
-              .pipe(catchError((err: ApiException) => throwError(err)))
-              .subscribe((user: UpdateUserResponseVm) => {
-                console.log(user);
-                this.profilePicture = user.imageUrl;
-                this.needsUpgrade = user.role === UserVmRole.User;
-              }, (err: ApiException) => {
-                console.log(err);
-              });
+            const userVm: UpdateUserVm = new UpdateUserVm(this.form.value);
+            this.userClient.update(userVm)
+                .pipe(catchError((err: ApiException) => throwError(err)))
+                .subscribe((user: UpdateUserResponseVm) => {
+                    console.log(user);
+                    this.profilePicture = user.imageUrl;
+                    this.needsUpgrade = user.role === UserVmRole.User;
+                }, (err: ApiException) => {
+                    console.log(err);
+                });
 
-          this.form.reset();
+            this.form.reset();
 
         } else {
-          console.log('Nothing to change');
+            console.log('Nothing to change');
         }
     }
 
@@ -128,10 +127,20 @@ export class ProfilePage implements OnInit {
         await alert.present();
     }
 
-  doRefresh(event) {
-    setTimeout(() => {
-        this.userClient.refreshSessionUser();
-        event.target.complete();
-    }, 2000);
-  }
+    toggleDarkMode() {
+        if (document.body.classList.contains('dark')) {
+            document.body.classList.remove('dark');
+            localStorage.removeItem('darkMode');
+        } else {
+            document.body.classList.toggle('dark', true);
+            localStorage.setItem('darkMode', 'true');
+        }
+    }
+
+    doRefresh(event) {
+        setTimeout(() => {
+            this.userClient.refreshSessionUser();
+            event.target.complete();
+        }, 2000);
+    }
 }
