@@ -28,7 +28,7 @@ export class HomePage implements OnInit, AfterViewInit {
     header = {
         left:   'timeGridWeek dayGridMonth',
         center: 'title',
-        right: 'today prev next'
+        right: 'prev next'
     };
     buttonText = {
         today:    'Heute',
@@ -96,7 +96,7 @@ export class HomePage implements OnInit, AfterViewInit {
         const eventView = await this.modalController.create(
             {
                 component: AppointmentEditPage,
-                componentProps: {appointments: this.calendarEvents, selected: $event}
+                componentProps: {appointments: this.calendarEvents, selected: $event.event.title}
             });
         (await eventView).present();
     }
@@ -122,7 +122,7 @@ export class HomePage implements OnInit, AfterViewInit {
     private async upgradeAlert() {
         return await this.alertController.create({
             header: 'Upgrade benötigt',
-            message: 'Möchten Sie Ihren Account upgraden um Aufgaben zu erstellen?',
+            message: 'Möchten Sie Ihren Account upgraden um Termine zu erstellen?',
             buttons: [
                 {
                     text: 'Abbruch',

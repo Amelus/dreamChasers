@@ -4,6 +4,7 @@ import {ApiException, UpdateUserResponseVm, UpdateUserVm, UserClient, UserVm, Us
 import {AlertController} from '@ionic/angular';
 import {catchError} from 'rxjs/operators';
 import {throwError} from 'rxjs';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-profile',
@@ -19,7 +20,8 @@ export class ProfilePage implements OnInit {
 
     constructor(private formBuilder: FormBuilder,
                 private userClient: UserClient,
-                private alertController: AlertController) {
+                private alertController: AlertController,
+                private router: Router) {
     }
 
     ngOnInit() {
@@ -41,6 +43,9 @@ export class ProfilePage implements OnInit {
                 .subscribe((user: UpdateUserResponseVm) => {
                     console.log(user);
                     this.profilePicture = user.imageUrl;
+                    if (this.needsUpgrade === true && user.role !== UserVmRole.User) {
+                        this.presentUpgradeSuccess();
+                    }
                     this.needsUpgrade = user.role === UserVmRole.User;
                 }, (err: ApiException) => {
                     console.log(err);
@@ -122,6 +127,24 @@ export class ProfilePage implements OnInit {
                         console.log('trigger changePic function');
                         this.form.get('imageUrl').setValue(data.imageUrl);
                         this.form.get('imageUrl').markAsDirty();
+                    }
+                }
+            ]
+        });
+        await alert.present();
+    }
+
+    public async presentUpgradeSuccess() {
+        const alert = await this.alertController.create({
+            header: 'Upgrade erfolgreich',
+            message: 'Ihr Account wurde erfolgreich upgegradet, Sie müssen sich nun erneut einloggen',
+            buttons: [
+                {
+                    text: 'OK',
+                    cssClass: 'primary',
+                    handler: () => {
+                       this.userClient.logout();
+                       this.router.navigate(['/login']);
                     }
                 }
             ]

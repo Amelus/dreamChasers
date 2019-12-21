@@ -38,20 +38,18 @@
 
 @media only screen and (max-width: 410px) {
   .btn {
-    font-size: 0.6rem;
+    font-size: 0.6rem !important;
   }
   .fc-center {
-    font-size: 0.5rem;
+    font-size: 0.5rem !important;
   }
 }
 
 @media screen and (max-width: 479px) {
   .btn {
-    font-size: 0.8rem;
+    font-size: 0.8rem !important;
   }
   .fc-center {
-    font-size: 0.7rem;
+    font-size: 0.7rem !important;
   }
-
-
 }

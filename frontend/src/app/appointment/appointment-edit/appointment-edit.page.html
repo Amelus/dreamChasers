@@ -10,21 +10,32 @@
 <ion-content>
   <!--<form [formGroup]="form">-->
     <ion-item class="ion-align-items-center ion-padding">
-      <ion-input autocomplete="true" required="true" [value]="selectedAppointment.title"></ion-input>
+      <ion-label>{{selectedAppointment.title}}</ion-label>
+      <ion-input autocomplete="true" required="true" [value]="selectedAppointment.title" [hidden]="!editorUser"></ion-input>
     </ion-item>
 
     <ion-item class="ion-align-items-center ion-padding" *ngIf="selectedAppointment.allDay">
       <ion-label>Ganztägig</ion-label>
     </ion-item>
 
-    <ion-item class="ion-align-items-center ion-padding">
-      <ion-datetime slot="start" displayFormat="DD MMM YY"
-                    [value]="selectedAppointment.start"></ion-datetime>
-      <ion-datetime slot="end" displayFormat="DD MMM YY"
-                    [value]="selectedAppointment.end"></ion-datetime>
-    </ion-item>
+    <ion-item class="ion-align-items-center ion-padding" *ngIf="!selectedAppointment.startRecur">
+      <ion-label>{{selectedAppointment.start}}</ion-label>
+      <div [hidden]="!editorUser">
+        <ion-datetime slot="start" displayFormat="DD MMM YY"
+                      [value]="selectedAppointment.start"></ion-datetime>
+        <ion-datetime slot="end" displayFormat="DD MMM YY"
+                      [value]="selectedAppointment.end"></ion-datetime>
+      </div>
+      </ion-item>
 
-    <ion-item class="ion-align-items-center ion-padding" *ngIf="!selectedAppointment.allDay">
+  <ion-item class="ion-align-items-center ion-padding" *ngIf="selectedAppointment.startRecur" [disabled]="!editorUser">
+    <ion-datetime slot="start" displayFormat="DD MMM YY"
+                  [value]="selectedAppointment.startRecur"></ion-datetime>
+    <ion-datetime slot="end" displayFormat="DD MMM YY"
+                  [value]="selectedAppointment.endRecur"></ion-datetime>
+  </ion-item>
+
+    <ion-item class="ion-align-items-center ion-padding" *ngIf="!selectedAppointment.allDay" [disabled]="!editorUser">
       <ion-datetime slot="start" displayFormat="HH:mm"
                     [value]="selectedAppointment.startTime"></ion-datetime>
       <ion-datetime slot="end" displayFormat="HH:mm"
@@ -33,7 +44,7 @@
 
     <ion-item class="ion-align-items-center ion-padding">
       <ion-label position="floating">Beschreibung</ion-label>
-      <ion-input autocomplete="true" required="false"  [value]="selectedAppointment.content"></ion-input>
+      <ion-input autocomplete="true" required="false"  [value]="selectedAppointment.content" [disabled]="!editorUser"></ion-input>
     </ion-item>
   <!--</form>-->
 </ion-content>

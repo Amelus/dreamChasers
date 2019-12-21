@@ -18,7 +18,8 @@
   <div class="general_form">
 
     <ion-item button (click)="openChangeImg()">
-      <img class="image" src="{{profilePicture}}"/>
+      <img class="image" src="{{profilePicture}}" *ngIf="profilePicture"/>
+      <img class="image" src="assets\image.png" *ngIf="!profilePicture"/>
     </ion-item>
 
       <ion-title class="content">{{currentUser.fullName}}</ion-title>
