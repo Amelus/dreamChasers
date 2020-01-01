@@ -146,3 +146,14 @@ body.dark {
   background-color: lightgray;
   opacity: 0.3;
 }
+
+.fc-button-primary:not(:disabled).fc-button-active:focus {
+  box-shadow: unset;
+}
+.fc-button-primary:hover {
+  background-color: #eec900;
+  border-color: #eec900;
+}
+.now-indic {
+  background-color: #eec900 !important;
+}

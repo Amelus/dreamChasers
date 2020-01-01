@@ -10,6 +10,7 @@ import {FullCalendarComponent} from '@fullcalendar/angular';
 import {Router} from '@angular/router';
 import {AppointmentCreationPage} from '../appointment/appointment-creation/appointment-creation.page';
 import {AppointmentEditPage} from '../appointment/appointment-edit/appointment-edit.page';
+import * as $ from 'jquery';
 
 @Component({
     selector: 'app-home',
@@ -36,7 +37,7 @@ export class HomePage implements OnInit, AfterViewInit {
     header = {
         left:   'listWeek,timeGridWeek,dayGridMonth',
         center: '',
-        right: 'myCustomButton'
+        right: 'prev,next myCustomButton'
     };
     buttonText = {
         today:    'Heute',
@@ -47,6 +48,7 @@ export class HomePage implements OnInit, AfterViewInit {
     showList: boolean;
     themeSystem: string;
     height: number;
+    titleName: string;
 
     constructor(public menuController: MenuController,
                 private userClient: UserClient,
@@ -63,6 +65,7 @@ export class HomePage implements OnInit, AfterViewInit {
         this.getEvents();
         this.height = window.innerHeight * 0.87;
         console.log('height: ' + this.height);
+        this.titleName = 'Kalender';
     }
 
     ngAfterViewInit(): void {
@@ -74,7 +77,16 @@ export class HomePage implements OnInit, AfterViewInit {
             this.themeSystem = 'standard';
         }
 
+        $(document).ready(() => {
+            $('.fc-day-top.fc-today').eq(0).addClass('now-indic');
+            $('.fc-day.fc-today').eq(0).siblings().addClass('fc-today');
+            $('.fc-listWeek-button, .fc-timeGridWeek-button, .fc-dayGridMonth-button').click( () => {
+                this.titleName = calenderApi.view.title;
+            });
+        });
 
+        const calenderApi = this.monthCalendar.getApi();
+        this.titleName = calenderApi.view.title;
     }
 
     showDateClick(day: any) {

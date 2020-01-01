@@ -1664,7 +1664,11 @@ export class AppointmentVm implements IAppointmentVm {
             this.title = data.title !== undefined ? data.title : null as any;
             this.allDay = data.allDay !== undefined ? data.allDay : null as any;
             this.backgroundColor = data.backgroundColor !== undefined ? data.backgroundColor : null as any;
-            this.borderColor = data.backgroundColor !== undefined ? data.backgroundColor : null as any;
+            if (this.allDay !== null && this.allDay) {
+                this.borderColor = data.backgroundColor !== undefined ? data.backgroundColor : null as any;
+            } else {
+                this.borderColor = 'white';
+            }
 
             this.start = data.start ? new Date(data.start.toString()) : null as any;
             this.end = data.end ? new Date(data.end.toString()) : null as any;
@@ -1686,7 +1690,11 @@ export class AppointmentVm implements IAppointmentVm {
         data.title = data.title !== undefined ? data.title : null as any;
         data.allDay = data.allDay !== undefined ? data.allDay : null as any;
         data.backgroundColor = data.backgroundColor !== undefined ? data.backgroundColor : null as any;
-        data.borderColor = data.backgroundColor !== undefined ? data.backgroundColor : null as any;
+        if (data.allDay !== null && data.allDay) {
+            data.borderColor = data.backgroundColor !== undefined ? data.backgroundColor : null as any;
+        } else {
+            data.borderColor = 'white';
+        }
 
         data.start = data.start ? new Date(data.start.toString()) : null as any;
         data.end = data.end ? new Date(data.end.toString()) : null as any;
