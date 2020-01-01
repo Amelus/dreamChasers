@@ -24,24 +24,16 @@
                    eventTextColor="white"
                    (dateClick)="showDateClick($event)"
                    (eventClick)="eventClick($event)"
+                   [firstDay]="1"
                    contentHeight="auto"
+                   [height]="height"
+                   [customButtons]="customButtons"
+                   [eventLimit]="4"
+                   [displayEventTime]="false"
+                   [eventTextColor]="'black'"
+                   [eventLimitText]="'mehr'"
                    >
     </full-calendar>
-    <full-calendar #dayListCalendar [hidden]="!showList" defaultView="listDay"
-                   [plugins]="calendarPlugins"
-                   [weekends]="true"
-                   [events]="calendarEvents"
-                   [locale]="'de'"
-                   [header]="false"
-                   [themeSystem]="themeSystem"
-                   (eventClick)="eventClick($event)"
-                   noEventsMessage="">
-    </full-calendar>
-    <ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="triggerAlert()">
-        <ion-fab-button [disabled]="!editorUser">
-            <ion-icon name="add"></ion-icon>
-        </ion-fab-button>
-    </ion-fab>
 
 </ion-content>
 

@@ -25,18 +25,28 @@ export class HomePage implements OnInit, AfterViewInit {
     defaultView: string;
     calendarPlugins = [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin, bootstrapPlugin];
     calendarEvents: AppointmentVm[] = [];
+    customButtons = {
+        myCustomButton: {
+            text: '+',
+            click: () => {
+                this.triggerAlert();
+            }
+        }
+    };
     header = {
-        left:   'timeGridWeek dayGridMonth',
-        center: 'title',
-        right: 'prev next'
+        left:   'listWeek,timeGridWeek,dayGridMonth',
+        center: '',
+        right: 'myCustomButton'
     };
     buttonText = {
         today:    'Heute',
         month:    'Monat',
         week:     'Woche',
+        list:     'Liste'
     };
     showList: boolean;
     themeSystem: string;
+    height: number;
 
     constructor(public menuController: MenuController,
                 private userClient: UserClient,
@@ -51,28 +61,20 @@ export class HomePage implements OnInit, AfterViewInit {
         this.defaultView = 'dayGridMonth';
         this.showList = true;
         this.getEvents();
+        this.height = window.innerHeight * 0.87;
+        console.log('height: ' + this.height);
     }
 
     ngAfterViewInit(): void {
         this.editorUser = this.isEditorUser();
-        document.getElementsByClassName('fc-timeGridWeek-button')[0]
-            .addEventListener('click', () => {this.viewChange('timeGridWeek'); }, false);
-        document.getElementsByClassName('fc-dayGridMonth-button')[0]
-            .addEventListener('click', () => {this.viewChange('dayGridMonth'); }, false);
 
         if (document.body.classList.contains('dark')) {
             this.themeSystem = 'bootstrap';
         } else {
             this.themeSystem = 'standard';
         }
-    }
 
-    viewChange(view: string) {
-        if (view === 'dayGridMonth') {
-            this.showList = true;
-        } else if (view === 'timeGridWeek') {
-            this.showList = false;
-        }
+
     }
 
     showDateClick(day: any) {

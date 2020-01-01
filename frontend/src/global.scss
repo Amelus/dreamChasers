@@ -40,6 +40,9 @@
   .btn {
     font-size: 0.6rem !important;
   }
+  .fc-button {
+    font-size: 0.8rem !important;
+  }
   .fc-center {
     font-size: 0.5rem !important;
   }
@@ -49,7 +52,97 @@
   .btn {
     font-size: 0.8rem !important;
   }
-  .fc-center {
-    font-size: 0.7rem !important;
+  .fc-button {
+    font-size: 0.8rem !important;
   }
+  .fc-center {
+    font-size: 0.5rem !important;
+  }
+}
+
+:root {
+  --ion-color-primary: #eec900;
+  --ion-color-primary-rgb: 238,201,0;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255,255,255;
+  --ion-color-primary-shade: #d1b100;
+  --ion-color-primary-tint: #f0ce1a;
+}
+
+.btn-primary {
+  background-color: unset;
+  border: unset;
+}
+
+.fc-button-primary {
+  color: unset;
+  background-color: unset;
+  border: unset;
+}
+
+.fc-button-primary:not(:disabled):active, .fc-button-primary:not(:disabled).fc-button-active {
+  color: #fff;
+  background-color:#eec900;
+  border-color: #eec900;
+  border-radius: 20px;
+}
+
+.fc-toolbar.fc-header-toolbar {
+  margin-top: 1%;
+}
+
+body.dark {
+  --ion-color-primary: #eec900;
+  --ion-color-primary-rgb: 238,201,0;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255,255,255;
+  --ion-color-primary-shade: #d1b100;
+  --ion-color-primary-tint: #f0ce1a;
+}
+
+.btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active, .show > .btn-primary.dropdown-toggle {
+  color: #fff;
+  background-color: #eec900;
+  border-color: #eec900;
+  border-radius: 20px;
+}
+
+@font-face {
+  font-family: avenir;
+  src: url(assets/avenir/AvenirNextLTPro-Regular.otf) format("opentype");
+}
+
+* {
+  font-family: 'avenir', 'arial', sans-serif;
+}
+
+.fc-myCustomButton-button {
+  font-size: 1.2rem !important;
+  margin: unset;
+  padding-top: unset;
+  padding-bottom: unset;
+  margin-right: 5px;
+  background-color: #eec900;
+  color: white;
+  border-radius: 20px;
+}
+
+.fc-view-container {
+  font-size: 0.8em;
+}
+
+.fc-toolbar.fc-footer-toolbar {
+  margin-top: unset;
+}
+
+.fc-head {
+  border-top: hidden;
+}
+
+.fc-day-header {
+  border: hidden !important;
+}
+.fc-other-month {
+  background-color: lightgray;
+  opacity: 0.3;
 }
