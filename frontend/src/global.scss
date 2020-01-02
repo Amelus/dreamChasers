@@ -154,9 +154,6 @@ body.dark {
   background-color: #eec900;
   border-color: #eec900;
 }
-.now-indic {
-  background-color: #eec900 !important;
-}
 .fc-unthemed td.fc-today {
   background: #fcf8e39e;
 }
@@ -165,8 +162,11 @@ body.dark {
 }
 thead {
   line-height: 0.9;
-  font-size: 0.8em;
+  font-size: 0.9em;
 }
 .fc-head {
   border-bottom: thin;
+}
+.fc-day-top.fc-today {
+  background-color: #eec900 !important;
 }

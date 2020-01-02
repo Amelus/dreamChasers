@@ -78,7 +78,6 @@ export class HomePage implements OnInit, AfterViewInit {
         }
 
         $(document).ready(() => {
-            $('.fc-day-top.fc-today').eq(0).addClass('now-indic');
             $('.fc-day.fc-today').eq(0).siblings().addClass('fc-today');
             $('.fc-listWeek-button, .fc-timeGridWeek-button, .fc-dayGridMonth-button, .fc-prev-button, .fc-next-button')
                 .click( () => {
