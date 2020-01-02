@@ -1,16 +1,17 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {ModalController, NavParams} from '@ionic/angular';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AppointmentClient, AppointmentParams, AppointmentVm} from '../../app.api';
 import * as moment from 'moment';
 import {Moment} from 'moment';
+import * as $ from 'jquery';
 
 @Component({
     selector: 'app-appointment-creation',
     templateUrl: './appointment-creation.page.html',
     styleUrls: ['./appointment-creation.page.scss'],
 })
-export class AppointmentCreationPage implements OnInit {
+export class AppointmentCreationPage implements OnInit, AfterViewInit {
 
     private form: FormGroup;
     private appointments: AppointmentVm[];
@@ -112,5 +113,11 @@ export class AppointmentCreationPage implements OnInit {
 
     toggleGlobal() {
         this.global = !this.global;
+    }
+
+    ngAfterViewInit(): void {
+        $(document).ready(() => {
+            $('.item-inner').addClass('no-border');
+        });
     }
 }

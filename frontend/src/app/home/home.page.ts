@@ -37,7 +37,7 @@ export class HomePage implements OnInit, AfterViewInit {
     header = {
         left:   'listWeek,timeGridWeek,dayGridMonth',
         center: '',
-        right: 'prev,next myCustomButton'
+        right: 'prev,next'
     };
     buttonText = {
         today:    'Heute',
@@ -63,7 +63,7 @@ export class HomePage implements OnInit, AfterViewInit {
         this.defaultView = 'dayGridMonth';
         this.showList = true;
         this.getEvents();
-        this.height = window.innerHeight * 0.87;
+        this.height = window.innerHeight * 0.9;
         console.log('height: ' + this.height);
         this.titleName = 'Kalender';
     }
@@ -80,9 +80,11 @@ export class HomePage implements OnInit, AfterViewInit {
         $(document).ready(() => {
             $('.fc-day-top.fc-today').eq(0).addClass('now-indic');
             $('.fc-day.fc-today').eq(0).siblings().addClass('fc-today');
-            $('.fc-listWeek-button, .fc-timeGridWeek-button, .fc-dayGridMonth-button').click( () => {
+            $('.fc-listWeek-button, .fc-timeGridWeek-button, .fc-dayGridMonth-button, .fc-prev-button, .fc-next-button')
+                .click( () => {
                 this.titleName = calenderApi.view.title;
             });
+
         });
 
         const calenderApi = this.monthCalendar.getApi();

@@ -3,4 +3,8 @@
   left: 50%;
 }
 
+.no-border {
+  border-bottom: unset !important;
+}
+
 /*# sourceMappingURL=appointment-creation.page.css.map */

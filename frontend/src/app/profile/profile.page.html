@@ -17,7 +17,7 @@
   </ion-refresher>-->
   <div class="general_form">
 
-    <ion-item button (click)="openChangeImg()">
+    <ion-item button (click)="openChangeImg()" detail="false">
       <img class="image" src="{{profilePicture}}" *ngIf="profilePicture"/>
       <img class="image" src="assets\image.png" *ngIf="!profilePicture"/>
     </ion-item>

@@ -36,6 +36,7 @@ export class AppComponent {
         icon: 'log-out',
     };
   todoIcon: string;
+  iosIcon: string;
   expandedTodos: boolean;
 
 
@@ -46,6 +47,7 @@ export class AppComponent {
     ) {
         this.initializeApp();
         this.todoIcon = 'arrow-dropdown';
+        this.iosIcon = 'arrow-dropdown';
         this.expandedTodos = false;
     }
 
@@ -59,8 +61,10 @@ export class AppComponent {
     toggleTodos() {
       if (this.expandedTodos) {
         this.todoIcon = 'arrow-dropdown';
+        this.iosIcon = 'arrow-dropdown';
       } else {
         this.todoIcon = 'arrow-dropup';
+        this.iosIcon = 'arrow-up';
       }
       this.expandedTodos = !this.expandedTodos;
     }

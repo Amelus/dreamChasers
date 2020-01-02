@@ -35,6 +35,11 @@
                    allDayText="Ganztägig"
                    >
     </full-calendar>
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="triggerAlert()">
+        <ion-fab-button [disabled]="!editorUser">
+            <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
 
 </ion-content>
 
