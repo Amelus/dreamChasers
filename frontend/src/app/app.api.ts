@@ -1664,11 +1664,7 @@ export class AppointmentVm implements IAppointmentVm {
             this.title = data.title !== undefined ? data.title : null as any;
             this.allDay = data.allDay !== undefined ? data.allDay : null as any;
             this.backgroundColor = data.backgroundColor !== undefined ? data.backgroundColor : null as any;
-            if (this.allDay !== null && this.allDay) {
-                this.borderColor = data.backgroundColor !== undefined ? data.backgroundColor : null as any;
-            } else {
-                this.borderColor = 'white';
-            }
+            this.borderColor = data.backgroundColor !== undefined ? data.backgroundColor : null as any;
 
             this.start = data.start ? new Date(data.start.toString()) : null as any;
             this.end = data.end ? new Date(data.end.toString()) : null as any;
@@ -1690,20 +1686,16 @@ export class AppointmentVm implements IAppointmentVm {
         data.title = data.title !== undefined ? data.title : null as any;
         data.allDay = data.allDay !== undefined ? data.allDay : null as any;
         data.backgroundColor = data.backgroundColor !== undefined ? data.backgroundColor : null as any;
-        if (data.allDay !== null && data.allDay) {
-            data.borderColor = data.backgroundColor !== undefined ? data.backgroundColor : null as any;
-        } else {
-            data.borderColor = 'white';
-        }
+        data.borderColor = data.backgroundColor !== undefined ? data.backgroundColor : null as any;
 
-        data.start = data.start ? new Date(data.start.toString()) : null as any;
-        data.end = data.end ? new Date(data.end.toString()) : null as any;
+        data.start = data.start ? data.start.toISOString() : null as any;
+        data.end = data.end ? data.end.toISOString() : null as any;
 
         data.daysOfWeek = data.daysOfWeek !== undefined ? data.daysOfWeek : null as any;
         data.startTime = data.startTime !== undefined ? data.startTime : null as any;
         data.endTime = data.endTime !== undefined ? data.endTime : null as any;
-        data.startRecur = data.startRecur ? new Date(data.startRecur.toString()) : null as any;
-        data.endRecur = data.endRecur ? new Date(data.endRecur.toString()) : null as any;
+        data.startRecur = data.startRecur ? data.startRecur.toISOString() : null as any;
+        data.endRecur = data.endRecur ? data.endRecur.toISOString() : null as any;
         return data;
     }
 }

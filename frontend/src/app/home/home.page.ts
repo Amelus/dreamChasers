@@ -1,16 +1,18 @@
 import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
-import {AlertController, MenuController, ModalController} from '@ionic/angular';
+import {AlertController, MenuController, ModalController, PopoverController} from '@ionic/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
 import bootstrapPlugin from '@fullcalendar/bootstrap';
-import {AppointmentClient, AppointmentVm, UserClient, UserVmRole} from '../app.api';
+import {AppointmentClient, AppointmentVm, TodoVm, UserClient, UserVmRole} from '../app.api';
 import {FullCalendarComponent} from '@fullcalendar/angular';
 import {Router} from '@angular/router';
 import {AppointmentCreationPage} from '../appointment/appointment-creation/appointment-creation.page';
 import {AppointmentEditPage} from '../appointment/appointment-edit/appointment-edit.page';
 import * as $ from 'jquery';
+import {DayDetailComponent} from '../components/day-detail/day-detail.component';
+import {DateInfo} from "../appointment/dateInfo";
 
 @Component({
     selector: 'app-home',
@@ -20,7 +22,6 @@ import * as $ from 'jquery';
 export class HomePage implements OnInit, AfterViewInit {
 
     @ViewChild('monthCalendar', {static: false}) monthCalendar: FullCalendarComponent;
-    @ViewChild('dayListCalendar', {static: true}) dayListCalendar: FullCalendarComponent;
 
     editorUser: boolean;
     defaultView: string;
@@ -55,7 +56,8 @@ export class HomePage implements OnInit, AfterViewInit {
                 private appointmentClient: AppointmentClient,
                 private router: Router,
                 private alertController: AlertController,
-                private modalController: ModalController) {
+                private modalController: ModalController,
+                private popoverController: PopoverController) {
         this.menuController.enable(true, 'mainMenu');
     }
 
@@ -90,14 +92,16 @@ export class HomePage implements OnInit, AfterViewInit {
         this.titleName = calenderApi.view.title;
     }
 
-    showDateClick(day: any) {
-        const calendarApi = this.dayListCalendar.getApi();
-        if (this.monthCalendar.getApi().view.type !== 'timeGridWeek') {
-            calendarApi.render();
-            calendarApi.gotoDate(day.date);
-        } else {
-            calendarApi.destroy();
-        }
+    async showDateClick(ev: any) {
+        const events = this.calendarEvents;
+        const popover = await this.popoverController.create({
+            component: DayDetailComponent,
+            event: ev,
+            animated: true,
+            showBackdrop: true,
+            componentProps: {target: ev, events}
+        });
+        return await popover.present();
     }
 
     getEvents() {
@@ -130,7 +134,7 @@ export class HomePage implements OnInit, AfterViewInit {
         return await this.modalController.create(
             {
                 component: AppointmentCreationPage,
-                componentProps: {appointments: this.calendarEvents}
+                componentProps: {appointments: this.calendarEvents, calender: this.monthCalendar}
             });
     }
 

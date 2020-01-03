@@ -170,3 +170,34 @@ thead {
 .fc-day-top.fc-today {
   background-color: #eec900 !important;
 }
+.fc-day-header {
+  line-height: 1.5;
+  font-weight: bolder;
+  font-size: 1em;
+}
+.fc-prev-button:active {
+  color: unset !important;
+  background-color: unset !important;
+  border: unset !important;
+}
+.fc-prev-button:hover {
+  color: unset !important;
+  background-color: unset !important;
+  border: unset !important;
+}
+.fc-prev-button:focus {
+  box-shadow: none !important;
+}
+.fc-next-button:active {
+  color: unset !important;
+  background-color: unset !important;
+  border: unset !important;
+}
+.fc-next-button:hover {
+  color: unset !important;
+  background-color: unset !important;
+  border: unset !important;
+}
+.fc-next-button:focus {
+  box-shadow: none !important;
+}

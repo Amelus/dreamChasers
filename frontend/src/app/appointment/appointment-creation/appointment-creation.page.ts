@@ -5,6 +5,7 @@ import {AppointmentClient, AppointmentParams, AppointmentVm} from '../../app.api
 import * as moment from 'moment';
 import {Moment} from 'moment';
 import * as $ from 'jquery';
+import {FullCalendarComponent} from '@fullcalendar/angular';
 
 @Component({
     selector: 'app-appointment-creation',
@@ -21,6 +22,7 @@ export class AppointmentCreationPage implements OnInit, AfterViewInit {
     private monthNames = 'Jan, Feb, Mar, Apr, Mai, Jun, Jul, Aug, Sep, Oct, Nov, Dec';
     private minuteValues = '0,5,10,15,20,25,30,35,40,45,50,55';
     private global: boolean;
+    private calender: FullCalendarComponent;
 
     constructor(public modalController: ModalController,
                 private formBuilder: FormBuilder,
@@ -36,6 +38,8 @@ export class AppointmentCreationPage implements OnInit, AfterViewInit {
         this.minDate = (now).toISOString();
         const newDate = moment(now).add(1, 'year');
         this.maxDate = newDate.toISOString();
+
+        this.calender = this.params.get('calender');
     }
 
     public async dismiss() {
@@ -66,6 +70,8 @@ export class AppointmentCreationPage implements OnInit, AfterViewInit {
                 this.form.get('daysOfWeek').reset();
                 this.form.get('backgroundColor').reset();
                 this.form.get('global').reset();
+
+                // this.calender.getApi().addEvent(newAppointment);
             });
 
         this.dismiss();

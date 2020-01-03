@@ -8,6 +8,7 @@ import {HomePage} from './home.page';
 import {FullCalendarModule} from '@fullcalendar/angular';
 import {AppointmentCreationPageModule} from '../appointment/appointment-creation/appointment-creation.module';
 import {AppointmentEditPageModule} from '../appointment/appointment-edit/appointment-edit.module';
+import {CustomComponentModule} from '../components/custom-component.module';
 
 @NgModule({
     imports: [
@@ -16,6 +17,7 @@ import {AppointmentEditPageModule} from '../appointment/appointment-edit/appoint
         IonicModule,
         AppointmentCreationPageModule,
         AppointmentEditPageModule,
+        CustomComponentModule,
         RouterModule.forChild([
             {
                 path: '',

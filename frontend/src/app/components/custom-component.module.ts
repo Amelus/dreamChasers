@@ -5,6 +5,7 @@ import {IonicModule} from '@ionic/angular';
 import {RouterModule} from '@angular/router';
 
 import {StatusChangeComponent} from './status-change/status-change.component';
+import {DayDetailComponent} from './day-detail/day-detail.component';
 
 @NgModule({
     imports: [
@@ -14,10 +15,11 @@ import {StatusChangeComponent} from './status-change/status-change.component';
         RouterModule
     ],
     exports: [
-        StatusChangeComponent
+        StatusChangeComponent,
+        DayDetailComponent
     ],
-    declarations: [StatusChangeComponent],
-    entryComponents: [StatusChangeComponent]
+    declarations: [StatusChangeComponent, DayDetailComponent],
+    entryComponents: [StatusChangeComponent, DayDetailComponent]
 })
 export class CustomComponentModule {
 }
