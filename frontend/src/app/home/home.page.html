@@ -9,7 +9,12 @@
     </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content fullscreen
+             (panLeft)="onPanLeft($event)"
+             (panRight)="onPanRight($event)"
+             (panend)="onPanEnd($event)"
+             (datesRender)="datesRender($event)">
+
     <full-calendar #monthCalendar
                    *ngIf="defaultView"
                    [defaultView]="defaultView"

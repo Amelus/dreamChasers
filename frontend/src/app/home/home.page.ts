@@ -12,7 +12,6 @@ import {AppointmentCreationPage} from '../appointment/appointment-creation/appoi
 import {AppointmentEditPage} from '../appointment/appointment-edit/appointment-edit.page';
 import * as $ from 'jquery';
 import {DayDetailComponent} from '../components/day-detail/day-detail.component';
-import {DateInfo} from "../appointment/dateInfo";
 
 @Component({
     selector: 'app-home',
@@ -50,6 +49,7 @@ export class HomePage implements OnInit, AfterViewInit {
     themeSystem: string;
     height: number;
     titleName: string;
+    lastPanAction: any;
 
     constructor(public menuController: MenuController,
                 private userClient: UserClient,
@@ -169,5 +169,33 @@ export class HomePage implements OnInit, AfterViewInit {
             || this.userClient.getSessionUser().role === null
             || this.userClient.getSessionUser().role === UserVmRole.User);
 
+    }
+
+    onPanLeft($event) {
+        console.log('panLeft');
+        this.lastPanAction = $event;
+    }
+
+    onPanRight($event) {
+        console.log('panRight');
+        this.lastPanAction = $event;
+    }
+
+    onPanEnd($event) {
+        console.log('panEnd');
+        const fcApi = this.monthCalendar.getApi();
+        switch (this.lastPanAction.additionalEvent) {
+            case 'panright':
+                fcApi.prev();
+                break;
+            case 'panleft':
+                fcApi.next();
+                break;
+        }
+    }
+
+    datesRender($event) {
+        console.log($event.view.activeStart, $event.view.activeEnd, $event);
+        // this.RefreshPage();
     }
 }

@@ -1,3 +1,33 @@
+.spacing {
+  margin-left: 8%;
+  margin-right: 7%;
+}
 
+.my-icon {
+  margin-top: 8%;
+  margin-right: 5%;
+}
+
+.my-text {
+  color: darkgrey;
+  font-size: 0.85em;
+}
+
+.my-title {
+  font-size: 1.1em;
+  padding-inline-start: 20px;
+  padding-inline-end: 20px;
+  text-align: left;
+}
+
+.col-wrap {
+  white-space: nowrap;
+  overflow: auto;
+}
+
+.tekst-wrap {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 /*# sourceMappingURL=day-detail.component.css.map */
