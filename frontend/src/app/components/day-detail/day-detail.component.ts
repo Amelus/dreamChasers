@@ -1,8 +1,10 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {ModalController, NavParams, PopoverController} from '@ionic/angular';
+import {Component, OnInit} from '@angular/core';
+import {AlertController, ModalController, NavParams, PopoverController} from '@ionic/angular';
 import {AppointmentVm} from '../../app.api';
 import {DateInfo} from '../../appointment/dateInfo';
 import {AppointmentEditPage} from '../../appointment/appointment-edit/appointment-edit.page';
+import {AppointmentCreationPage} from '../../appointment/appointment-creation/appointment-creation.page';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-day-detail',
@@ -13,36 +15,24 @@ export class DayDetailComponent implements OnInit {
   targetDay: DateInfo;
   formattedDay: string;
   currentEvents: AppointmentVm[] = [];
+  editorUser: boolean;
 
   constructor(public popoverController: PopoverController,
               public modalController: ModalController,
+              private router: Router,
+              private alertController: AlertController,
               public navParams: NavParams) { }
 
   ngOnInit() {
     this.targetDay = this.navParams.get('target');
-    const allEvents = this.navParams.get('events');
+    this.currentEvents =  this.navParams.get('events');
+    this.editorUser = this.navParams.get('editorUser');
     this.formattedDay = this.getDayOfWeek(this.targetDay.date);
-    this.currentEvents = allEvents.filter((event: AppointmentVm) => {
-      if (event.start) {
-        if (event.start.getDate() <= this.targetDay.date.getDate()
-            && event.end.getDate() >= this.targetDay.date.getDate() ) {
-          return true;
-        }
-      } else if (event.startRecur) {
-        if (this.isDayContained(event.daysOfWeek) &&
-            event.startRecur.getMilliseconds() <= this.targetDay.date.getMilliseconds()
-            && event.endRecur.getMilliseconds() >= this.targetDay.date.getMilliseconds() ) {
-          return true;
-        }
-      }
-      return false;
-    });
   }
 
   dismiss() {
     this.popoverController.dismiss();
   }
-
 
   async eventClick(item: any) {
     const eventView = await this.modalController.create(
@@ -62,12 +52,6 @@ export class DayDetailComponent implements OnInit {
     return day + ', ' + date.getDate() + '.' + (date.getMonth() + 1) + '.' + date.getFullYear();
   }
 
-
-  isDayContained(weekArray: number[]): boolean {
-    const day = this.targetDay.date.getDay();
-    return weekArray.map(Number).indexOf(day) >= 0;
-  }
-
   formatTime(time: string): string {
     const array: string[] = time.split(':');
     return array[0] + ':' + array[1];
@@ -76,5 +60,44 @@ export class DayDetailComponent implements OnInit {
   getTime(date: Date): string {
     const datetext = date.toTimeString().split(' ');
     return this.formatTime(datetext[0]);
+  }
+
+  async triggerAlert() {
+    let alert: any;
+    if (this.editorUser) {
+      alert = this.createAppointment();
+    } else {
+      alert = this.upgradeAlert();
+    }
+    (await alert).present();
+  }
+
+  private async createAppointment() {
+    this.dismiss();
+    return await this.modalController.create(
+        {
+          component: AppointmentCreationPage,
+          componentProps: {appointments: this.currentEvents}
+        });
+  }
+
+  private async upgradeAlert() {
+    return await this.alertController.create({
+      header: 'Upgrade benötigt',
+      message: 'Möchten Sie Ihren Account upgraden um Termine zu erstellen?',
+      buttons: [
+        {
+          text: 'Abbruch',
+          role: 'cancel',
+          cssClass: 'secondary'
+        }, {
+          text: 'Upgrade',
+          cssClass: 'primary',
+          handler: () => {
+            this.router.navigate(['/profile']);
+          }
+        }
+      ]
+    });
   }
 }

@@ -6,6 +6,9 @@
         <ion-title>
             {{titleName}}
         </ion-title>
+        <ion-button slot="end" (click)="presentLoadingWithOptions()" fill="clear">
+            <ion-icon name="sync"></ion-icon>
+        </ion-button>
     </ion-toolbar>
 </ion-header>
 
@@ -37,6 +40,9 @@
                    [displayEventTime]="false"
                    [eventTextColor]="'black'"
                    [eventLimitText]="'mehr'"
+                   [eventLimitClick]="'dayGridMonth'"
+                   maxTime="21:00:00"
+                   minTime="06:00:00"
                    allDayText="Ganztägig"
                    >
     </full-calendar>

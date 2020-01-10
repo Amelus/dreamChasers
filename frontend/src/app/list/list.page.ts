@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, OnInit, Renderer2} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {TodoClient, TodoParams, TodoVm, UserClient, UserVmRole} from '../app.api';
-import {AlertController, ModalController, PopoverController} from '@ionic/angular';
+import {AlertController, LoadingController, ModalController, PopoverController} from '@ionic/angular';
 import {StatusChangeComponent} from '../components/status-change/status-change.component';
 import {TodoCreationPage} from '../todo-creation/todo-creation.page';
 import {Router} from '@angular/router';
@@ -28,6 +28,7 @@ export class ListPage implements OnInit, AfterViewInit {
                 private userClient: UserClient,
                 private alertController: AlertController,
                 public modalController: ModalController,
+                private loadingController: LoadingController,
                 private router: Router) {
     }
 
@@ -42,12 +43,13 @@ export class ListPage implements OnInit, AfterViewInit {
         this.editorUser = this.isEditorUser();
     }
 
-    doRefresh(event) {
-        setTimeout(() => {
-            console.log('Async operation has ended');
-            this.getTodos();
-            event.target.complete();
-        }, 2000);
+    async presentLoadingWithOptions() {
+        this.getTodos();
+        const loading = await this.loadingController.create({
+            duration: 2000,
+            message: 'Synchronisiere...'
+        });
+        return await loading.present();
     }
 
     toggleDeletion() {

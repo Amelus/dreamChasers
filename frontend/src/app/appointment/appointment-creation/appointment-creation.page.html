@@ -45,7 +45,8 @@
 
   <form [formGroup]="form">
     <ion-item class="ion-align-items-center ion-padding">
-      <ion-input autocomplete="true" required="true" formControlName="title" placeholder="Terminname"></ion-input>
+      <ion-label position="floating">Terminname</ion-label>
+      <ion-input autocomplete="true" required="true" formControlName="title"></ion-input>
     </ion-item>
 
     <ion-item class="ion-align-items-center ion-padding">
@@ -75,29 +76,48 @@
         <ion-toggle color="primary" (click)="toggleAllDay()"></ion-toggle>
     </ion-item>
 
-    <ion-item class="ion-align-items-center ion-padding">
-      <ion-datetime slot="start" displayFormat="DD MMM YY" formControlName="start"
-                    [monthShortNames]="monthNames"
-                    [value]="minDate"
-                    [min]="minDate"
-                    [max]="maxDate"></ion-datetime>
-      <ion-icon class="time-arrow" name="arrow-dropright"></ion-icon>
-      <ion-datetime slot="end" displayFormat="DD MMM YY" formControlName="end"
-                    [monthShortNames]="monthNames"
-                    [value]="minDate"
-                    [min]="minDate"
-                    [max]="maxDate"></ion-datetime>
-    </ion-item>
+    <ion-row>
+      <ion-col>
+        <ion-label position="stacked" style="margin-left: 30px;">Abhaltungszeitraum</ion-label>
+        <ion-row class="ion-align-items-center ion-padding date-row">
+          <ion-col>
+            <ion-datetime displayFormat="DD MMM YY" formControlName="start"
+                          [monthShortNames]="monthNames"
+                          [value]="minDate"
+                          [min]="minDate"
+                          [max]="maxDate"></ion-datetime>
+          </ion-col>
+          <ion-col>
+            <ion-icon class="time-arrow" name="arrow-dropright"></ion-icon>
+          </ion-col>
+          <ion-col>
+            <ion-datetime displayFormat="DD MMM YY" formControlName="end" class="time-align"
+                          [monthShortNames]="monthNames"
+                          [value]="minDate"
+                          [min]="minDate"
+                          [max]="maxDate"></ion-datetime>
+          </ion-col>
+        </ion-row>
 
-    <ion-item class="ion-align-items-center ion-padding" *ngIf="!allDay">
-      <ion-datetime slot="start" displayFormat="HH:mm" formControlName="startTime"
-                    [minuteValues]="minuteValues"
-                    [value]="minDate"></ion-datetime>
-      <ion-icon class="time-arrow" name="arrow-dropright"></ion-icon>
-      <ion-datetime slot="end" displayFormat="HH:mm" formControlName="endTime"
-                    [minuteValues]="minuteValues"
-                    [value]="minDate"></ion-datetime>
-    </ion-item>
+        <ion-row class="ion-align-items-center ion-padding date-row" *ngIf="!allDay">
+          <ion-col>
+            <ion-datetime displayFormat="HH:mm" formControlName="startTime"
+                          [minuteValues]="minuteValues"
+                          [value]="minDate"></ion-datetime>
+          </ion-col>
+          <ion-col>
+            <ion-icon class="time-arrow" name="arrow-dropright"></ion-icon>
+          </ion-col>
+          <ion-col>
+            <ion-datetime displayFormat="HH:mm" formControlName="endTime" class="time-align"
+                          [minuteValues]="minuteValues"
+                          [value]="minDate"></ion-datetime>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+
+
 
     <ion-item class="ion-align-items-center ion-padding">
       <ion-label>Wiederholen</ion-label>

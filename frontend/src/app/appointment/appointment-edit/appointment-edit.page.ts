@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {AlertController, ModalController, NavParams} from '@ionic/angular';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {AppointmentVm, UserClient, UserVmRole} from '../../app.api';
+import {AppointmentClient, AppointmentVm, UserClient, UserVmRole} from '../../app.api';
 
 @Component({
   selector: 'app-appointment-edit',
@@ -17,11 +17,13 @@ export class AppointmentEditPage implements OnInit {
   private editMode: boolean;
   private global: boolean;
   private allDay: boolean;
+  private isCreator: boolean;
 
   constructor(private navParams: NavParams,
               private formBuilder: FormBuilder,
               public modalController: ModalController,
               private userClient: UserClient,
+              private appointmentClient: AppointmentClient,
               private alertController: AlertController) {
   }
 
@@ -29,8 +31,12 @@ export class AppointmentEditPage implements OnInit {
     this.initForm();
     this.appointments = this.navParams.get('appointments');
     this.selectedAppointment = this.getSelectedAppointment();
-    this.editorUser = this.isEditorUser();
+    this.editorUser = this.navParams.get('editorUser');
     this.editMode = false;
+    this.global = this.selectedAppointment.extendedProps.global;
+    this.allDay = this.selectedAppointment.allDay;
+    const user = this.userClient.getSessionUser();
+    this.isCreator = this.selectedAppointment.extendedProps.creator === user.username;
   }
 
   modifyTitle(eventIndex, newTitle) {
@@ -47,26 +53,18 @@ export class AppointmentEditPage implements OnInit {
     });
   }
 
-  toggleEdit() {
-    this.editMode = !this.editMode;
+  async toggleEdit() {
+    if (this.isCreator) {
+      this.editMode = !this.editMode;
+    } else {
+      const alert = this.noPermission2DeleteAlert();
+      (await alert).present();
+    }
   }
 
   getSelectedAppointment() {
     const selectedItemTitle = this.navParams.get('selected');
     return this.appointments.find((appointment) => appointment.title === selectedItemTitle);
-  }
-
-  private isEditorUser(): boolean {
-    if (!this.userClient.getSessionUser()
-        || this.userClient.getSessionUser() === undefined
-        || this.userClient.getSessionUser() === null) {
-      return false;
-    }
-
-    return !(this.userClient.getSessionUser().role === undefined
-        || this.userClient.getSessionUser().role === null
-        || this.userClient.getSessionUser().role === UserVmRole.User);
-
   }
 
   toggleGlobal() {
@@ -94,5 +92,50 @@ export class AppointmentEditPage implements OnInit {
 
   onSubmit() {
 
+  }
+
+  async tryDelete() {
+    const user = this.userClient.getSessionUser();
+    let alert: any;
+    if (this.selectedAppointment.extendedProps.creator === user.username) {
+      alert = this.deleteAlert();
+    } else {
+      alert = this.noPermission2DeleteAlert();
+    }
+    (await alert).present();
+  }
+
+  private async deleteAlert() {
+    return await this.alertController.create({
+      header: 'Termin löschen',
+      message: 'Sind Sie sicher dass sie diesen Termin löschen möchten?',
+      buttons: [
+        {
+          text: 'Abbruch',
+          role: 'cancel',
+          cssClass: 'secondary'
+        }, {
+          text: 'Löschen',
+          cssClass: 'primary',
+          handler: () => {
+            this.appointmentClient.delete(this.selectedAppointment.id).subscribe();
+          }
+        }
+      ]
+    });
+  }
+
+  private async noPermission2DeleteAlert() {
+    return await this.alertController.create({
+      header: 'Keine Berechtigung',
+      message: 'Sie besitzen keine Berechtigung um diesen Termin zu löschen',
+      buttons: [
+        {
+          text: 'OK',
+          role: 'cancel',
+          cssClass: 'secondary'
+        }
+      ]
+    });
   }
 }

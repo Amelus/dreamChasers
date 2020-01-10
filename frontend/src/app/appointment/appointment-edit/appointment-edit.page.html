@@ -1,7 +1,10 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Detailansicht</ion-title>
-    <ion-button slot="end" (click)="toggleEdit()" fill="clear">
+    <ion-button slot="end" (click)="tryDelete()" [disabled]="!isCreator" fill="clear">
+      <ion-icon name="trash"></ion-icon>
+    </ion-button>
+    <ion-button slot="end" (click)="toggleEdit()" [disabled]="!isCreator" fill="clear">
       <ion-icon name="create"></ion-icon>
     </ion-button>
   </ion-toolbar>
@@ -10,50 +13,92 @@
 <ion-content>
   <form [formGroup]="form">
     <ion-item class="ion-align-items-center ion-padding">
-      <ion-label *ngIf="!this.editMode">{{selectedAppointment.title}}</ion-label>
-      <ion-input autocomplete="true" required="true" [value]="selectedAppointment.title" *ngIf="this.editMode"></ion-input>
+      <ion-label position="stacked">Titel</ion-label>
+      <ion-input autocomplete="true" required="true" [value]="selectedAppointment.title" [readonly]="!editMode"></ion-input>
     </ion-item>
+
+    <ion-row class="ion-align-items-center ion-padding">
+      <ion-col>
+        <ion-item>
+          <ion-label position="stacked">Teamrelevant</ion-label>
+          <ion-toggle color="primary" (click)="toggleGlobal()" [checked]="global" [disabled]="!editMode"></ion-toggle>
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-item>
+          <ion-label position="stacked">Ganztägig</ion-label>
+          <ion-toggle color="primary" (click)="toggleAllDay()" [checked]="allDay" [disabled]="!editMode"></ion-toggle>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-label position="stacked" style="margin-left: 35px;">Abhaltungszeitraum</ion-label>
+        <ion-row class="ion-align-items-center ion-padding date-row time-row" *ngIf="!selectedAppointment.startRecur">
+          <ion-col>
+            <ion-datetime  displayFormat="DD MMM YY"
+                           [value]="selectedAppointment.start.toISOString()" [readonly]="!this.editMode"></ion-datetime>
+          </ion-col>
+          <ion-col>
+            <ion-icon class="time-arrow" name="arrow-dropright"></ion-icon>
+          </ion-col>
+          <ion-col class="time-align">
+            <ion-datetime  displayFormat="DD MMM YY"
+                           [value]="selectedAppointment.end.toISOString()" [readonly]="!this.editMode"></ion-datetime>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="ion-align-items-center ion-padding date-row time-row" *ngIf="selectedAppointment.startRecur">
+          <ion-col>
+            <ion-datetime  displayFormat="DD MMM YY"
+                           [value]="selectedAppointment.startRecur.toISOString()" [readonly]="!this.editMode"></ion-datetime>
+          </ion-col>
+          <ion-col>
+            <ion-icon class="time-arrow" name="arrow-dropright"></ion-icon>
+          </ion-col>
+          <ion-col class="time-align">
+            <ion-datetime  displayFormat="DD MMM YY"
+                           [value]="selectedAppointment.endRecur.toISOString()" [readonly]="!this.editMode"></ion-datetime>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="ion-align-items-center ion-padding date-row time-row" *ngIf="!selectedAppointment.allDay">
+          <ng-container *ngIf="selectedAppointment.startTime">
+            <ion-col>
+              <ion-datetime displayFormat="HH:mm"
+                            [value]="selectedAppointment.startTime" [readonly]="!this.editMode"></ion-datetime>
+            </ion-col>
+            <ion-col>
+              <ion-icon class="time-arrow" name="arrow-dropright"></ion-icon>
+            </ion-col>
+            <ion-col class="time-align">
+              <ion-datetime displayFormat="HH:mm"
+                            [value]="selectedAppointment.endTime" [readonly]="!this.editMode"></ion-datetime>
+            </ion-col>
+          </ng-container>
+          <ng-container *ngIf="!selectedAppointment.startTime">
+            <ion-col>
+              <ion-datetime displayFormat="HH:mm"
+                            [value]="selectedAppointment.start.toISOString()" [readonly]="!this.editMode"></ion-datetime>
+            </ion-col>
+            <ion-col>
+              <ion-icon class="time-arrow" name="arrow-dropright"></ion-icon>
+            </ion-col>
+            <ion-col class="time-align">
+              <ion-datetime displayFormat="HH:mm"
+                            [value]="selectedAppointment.end.toISOString()" [readonly]="!this.editMode"></ion-datetime>
+            </ion-col>
+          </ng-container>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+
+
 
     <ion-item class="ion-align-items-center ion-padding">
-      <ion-label>Teamrelevant</ion-label>
-      <ion-toggle color="primary" (click)="toggleGlobal()" [checked]="global" *ngIf="this.editMode"></ion-toggle>
-    </ion-item>
-
-    <ion-item class="ion-align-items-center ion-padding" *ngIf="selectedAppointment.allDay">
-      <ion-label *ngIf="!this.editMode">Ganztägig</ion-label>
-      <ion-toggle color="primary" (click)="toggleAllDay()" *ngIf="this.editMode"></ion-toggle>
-    </ion-item>
-
-    <ion-item class="ion-align-items-center ion-padding" *ngIf="!selectedAppointment.startRecur">
-        <ion-datetime slot="start" displayFormat="DD MMM YY"
-                      [value]="selectedAppointment.start.toISOString()" [readonly]="!this.editMode"></ion-datetime>
-        <ion-icon class="time-arrow" name="arrow-dropright"></ion-icon>
-        <ion-datetime slot="end" displayFormat="DD MMM YY"
-                      [value]="selectedAppointment.end.toISOString()" [readonly]="!this.editMode"></ion-datetime>
-      </ion-item>
-
-  <ion-item class="ion-align-items-center ion-padding" *ngIf="selectedAppointment.startRecur">
-    <ion-datetime slot="start" displayFormat="DD MMM YY"
-                  [value]="selectedAppointment.startRecur.toISOString()" [readonly]="!this.editMode"></ion-datetime>
-    <ion-icon class="time-arrow" name="arrow-dropright"></ion-icon>
-    <ion-datetime slot="end" displayFormat="DD MMM YY"
-                  [value]="selectedAppointment.endRecur.toISOString()" [readonly]="!this.editMode"></ion-datetime>
-  </ion-item>
-
-    <ion-item class="ion-align-items-center ion-padding" *ngIf="!selectedAppointment.allDay">
-      <ion-datetime slot="start" displayFormat="HH:mm"
-                    [value]="selectedAppointment.startTime" [readonly]="!this.editMode"></ion-datetime>
-      <ion-icon class="time-arrow" name="arrow-dropright"></ion-icon>
-      <ion-datetime slot="end" displayFormat="HH:mm"
-                    [value]="selectedAppointment.endTime" [readonly]="!this.editMode"></ion-datetime>
-    </ion-item>
-
-    <ion-item class="ion-align-items-center ion-padding">
-      <ion-label>Beschreibung</ion-label>
-      <ion-content *ngIf="!this.editMode">
-        {{selectedAppointment.extendedProps.content}}
-      </ion-content>
-      <ion-input autocomplete="true" required="false"  [value]="selectedAppointment.extendedProps.content" *ngIf="this.editMode">
+      <ion-label position="stacked">Beschreibung</ion-label>
+      <ion-input autocomplete="true" required="false"  [value]="selectedAppointment.extendedProps.content" [readonly]="!editMode">
       </ion-input>
     </ion-item>
   </form>
@@ -61,8 +106,11 @@
 
   <ion-footer>
     <ion-toolbar>
-      <ion-button slot="end" (click)="dismiss()" fill="clear">
+      <ion-button *ngIf="!this.editMode" slot="end" (click)="dismiss()" fill="clear">
         Schließen
+      </ion-button>
+      <ion-button *ngIf="this.editMode" slot="end" fill="clear" (click)="toggleEdit()">
+        Abbrechen
       </ion-button>
       <ion-button *ngIf="this.editMode" slot="end" fill="clear" (click)="onSubmit()">
         Speichern

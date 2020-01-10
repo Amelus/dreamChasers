@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
-import {AlertController, MenuController, ModalController, PopoverController} from '@ionic/angular';
+import {AlertController, LoadingController, MenuController, ModalController, PopoverController} from '@ionic/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -12,6 +12,7 @@ import {AppointmentCreationPage} from '../appointment/appointment-creation/appoi
 import {AppointmentEditPage} from '../appointment/appointment-edit/appointment-edit.page';
 import * as $ from 'jquery';
 import {DayDetailComponent} from '../components/day-detail/day-detail.component';
+import {DateInfo} from '../appointment/dateInfo';
 
 @Component({
     selector: 'app-home',
@@ -57,7 +58,8 @@ export class HomePage implements OnInit, AfterViewInit {
                 private router: Router,
                 private alertController: AlertController,
                 private modalController: ModalController,
-                private popoverController: PopoverController) {
+                private popoverController: PopoverController,
+                private loadingController: LoadingController) {
         this.menuController.enable(true, 'mainMenu');
     }
 
@@ -86,22 +88,57 @@ export class HomePage implements OnInit, AfterViewInit {
                 this.titleName = calenderApi.view.title;
             });
 
+            $('.fc-dayGridMonth-button').click(() => {
+                $('.fc-day.fc-today').eq(0).siblings().addClass('fc-today');
+            });
+
         });
 
         const calenderApi = this.monthCalendar.getApi();
         this.titleName = calenderApi.view.title;
     }
 
-    async showDateClick(ev: any) {
-        const events = this.calendarEvents;
-        const popover = await this.popoverController.create({
-            component: DayDetailComponent,
-            event: ev,
-            animated: true,
-            showBackdrop: true,
-            componentProps: {target: ev, events}
+    async presentLoadingWithOptions() {
+        this.getEvents();
+        const loading = await this.loadingController.create({
+            duration: 2000,
+            message: 'Synchronisiere...'
         });
-        return await popover.present();
+        return await loading.present();
+    }
+
+    async showDateClick(ev: any) {
+        const events = this.calendarEvents.filter((event: AppointmentVm) => {
+            return this.isRelevantEvent(event, ev);
+        });
+
+        if (events.length > 0) {
+            const editor = this.editorUser;
+            const popover = await this.popoverController.create({
+                component: DayDetailComponent,
+                event: ev,
+                animated: true,
+                showBackdrop: true,
+                componentProps: {target: ev, events, editorUser: editor}
+            });
+            return await popover.present();
+        }
+    }
+
+    private isRelevantEvent(event: AppointmentVm, ev: any) {
+        if (event.start) {
+            if (event.start.getDate() <= ev.date.getDate()
+                && event.end.getDate() >= ev.date.getDate()) {
+                return true;
+            }
+        } else if (event.startRecur) {
+            if (this.isDayContained(event.daysOfWeek, ev) &&
+                event.startRecur.getMilliseconds() <= ev.date.getMilliseconds()
+                && event.endRecur.getMilliseconds() >= ev.date.getMilliseconds()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     getEvents() {
@@ -112,10 +149,11 @@ export class HomePage implements OnInit, AfterViewInit {
     }
 
     async eventClick($event: any) {
+        const editor = this.editorUser;
         const eventView = await this.modalController.create(
             {
                 component: AppointmentEditPage,
-                componentProps: {appointments: this.calendarEvents, selected: $event.event.title}
+                componentProps: {appointments: this.calendarEvents, selected: $event.event.title, editorUser: editor}
             });
         (await eventView).present();
     }
@@ -187,9 +225,17 @@ export class HomePage implements OnInit, AfterViewInit {
         switch (this.lastPanAction.additionalEvent) {
             case 'panright':
                 fcApi.prev();
+                this.titleName = fcApi.view.title;
+                if (fcApi.view.type === 'dayGridMonth') {
+                    $('.fc-day.fc-today').eq(0).siblings().addClass('fc-today');
+                }
                 break;
             case 'panleft':
                 fcApi.next();
+                this.titleName = fcApi.view.title;
+                if (fcApi.view.type === 'dayGridMonth') {
+                    $('.fc-day.fc-today').eq(0).siblings().addClass('fc-today');
+                }
                 break;
         }
     }
@@ -197,5 +243,10 @@ export class HomePage implements OnInit, AfterViewInit {
     datesRender($event) {
         console.log($event.view.activeStart, $event.view.activeEnd, $event);
         // this.RefreshPage();
+    }
+
+    isDayContained(weekArray: number[], targetDay: DateInfo): boolean {
+        const day = targetDay.date.getDay();
+        return weekArray.map(Number).indexOf(day) >= 0;
     }
 }

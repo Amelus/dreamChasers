@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, OnInit, Renderer2} from '@angular/core';
 import {TodoClient, TodoVm, UserClient, UserVmRole} from '../app.api';
 import {StatusChangeComponent} from '../components/status-change/status-change.component';
-import {PopoverController} from '@ionic/angular';
+import {LoadingController, PopoverController} from '@ionic/angular';
 
 @Component({
   selector: 'app-list-assigned',
@@ -16,7 +16,8 @@ export class ListAssignedPage implements OnInit, AfterViewInit {
   constructor(private todoClient: TodoClient,
               public popoverController: PopoverController,
               private renderer: Renderer2,
-              private userClient: UserClient) { }
+              private userClient: UserClient,
+              private loadingController: LoadingController) { }
 
   ngOnInit() {
     this.getTodos();
@@ -26,12 +27,13 @@ export class ListAssignedPage implements OnInit, AfterViewInit {
     this.editorUser = this.userClient.getSessionUser() && this.userClient.getSessionUser().role !== UserVmRole.User;
   }
 
-  doRefresh(event) {
-    setTimeout(() => {
-      console.log('Async operation has ended');
-      this.getTodos();
-      event.target.complete();
-    }, 2000);
+  async presentLoadingWithOptions() {
+    this.getTodos();
+    const loading = await this.loadingController.create({
+      duration: 2000,
+      message: 'Synchronisiere...'
+    });
+    return await loading.present();
   }
 
   private getTodos() {
