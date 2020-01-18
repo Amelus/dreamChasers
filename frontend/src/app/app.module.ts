@@ -13,6 +13,8 @@ import {FormBuilder} from '@angular/forms';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {AuthInterceptor} from './auth/auth.interceptor';
 import {AuthGuard} from './auth/auth.guard';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
     declarations: [AppComponent],
@@ -21,7 +23,8 @@ import {AuthGuard} from './auth/auth.guard';
         BrowserModule,
         HttpClientModule,
         IonicModule.forRoot(),
-        AppRoutingModule
+        AppRoutingModule,
+        ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
     ],
     providers: [
         StatusBar,

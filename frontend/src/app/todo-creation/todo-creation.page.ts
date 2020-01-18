@@ -13,11 +13,11 @@ import {Moment} from 'moment';
 })
 export class TodoCreationPage implements OnInit {
 
-  private form: FormGroup;
-  private todos: TodoVm[];
-  private assignees: UserVm[];
-  private minDate: string;
-  private maxDate: string;
+   form: FormGroup;
+   private todos: TodoVm[];
+   assignees: UserVm[];
+   minDate: string;
+   maxDate: string;
 
   constructor(public modalController: ModalController,
               private formBuilder: FormBuilder,

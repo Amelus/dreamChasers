@@ -14,14 +14,14 @@ import {FullCalendarComponent} from '@fullcalendar/angular';
 })
 export class AppointmentCreationPage implements OnInit, AfterViewInit {
 
-    private form: FormGroup;
-    private appointments: AppointmentVm[];
-    private allDay: boolean;
-    private minDate: string;
-    private maxDate: string;
-    private monthNames = 'Jan, Feb, Mar, Apr, Mai, Jun, Jul, Aug, Sep, Oct, Nov, Dec';
-    private minuteValues = '0,5,10,15,20,25,30,35,40,45,50,55';
-    private global: boolean;
+    form: FormGroup;
+    appointments: AppointmentVm[];
+    allDay: boolean;
+    minDate: string;
+    maxDate: string;
+    monthNames = 'Jan, Feb, Mar, Apr, Mai, Jun, Jul, Aug, Sep, Oct, Nov, Dec';
+    minuteValues = '0,5,10,15,20,25,30,35,40,45,50,55';
+    global: boolean;
 
     constructor(public modalController: ModalController,
                 private formBuilder: FormBuilder,

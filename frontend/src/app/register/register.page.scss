@@ -1,10 +1,26 @@
 .error {
   color: red;
+  font-size: 0.8em;
 }
-/* Medium devices (landscape tablets, 768px and up) */
+/* Medium devices (landscape tablets, 768px and up)
 @media only screen and (max-width: 650px) {
   .general_form {
     margin-left: unset;
     margin-right: unset;
   }
+}*/
+
+.input {
+  border: groove;
+  border-width: thin;
+  border-radius: 10px;
+  margin-top: 5px;
+}
+
+.it-nat {
+  width: 100%;
+}
+
+.log-button {
+  -webkit-appearance: unset;
 }

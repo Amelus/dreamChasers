@@ -10,14 +10,14 @@ import {AppointmentClient, AppointmentVm, UserClient, UserVmRole} from '../../ap
 })
 export class AppointmentEditPage implements OnInit {
 
-  private form: FormGroup;
-  private appointments: AppointmentVm[];
-  private selectedAppointment: AppointmentVm;
-  private editorUser: boolean;
-  private editMode: boolean;
-  private global: boolean;
-  private allDay: boolean;
-  private isCreator: boolean;
+  form: FormGroup;
+   appointments: AppointmentVm[];
+   selectedAppointment: AppointmentVm;
+   editorUser: boolean;
+   editMode: boolean;
+   global: boolean;
+   allDay: boolean;
+   isCreator: boolean;
 
   constructor(private navParams: NavParams,
               private formBuilder: FormBuilder,

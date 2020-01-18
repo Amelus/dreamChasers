@@ -38,7 +38,12 @@
                           </ion-label>
                         </ion-item>
                       </ng-container>
-
+                        <ion-item [routerDirection]="'root'" [routerLink]="[mindMap.url]" detail="false">
+                            <ion-icon slot="start" [name]="mindMap.icon"></ion-icon>
+                            <ion-label>
+                                {{mindMap.title}}
+                            </ion-label>
+                        </ion-item>
                         <ion-item [routerDirection]="'root'" [routerLink]="[profile.url]" detail="false">
                             <ion-icon slot="start" [name]="profile.icon"></ion-icon>
                             <ion-label>

@@ -25,6 +25,11 @@ export class AppComponent {
         url: '/list',
         icon: 'checkbox-outline'
     };
+    public mindMap = {
+        title: 'Strukturansicht',
+        url: '/mind-map',
+        icon: 'git-branch'
+    };
     public profile = {
         title: 'Profil',
         url: '/profile',

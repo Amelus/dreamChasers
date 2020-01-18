@@ -36,9 +36,9 @@ export class HomePage implements OnInit, AfterViewInit {
         }
     };
     header = {
-        left:   'listWeek,timeGridWeek,dayGridMonth',
+        left:   'listWeek timeGridWeek dayGridMonth',
         center: '',
-        right: 'prev,next'
+        right: 'prev next'
     };
     buttonText = {
         today:    'Heute',
@@ -83,7 +83,7 @@ export class HomePage implements OnInit, AfterViewInit {
 
         $(document).ready(() => {
             $('.fc-day.fc-today').eq(0).siblings().addClass('fc-today');
-            $('.fc-listWeek-button, .fc-timeGridWeek-button, .fc-dayGridMonth-button, .fc-prev-button, .fc-next-button')
+            $('.fc-listWeek-button, .fc-dayGridWeek-button, .fc-dayGridMonth-button, .fc-prev-button, .fc-next-button')
                 .click( () => {
                 this.titleName = calenderApi.view.title;
             });

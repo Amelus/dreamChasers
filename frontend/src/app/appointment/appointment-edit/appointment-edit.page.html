@@ -1,12 +1,14 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Detailansicht</ion-title>
-    <ion-button slot="end" (click)="tryDelete()" [disabled]="!isCreator" fill="clear">
-      <ion-icon name="trash"></ion-icon>
-    </ion-button>
-    <ion-button slot="end" (click)="toggleEdit()" [disabled]="!isCreator" fill="clear">
-      <ion-icon name="create"></ion-icon>
-    </ion-button>
+    <ion-buttons slot="end" *ngIf="isCreator">
+      <ion-button (click)="tryDelete()" fill="clear">
+        <ion-icon name="trash"></ion-icon>
+      </ion-button>
+      <ion-button (click)="toggleEdit()" fill="clear">
+        <ion-icon name="create"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -93,8 +95,6 @@
         </ion-row>
       </ion-col>
     </ion-row>
-
-
 
     <ion-item class="ion-align-items-center ion-padding">
       <ion-label position="stacked">Beschreibung</ion-label>

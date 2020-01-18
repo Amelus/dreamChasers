@@ -57,6 +57,7 @@ export class AppointmentService extends BaseService<Appointment> {
 
     map2Vm(source: Appointment): AppointmentVm {
         const target: AppointmentVm = new AppointmentVm();
+        target.id = source.id;
         target.title = source.title;
         target.allDay = source.allDay;
         target.backgroundColor = source.backgroundColor;
@@ -92,6 +93,7 @@ export class AppointmentService extends BaseService<Appointment> {
             fromLead.forEach((appointment) => {
                 if (!appointment.global) {
                     appointment.title = 'Blocked';
+                    appointment.content = 'Privater Termin von ' + user.leadUser;
                 }
             });
         }
