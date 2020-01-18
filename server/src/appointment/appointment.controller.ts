@@ -9,7 +9,6 @@ import {
     Param,
     Post,
     Put,
-    Query,
     Req,
     UseGuards,
 } from '@nestjs/common';
@@ -17,12 +16,10 @@ import {
     ApiBadRequestResponse,
     ApiBearerAuth,
     ApiCreatedResponse,
-    ApiImplicitQuery,
     ApiOkResponse,
     ApiOperation,
     ApiUseTags,
 } from '@nestjs/swagger';
-import {map} from 'lodash';
 import {ApiException} from '../shared/api-exception.model';
 import {GetOperationId} from '../shared/utilities/get-operation-id.helper';
 import {Appointment} from './models/appointment.model';
