@@ -1,5 +1,4 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {customizeUtil, MindMapMain} from 'mind-map';
 
 @Component({
   selector: 'app-mind-map',
@@ -34,7 +33,7 @@ export class MindMapPage implements OnInit, AfterViewInit {
       return;
     }
 
-    const nodeId = customizeUtil.uuid.newid();
+    const nodeId = 'stuff';
     this.mindMap.addNode(selectedNode, nodeId);
   }
 
