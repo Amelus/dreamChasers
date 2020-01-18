@@ -21,11 +21,10 @@ This repository houses the Project's backend written using **NestJS**
 
 ## Client-side (Angular)
 
-This repository houses the Project's frontend written using **Angular 6**
+This repository houses the Project's frontend written using **Ionic and Angular 8**
 
-- **Ant Design**: The components design is by AntDesign (https://ng.ant.design/docs/introduce/en). I really like the subtle looks of AntDesign.
+- **Ionic Design**: The components design is by Ionic (https://ionicframework.com/docs/components). 
 - **Steps**: `npm i` to install all the dependencies then just start the application with `ng serve`
-- **Note**: Might be worth it to take a look at `proxy.conf.json` and how I setup the CLI to use the `proxy` file when serving so that we can call our backend on `localhost:3000`. This is so-called **Cross Domains Request** and our backend does not have CORS setup. Proxy will help us making the requests from `4200` to `3000`.
 
 ## Docker
 
