@@ -106,9 +106,6 @@ export class HomePage implements OnInit, AfterViewInit {
             $('.fc-dayGridMonth-button').click(() => {
                 $('.fc-day.fc-today').eq(0).siblings().addClass('fc-today');
             });
-
-            $('body /deep/ .toolbar-container').css('background', '#1a1b1e');
-
         });
 
         const calenderApi = this.monthCalendar.getApi();
