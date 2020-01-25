@@ -105,6 +105,12 @@ body.dark {
   --ion-color-primary-contrast-rgb: 255,255,255;
   --ion-color-primary-shade: #d1b100;
   --ion-color-primary-tint: #f0ce1a;
+  ion-toolbar {
+    --background: #1a1b1e;
+  }
+  form {
+    background: #1a1b1e;
+  }
 }
 
 .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active, .show > .btn-primary.dropdown-toggle {
@@ -216,4 +222,10 @@ thead {
 .time-row {
   padding-bottom: unset;
   padding-top: unset;
+}
+.fc-time-grid .fc-slats .fc-minor td {
+  border-top-style: hidden;
+}
+.modal-wrapper {
+  border-radius: 10px !important;
 }

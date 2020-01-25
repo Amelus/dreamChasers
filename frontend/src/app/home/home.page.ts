@@ -46,6 +46,21 @@ export class HomePage implements OnInit, AfterViewInit {
         week:     'Woche',
         list:     'Liste'
     };
+    slotLabelFormat = {
+        hour: 'numeric',
+        meridiem: false,
+        timeStyle: 'short',
+        omitZeroMinute: true
+    };
+    viewOptions = {
+        timeGrid: {
+            columnHeaderFormat: {
+                weekday: 'short',
+                day: 'numeric',
+                omitCommas: true
+            }
+        }
+    };
     showList: boolean;
     themeSystem: string;
     height: number;
@@ -83,7 +98,7 @@ export class HomePage implements OnInit, AfterViewInit {
 
         $(document).ready(() => {
             $('.fc-day.fc-today').eq(0).siblings().addClass('fc-today');
-            $('.fc-listWeek-button, .fc-dayGridWeek-button, .fc-dayGridMonth-button, .fc-prev-button, .fc-next-button')
+            $('.fc-listWeek-button, .fc-timeGridWeek-button, .fc-dayGridMonth-button, .fc-prev-button, .fc-next-button')
                 .click( () => {
                 this.titleName = calenderApi.view.title;
             });
@@ -91,6 +106,8 @@ export class HomePage implements OnInit, AfterViewInit {
             $('.fc-dayGridMonth-button').click(() => {
                 $('.fc-day.fc-today').eq(0).siblings().addClass('fc-today');
             });
+
+            $('body /deep/ .toolbar-container').css('background', '#1a1b1e');
 
         });
 

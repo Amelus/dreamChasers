@@ -42,8 +42,10 @@
                    [eventLimitText]="'mehr'"
                    [eventLimitClick]="'dayGridMonth'"
                    maxTime="23:59:59"
-                   minTime="05:00:00"
-                   allDayText="Ganztägig"
+                   minTime="00:00:00"
+                   [allDaySlot]="false"
+                   [slotLabelFormat]="slotLabelFormat"
+                   [views]="viewOptions"
                    >
     </full-calendar>
     <ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="triggerAlert()">

@@ -9,7 +9,7 @@
 }
 
 .todo_text {
-  margin-top: 4%;
+  margin-top: 13px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -67,6 +67,10 @@
 }
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (min-width: 768px) {
+  .todo_text {
+    margin-top: 16px;
+  }
+
   .todo_icon {
     width: 5%;
   }
