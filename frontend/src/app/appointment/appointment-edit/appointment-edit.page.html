@@ -16,20 +16,20 @@
   <form [formGroup]="form">
     <ion-item class="ion-align-items-center ion-padding">
       <ion-label position="stacked">Titel</ion-label>
-      <ion-input autocomplete="true" required="true" [value]="selectedAppointment.title" [readonly]="!editMode"></ion-input>
+      <ion-input autocomplete="true" [value]="selectedAppointment.title" [readonly]="!editMode" formControlName="title"></ion-input>
     </ion-item>
 
     <ion-row class="ion-align-items-center ion-padding">
       <ion-col>
         <ion-item>
           <ion-label position="stacked">Teamrelevant</ion-label>
-          <ion-toggle color="primary" (click)="toggleGlobal()" [checked]="global" [disabled]="!editMode"></ion-toggle>
+          <ion-toggle color="primary" (click)="toggleGlobal()" [checked]="global" formControlName="global" *ngIf="editMode"></ion-toggle>
         </ion-item>
       </ion-col>
       <ion-col>
         <ion-item>
           <ion-label position="stacked">Ganztägig</ion-label>
-          <ion-toggle color="primary" (click)="toggleAllDay()" [checked]="allDay" [disabled]="!editMode"></ion-toggle>
+          <ion-toggle color="primary" (click)="toggleAllDay()" [checked]="allDay" formControlName="allDay" *ngIf="editMode"></ion-toggle>
         </ion-item>
       </ion-col>
     </ion-row>
@@ -40,43 +40,43 @@
         <ion-row class="ion-align-items-center ion-padding date-row time-row" *ngIf="!selectedAppointment.startRecur">
           <ion-col>
             <ion-datetime  displayFormat="DD MMM YY"
-                           [value]="selectedAppointment.start.toISOString()" [readonly]="!this.editMode"></ion-datetime>
+                           [value]="selectedAppointment.start.toISOString()" [readonly]="!this.editMode" formControlName="start"></ion-datetime>
           </ion-col>
           <ion-col>
             <ion-icon class="time-arrow" name="arrow-dropright"></ion-icon>
           </ion-col>
           <ion-col class="time-align">
             <ion-datetime  displayFormat="DD MMM YY"
-                           [value]="selectedAppointment.end.toISOString()" [readonly]="!this.editMode"></ion-datetime>
+                           [value]="selectedAppointment.end.toISOString()" [readonly]="!this.editMode" formControlName="end"></ion-datetime>
           </ion-col>
         </ion-row>
 
         <ion-row class="ion-align-items-center ion-padding date-row time-row" *ngIf="selectedAppointment.startRecur">
           <ion-col>
             <ion-datetime  displayFormat="DD MMM YY"
-                           [value]="selectedAppointment.startRecur.toISOString()" [readonly]="!this.editMode"></ion-datetime>
+                           [value]="selectedAppointment.startRecur.toISOString()" [readonly]="!this.editMode" formControlName="start"></ion-datetime>
           </ion-col>
           <ion-col>
             <ion-icon class="time-arrow" name="arrow-dropright"></ion-icon>
           </ion-col>
           <ion-col class="time-align">
             <ion-datetime  displayFormat="DD MMM YY"
-                           [value]="selectedAppointment.endRecur.toISOString()" [readonly]="!this.editMode"></ion-datetime>
+                           [value]="selectedAppointment.endRecur.toISOString()" [readonly]="!this.editMode" formControlName="end"></ion-datetime>
           </ion-col>
         </ion-row>
 
-        <ion-row class="ion-align-items-center ion-padding date-row time-row" *ngIf="!selectedAppointment.allDay">
+        <ion-row class="ion-align-items-center ion-padding date-row time-row" *ngIf="!allDay">
           <ng-container *ngIf="selectedAppointment.startTime">
             <ion-col>
               <ion-datetime displayFormat="HH:mm"
-                            [value]="selectedAppointment.startTime" [readonly]="!this.editMode"></ion-datetime>
+                            [value]="selectedAppointment.startTime" [readonly]="!this.editMode" formControlName="startTime"></ion-datetime>
             </ion-col>
             <ion-col>
               <ion-icon class="time-arrow" name="arrow-dropright"></ion-icon>
             </ion-col>
             <ion-col class="time-align">
               <ion-datetime displayFormat="HH:mm"
-                            [value]="selectedAppointment.endTime" [readonly]="!this.editMode"></ion-datetime>
+                            [value]="selectedAppointment.endTime" [readonly]="!this.editMode" formControlName="endTime"></ion-datetime>
             </ion-col>
           </ng-container>
           <ng-container *ngIf="!selectedAppointment.startTime">
@@ -98,7 +98,7 @@
 
     <ion-item class="ion-align-items-center ion-padding">
       <ion-label position="stacked">Beschreibung</ion-label>
-      <ion-input autocomplete="true" required="false"  [value]="selectedAppointment.extendedProps.content" [readonly]="!editMode">
+      <ion-input autocomplete="true"  [value]="selectedAppointment.extendedProps.content" [readonly]="!editMode" formControlName="content">
       </ion-input>
     </ion-item>
   </form>

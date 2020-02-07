@@ -30,6 +30,11 @@ export class AppComponent {
         url: '/mind-map',
         icon: 'git-branch'
     };
+    public cloudStorage = {
+        title: 'Cloud Speicher',
+        url: '/cloud-storage',
+        icon: 'cloud-outline'
+    };
     public profile = {
         title: 'Profil',
         url: '/profile',
