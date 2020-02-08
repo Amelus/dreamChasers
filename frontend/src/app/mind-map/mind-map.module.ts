@@ -6,6 +6,9 @@ import {RouterModule, Routes} from '@angular/router';
 import {IonicModule} from '@ionic/angular';
 
 import {MindMapPage} from './mind-map.page';
+import {TreeModule} from 'primeng';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {BrowserModule} from '@angular/platform-browser';
 
 const routes: Routes = [
   {
@@ -19,7 +22,8 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    TreeModule
   ],
   declarations: [MindMapPage]
 })

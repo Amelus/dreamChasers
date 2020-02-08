@@ -38,7 +38,10 @@
               },
               {
                 "input": "src/global.scss"
-              }
+              },
+              "node_modules/primeicons/primeicons.css",
+              "node_modules/primeng/resources/themes/nova-light/theme.css",
+              "node_modules/primeng/resources/primeng.min.css"
             ],
             "scripts": ["./node_modules/jquery/dist/jquery.min.js"]
           },
