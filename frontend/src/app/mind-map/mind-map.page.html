@@ -7,4 +7,8 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content></ion-content>
+<!-- <p-tree [value]="files" selectionMode="single" [(selection)]="selectedFile" (onNodeSelect)="nodeSelect($event)"></p-tree> -->
+<!-- <p-tree [value]="files"></p-tree> -->
+<ion-content>
+  <p-tree [value] = "files" layout="horizontal" selectionMode="single" [(selection)]="selectedFile"></p-tree>
+</ion-content>
