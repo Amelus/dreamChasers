@@ -4,12 +4,11 @@ Repository will be separated into `server` and `client` directory for **NestJS**
 
 - [x] Server repository
 - [x] Client repository
-- [x] Docker support
 - [x] Hook up Server and Client
 
 ## Server-side (NestJS)
 
-This repository houses the Project's backend written using **NestJS**
+This repository houses the Project's backend written using **NestJS** (https://docs.nestjs.com)
 
 - **NSwag**: Nswag allows us to generate API Calls to our Backend on our Frontend in forms of Functions. The abstraction of **HttpClientModule** takes place in the generated file.
 - **Steps**:
@@ -25,13 +24,4 @@ This repository houses the Project's frontend written using **Ionic and Angular 
 
 - **Ionic Design**: The components design is by Ionic (https://ionicframework.com/docs/components). 
 - **Steps**: `npm i` to install all the dependencies then just start the application with `ng serve`
-
-## Docker
-
-Docker is supported.
-
-- **Branch**: `docker`
-- **Steps**: Just clone the repository, check out `docker` branch then from `root` directory, run `docker-compose up` and Docker will take over.
-- **Note**: Angular application will be served by NGINX on `localhost`; Nest application will be running on `localhost:3000`; **cAdvisor** which monitors our containers will be running on `localhost:8080`. Again, it's worthwhile to explore the Dockerfile in both `client` and `server` directory; also `nginx.conf` and `docker-compose.yml` to get the gist of how Docker and Docker Compose work.
-
-P.S: Pull Requests, Contributions are most definitely welcomed :)
+- **Fullcalendar**: The calender component is taken from Fullcalendar (https://fullcalendar.io/docs) 
