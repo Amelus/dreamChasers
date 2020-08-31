@@ -59,7 +59,8 @@ const routes: Routes = [
     path: 'appointment-edit',
     loadChildren: './appointment/appointment-edit/appointment-edit.module#AppointmentEditPageModule' ,
     canActivate: [AuthGuard]
-  },  { path: 'mind-map', loadChildren: './mind-map/mind-map.module#MindMapPageModule' }
+  },  { path: 'mind-map', loadChildren: './mind-map/mind-map.module#MindMapPageModule' },
+  { path: 'cloud-storage', loadChildren: './cloud-storage/cloud-storage.module#CloudStoragePageModule' }
 
 
 

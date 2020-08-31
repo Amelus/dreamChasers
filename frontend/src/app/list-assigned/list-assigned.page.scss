@@ -8,7 +8,7 @@
   height: 100%;
 }
 .todo_text {
-  margin-top: 4%;
+  margin-top: 13px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -52,6 +52,9 @@
 
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (min-width: 768px) {
+  .todo_text {
+    margin-top: 16px;
+  }
   .todo_title {
     width: 56%;
   }
@@ -65,9 +68,6 @@
 
 /* Large devices (laptops/desktops, 992px and up) */
 @media only screen and (min-width: 1560px) {
-  .todo_text {
-    margin-top: 3%;
-  }
   .todo_text_label {
     width: 53%;
   }

@@ -42,7 +42,7 @@ export class UserService extends BaseService<User> {
             try {
                 leadUser = await this._userModel.findOne({username: registrationCode, role: UserRole.Leader});
             } catch (e) {
-                throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new HttpException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
             }
             if (!leadUser) {
                 throw new HttpException('Invalid registration code', HttpStatus.BAD_REQUEST);
@@ -65,7 +65,7 @@ export class UserService extends BaseService<User> {
             const result = await this.create(newUser);
             return result.toJSON() as User;
         } catch (e) {
-            throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new HttpException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -75,13 +75,13 @@ export class UserService extends BaseService<User> {
         const user = await this.findOne({username});
 
         if (!user) {
-            throw new HttpException('Invalid crendentials', HttpStatus.NOT_FOUND);
+            throw new HttpException('Invalid credentials', HttpStatus.NOT_FOUND);
         }
 
         const isMatch = await compare(password, user.password);
 
         if (!isMatch) {
-            throw new HttpException('Invalid crendentials', HttpStatus.BAD_REQUEST);
+            throw new HttpException('Invalid credentials', HttpStatus.BAD_REQUEST);
         }
 
         const payload: JwtPayload = {

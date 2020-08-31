@@ -7,42 +7,6 @@
 
 <ion-content>
 
-  <ng-container *ngIf="form.get('title').dirty && form.get('title').errors">
-    <div class="error">
-      <ng-container *ngIf="form.get('title').hasError('required')">
-        Ein Titel muss festgelegt werden
-      </ng-container>
-    </div>
-  </ng-container>
-  <ng-container *ngIf="form.get('start').dirty && form.get('start').errors">
-  <div class="error">
-    <ng-container *ngIf="form.get('start').hasError('required')">
-      Eine Startzeit muss festgelegt werden
-    </ng-container>
-  </div>
-  </ng-container>
-  <ng-container *ngIf="form.get('end').dirty && form.get('end').errors">
-    <div class="error">
-      <ng-container *ngIf="form.get('end').hasError('required')">
-        Eine Endzeit muss festgelegt werden
-      </ng-container>
-    </div>
-  </ng-container>
-  <ng-container *ngIf="form.get('startTime').dirty && form.get('startTime').errors">
-    <div class="error">
-      <ng-container *ngIf="form.get('startTime').hasError('required')">
-        Eine Uhrzeit muss festgelegt werden
-      </ng-container>
-    </div>
-  </ng-container>
-  <ng-container *ngIf="form.get('endTime').dirty && form.get('endTime').errors">
-    <div class="error">
-      <ng-container *ngIf="form.get('endTime').hasError('required')">
-        Eine End-Uhrzeit muss festgelegt werden
-      </ng-container>
-    </div>
-  </ng-container>
-
   <form [formGroup]="form">
     <ion-item class="ion-align-items-center ion-padding">
       <ion-label position="floating">Terminname</ion-label>

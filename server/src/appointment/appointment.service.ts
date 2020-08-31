@@ -88,7 +88,7 @@ export class AppointmentService extends BaseService<Appointment> {
     async findLeadEvents(user: InstanceType<User>, filter, fromLead: InstanceType<Appointment>[]) {
         if (user.role === UserRole.Leader || user.role === UserRole.User) {
             filter['creator'] = user.leadUser;
-            // filter relevant events - time
+            // TODO: filter relevant events - time
             fromLead = await this.findAll(filter);
             fromLead.forEach((appointment) => {
                 if (!appointment.global) {

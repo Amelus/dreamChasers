@@ -44,6 +44,12 @@
                                 {{mindMap.title}}
                             </ion-label>
                         </ion-item>
+                        <ion-item [routerDirection]="'root'" [routerLink]="[cloudStorage.url]" detail="false">
+                            <ion-icon slot="start" [name]="cloudStorage.icon"></ion-icon>
+                            <ion-label>
+                                {{cloudStorage.title}}
+                            </ion-label>
+                        </ion-item>
                         <ion-item [routerDirection]="'root'" [routerLink]="[profile.url]" detail="false">
                             <ion-icon slot="start" [name]="profile.icon"></ion-icon>
                             <ion-label>

@@ -35,6 +35,7 @@
     "bootstrap": "^4.4.1",
     "bootswatch": "^4.4.1",
     "core-js": "^2.5.4",
+    "dropbox": "^4.0.30",
     "hammerjs": "^2.0.8",
     "jquery": "^3.4.1",
     "moment": "latest",
